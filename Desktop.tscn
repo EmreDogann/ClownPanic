@@ -1,0 +1,195 @@
+[gd_scene load_steps=21 format=2]
+
+[ext_resource path="res://Shaders/Pixelate.tres" type="Material" id=1]
+[ext_resource path="res://Shaders/CRT.tres" type="Material" id=2]
+[ext_resource path="res://Shaders/StartMenuMask.tres" type="Material" id=3]
+[ext_resource path="res://Images/Y28hdx1zrLdjadACdbwq--50--3LGRL.png" type="Texture" id=4]
+[ext_resource path="res://Gradients/StartMenu-TaskBar-Transition.tres" type="Texture" id=5]
+[ext_resource path="res://Gradients/TaskBar-ItemBar-Transition.tres" type="Texture" id=6]
+[ext_resource path="res://Fonts/DisposableDroidBB_ital.ttf" type="DynamicFontData" id=7]
+[ext_resource path="res://Gradients/Taskbar.tres" type="Texture" id=8]
+[ext_resource path="res://Gradients/StartMenu.tres" type="Texture" id=9]
+[ext_resource path="res://Gradients/Itembar.tres" type="Texture" id=10]
+[ext_resource path="res://Scripts/Label.gd" type="Script" id=11]
+
+[sub_resource type="Gradient" id=3]
+
+[sub_resource type="GradientTexture2D" id=4]
+gradient = SubResource( 3 )
+
+[sub_resource type="StyleBoxTexture" id=5]
+texture = SubResource( 4 )
+region_rect = Rect2( 0, 0, 64, 64 )
+
+[sub_resource type="Theme" id=2]
+Button/colors/font_color = Color( 0.88, 0.88, 0.88, 1 )
+Button/colors/font_color_disabled = Color( 0.9, 0.9, 0.9, 0.2 )
+Button/colors/font_color_focus = Color( 0.94, 0.94, 0.94, 1 )
+Button/colors/font_color_hover = Color( 0.94, 0.94, 0.94, 1 )
+Button/colors/font_color_pressed = Color( 1, 1, 1, 1 )
+Button/constants/hseparation = 2
+Button/fonts/font = null
+Button/styles/disabled = null
+Button/styles/focus = null
+Button/styles/hover = null
+Button/styles/normal = SubResource( 5 )
+Button/styles/pressed = null
+
+[sub_resource type="Gradient" id=10]
+interpolation_mode = 2
+colors = PoolColorArray( 0.318262, 0.578125, 0.255188, 0, 0.0392157, 0.101961, 0.0392157, 0.392157 )
+
+[sub_resource type="GradientTexture2D" id=11]
+gradient = SubResource( 10 )
+fill_from = Vector2( 0.75, 0.975 )
+fill_to = Vector2( 1, 1 )
+
+[sub_resource type="Gradient" id=12]
+colors = PoolColorArray( 0.175232, 0.453125, 0.205626, 0, 0.407843, 0.592157, 0.8, 0.588235 )
+
+[sub_resource type="GradientTexture2D" id=13]
+gradient = SubResource( 12 )
+
+[sub_resource type="DynamicFont" id=14]
+size = 36
+use_mipmaps = true
+use_filter = true
+extra_spacing_top = 2
+extra_spacing_space = -5
+font_data = ExtResource( 7 )
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Desktop" type="Panel" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = SubResource( 2 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Wallpaper" type="TextureRect" parent="Desktop"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_bottom = -30.0
+texture = ExtResource( 4 )
+expand = true
+stretch_mode = 1
+
+[node name="TaskBar" type="TextureRect" parent="Desktop"]
+material = ExtResource( 1 )
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -40.0
+texture = ExtResource( 8 )
+expand = true
+stretch_mode = 1
+
+[node name="Start Menu" type="TextureRect" parent="Desktop/TaskBar"]
+material = ExtResource( 3 )
+anchor_bottom = 1.0
+margin_right = 148.0
+rect_min_size = Vector2( 70, 0 )
+texture = ExtResource( 9 )
+expand = true
+stretch_mode = 1
+
+[node name="Transition Left" type="TextureRect" parent="Desktop/TaskBar/Start Menu"]
+use_parent_material = true
+anchor_bottom = 1.0
+margin_right = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+rect_pivot_offset = Vector2( -94, -79 )
+texture = ExtResource( 5 )
+expand = true
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Transition Right Dark" type="TextureRect" parent="Desktop/TaskBar/Start Menu"]
+use_parent_material = true
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+rect_pivot_offset = Vector2( -94, -79 )
+texture = SubResource( 11 )
+expand = true
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Transition Right Bright" type="TextureRect" parent="Desktop/TaskBar/Start Menu"]
+show_behind_parent = true
+use_parent_material = true
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = 1.0
+texture = SubResource( 13 )
+expand = true
+stretch_mode = 1
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Label" type="Label" parent="Desktop/TaskBar/Start Menu"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -2.0
+margin_right = -7.0
+custom_fonts/font = SubResource( 14 )
+text = "Start"
+align = 1
+valign = 1
+uppercase = true
+
+[node name="ItemBar" type="TextureRect" parent="Desktop/TaskBar"]
+use_parent_material = true
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -128.0
+rect_min_size = Vector2( 70, 0 )
+texture = ExtResource( 10 )
+expand = true
+stretch_mode = 1
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Transition" type="TextureRect" parent="Desktop/TaskBar/ItemBar"]
+use_parent_material = true
+anchor_bottom = 1.0
+margin_left = -1.0
+margin_right = 3.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource( 6 )
+expand = true
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Time" type="Label" parent="Desktop/TaskBar/ItemBar"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_fonts/font = SubResource( 14 )
+text = "5:00 PM"
+align = 1
+valign = 1
+uppercase = true
+script = ExtResource( 11 )
+
+[node name="WhiteBG" type="ColorRect" parent="Desktop"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="CRT Filter" type="ColorRect" parent="Desktop"]
+material = ExtResource( 2 )
+anchor_right = 1.0
+anchor_bottom = 1.0

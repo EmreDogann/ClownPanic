@@ -1,0 +1,31 @@
+[gd_resource type="ShaderMaterial" load_steps=3 format=2]
+
+[ext_resource path="res://Images/StartMenuMask.png" type="Texture" id=1]
+
+[sub_resource type="Shader" id=1]
+code = "shader_type canvas_item;
+
+uniform sampler2D mask_texture;
+uniform int amountColor = 40;
+uniform int amountMask = 40;
+
+void fragment() {
+	// From: https://godotshaders.com/shader/pixelate/
+	vec2 grid_uv;
+	vec2 grid_uv2;
+	{
+		grid_uv = round(UV * float(amountColor)) / float(amountColor);
+		grid_uv2 = round(UV * float(amountMask)) / float(amountMask);
+	}
+	
+    vec4 colour = texture(TEXTURE, grid_uv);
+    colour.a *= texture(mask_texture, grid_uv2).a;
+
+    COLOR = colour;
+}"
+
+[resource]
+shader = SubResource( 1 )
+shader_param/amountColor = 16
+shader_param/amountMask = 82
+shader_param/mask_texture = ExtResource( 1 )

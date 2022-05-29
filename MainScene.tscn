@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Desktop.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Scripts/Mouse.gd" type="Script" id=2]
+[ext_resource path="res://Images/Cursor/Pixel/pixel.png" type="Texture" id=3]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Mouse" type="Node2D" parent="."]
+position = Vector2( 139, 90 )
+script = ExtResource( 2 )
+
+[node name="Sprite" type="Sprite" parent="Mouse"]
+texture = ExtResource( 3 )
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="Control" parent="CanvasLayer" instance=ExtResource( 1 )]
