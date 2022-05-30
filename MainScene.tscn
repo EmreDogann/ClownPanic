@@ -1,19 +1,106 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://Desktop.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scripts/Mouse.gd" type="Script" id=2]
-[ext_resource path="res://Images/Cursor/Pixel/pixel.png" type="Texture" id=3]
+[ext_resource path="res://Images/Cursor/XP/xp_arrow.png" type="Texture" id=3]
+[ext_resource path="res://Shaders/CRT.tres" type="Material" id=4]
+[ext_resource path="res://Scripts/FreeMouse.gd" type="Script" id=5]
+[ext_resource path="res://Scripts/PhysicsMouse.gd" type="Script" id=6]
+[ext_resource path="res://Scripts/StaticBody2D-AnchorToScreen.gd" type="Script" id=7]
+[ext_resource path="res://addons/WinXP-Window/WindowScript.gd" type="Script" id=8]
+
+[sub_resource type="PhysicsMaterial" id=2]
+bounce = 0.3
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 960, 20 )
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 20, 544 )
+
+[sub_resource type="RectangleShape2D" id=4]
+extents = Vector2( 968, 20 )
+
+[sub_resource type="RectangleShape2D" id=5]
+extents = Vector2( 20, 540 )
 
 [node name="Node2D" type="Node2D"]
 
-[node name="Mouse" type="Node2D" parent="."]
-position = Vector2( 139, 90 )
-script = ExtResource( 2 )
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+physics_material_override = SubResource( 2 )
+script = ExtResource( 7 )
 
-[node name="Sprite" type="Sprite" parent="Mouse"]
-texture = ExtResource( 3 )
+[node name="Taskbar" type="CollisionShape2D" parent="StaticBody2D" groups=["ScreenColliders"]]
+position = Vector2( 960, 1060 )
+shape = SubResource( 1 )
+one_way_collision = true
+
+[node name="Left" type="CollisionShape2D" parent="StaticBody2D" groups=["ScreenColliders"]]
+position = Vector2( -20, 536 )
+shape = SubResource( 3 )
+
+[node name="Top" type="CollisionShape2D" parent="StaticBody2D" groups=["ScreenColliders"]]
+position = Vector2( 960, -20 )
+shape = SubResource( 4 )
+
+[node name="Right" type="CollisionShape2D" parent="StaticBody2D" groups=["ScreenColliders"]]
+position = Vector2( 1940, 540 )
+shape = SubResource( 5 )
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 layer = -1
 
 [node name="Control" parent="CanvasLayer" instance=ExtResource( 1 )]
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Mouse" type="Node2D" parent="CanvasLayer"]
+script = ExtResource( 2 )
+
+[node name="FreeMouse" type="Node2D" parent="CanvasLayer/Mouse"]
+script = ExtResource( 5 )
+
+[node name="Sprite" type="Sprite" parent="CanvasLayer/Mouse/FreeMouse"]
+texture = ExtResource( 3 )
+centered = false
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="PhysicsMouse" type="RigidBody2D" parent="CanvasLayer/Mouse"]
+visible = false
+position = Vector2( 4.33104, 8.61787 )
+mass = 10.0
+gravity_scale = 10.0
+continuous_cd = 1
+can_sleep = false
+linear_velocity = Vector2( 1000, 0 )
+script = ExtResource( 6 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="CanvasLayer/Mouse/PhysicsMouse"]
+position = Vector2( -4.33104, -8.52946 )
+polygon = PoolVector2Array( 12, 11, 10.757, 21.8148, 0, 16, -0.0705414, -0.547478 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Sprite" type="Sprite" parent="CanvasLayer/Mouse/PhysicsMouse"]
+position = Vector2( -4.33104, -8.61787 )
+texture = ExtResource( 3 )
+centered = false
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="CRT Filter" type="ColorRect" parent="CanvasLayer"]
+material = ExtResource( 4 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="WinXP-Window" type="Node2D" parent="."]
+rotation = 450.458
+script = ExtResource( 8 )
