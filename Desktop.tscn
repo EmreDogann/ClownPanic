@@ -3,14 +3,14 @@
 [ext_resource path="res://Shaders/Pixelate.tres" type="Material" id=1]
 [ext_resource path="res://Shaders/CRT.tres" type="Material" id=2]
 [ext_resource path="res://Shaders/StartMenuMask.tres" type="Material" id=3]
-[ext_resource path="res://Images/Y28hdx1zrLdjadACdbwq--50--3LGRL.png" type="Texture" id=4]
+[ext_resource path="res://Images/Clowns.png" type="Texture" id=4]
 [ext_resource path="res://Gradients/StartMenu-TaskBar-Transition.tres" type="Texture" id=5]
 [ext_resource path="res://Gradients/TaskBar-ItemBar-Transition.tres" type="Texture" id=6]
 [ext_resource path="res://Fonts/DisposableDroidBB_ital.ttf" type="DynamicFontData" id=7]
 [ext_resource path="res://Gradients/Taskbar.tres" type="Texture" id=8]
 [ext_resource path="res://Gradients/StartMenu.tres" type="Texture" id=9]
 [ext_resource path="res://Gradients/Itembar.tres" type="Texture" id=10]
-[ext_resource path="res://Scripts/Label.gd" type="Script" id=11]
+[ext_resource path="res://Scripts/Time.gd" type="Script" id=11]
 
 [sub_resource type="Gradient" id=3]
 
