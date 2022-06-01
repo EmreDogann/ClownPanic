@@ -1,0 +1,6 @@
+[gd_resource type="DynamicFontData" format=2]
+
+[resource]
+antialiased = false
+override_oversampling = 5.0
+font_path = "res://Fonts/DisposableDroidBB_bld.ttf"

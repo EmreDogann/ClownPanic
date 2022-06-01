@@ -15,7 +15,7 @@ onready var debug_edge_pivots = [
 export(bool) var enable_resizing_debug_view = false 
 
 var grabbing = false
-var grab_range_corner = 10.0
+var grab_range_corner = 8.0
 var grab_range_edge = 3.0
 var edge_corner_separation = 5.0
 var active_grab_point = Vector2()
@@ -23,8 +23,8 @@ onready var grab_points = [
 	# Corners
 	rect_position,  # Top Left
 	rect_position + Vector2(rect_size.x,0), # Top Right
-	rect_position + Vector2(0,rect_size.y), # Bottom Left
 	rect_position + rect_size, # Bottom Right
+	rect_position + Vector2(0,rect_size.y), # Bottom Left
 	
 	# Edges
 	rect_position + Vector2(rect_size.x/2.0,0), # Top
@@ -55,18 +55,23 @@ func update_grab_points():
 				grabPointInstances[i].rect_scale = Vector2(grab_range_edge, rect_size.y/2.0 - (edge_corner_separation*2.0)) * 2
 
 func _ready() -> void:
-	var mouseRef: Node2D = get_tree().get_nodes_in_group("Mouse")[0]
+	var mouseRef = get_tree().get_nodes_in_group("Mouse")
+	
+	if (mouseRef.size() > 0):
+		mouseRef = mouseRef[0]
+	
 	# Make Corners
 	for i in range(4):
 		var debugCorner: Panel = Corner.instance()
 		debugCorner.name = "CornerDebug" + str(i)
 		debugCorner.rect_global_position = grab_points[i]
 		debugCorner.rect_scale = Vector2(grab_range_corner, grab_range_corner) * 2
-		debugCorner.connect("mouse_entered", mouseRef, "_on_window_mouse_entered", [false, i % 2])
-		debugCorner.connect("mouse_exited", mouseRef, "_on_window_mouse_exit")
+		
+		if (mouseRef):
+			debugCorner.connect("mouse_entered", mouseRef, "_on_window_mouse_entered", [false, i])
+			debugCorner.connect("mouse_exited", mouseRef, "_on_window_mouse_exit")
 		
 		if (enable_resizing_debug_view):
-#			debugCorner.visible = false
 			debugCorner.get_stylebox("panel").draw_center = true
 		add_child(debugCorner)
 		
@@ -81,16 +86,19 @@ func _ready() -> void:
 		# Change scaling direction if the point is on the top/bottom vs left/right
 		if (i <= 1): # Top/Bottom
 			debugEdge.rect_scale = Vector2(rect_size.x/2.0 - (edge_corner_separation*2.0), grab_range_edge) * 2
-			debugEdge.connect("mouse_entered", mouseRef, "_on_window_mouse_entered", [true, 0])
 		else: # Left/Right
 			debugEdge.rect_scale = Vector2(grab_range_edge, rect_size.y/2.0 - (edge_corner_separation*2.0)) * 2
-			debugEdge.connect("mouse_entered", mouseRef, "_on_window_mouse_entered", [true, 1])
+		
+		if (mouseRef):
+			if (i <= 1): # Top/Bottom
+				debugEdge.connect("mouse_entered", mouseRef, "_on_window_mouse_entered", [true, 0])
+			else: # Left/Right
+				debugEdge.connect("mouse_entered", mouseRef, "_on_window_mouse_entered", [true, 1])
+			debugEdge.connect("mouse_exited", mouseRef, "_on_window_mouse_exit")
 			
 		debugEdge.rect_pivot_offset = debug_edge_pivots[i]
-		debugEdge.connect("mouse_exited", mouseRef, "_on_window_mouse_exit")
 		
 		if (enable_resizing_debug_view):
-#			debugEdge.visible = false
 			debugEdge.get_stylebox("panel").draw_center = true
 		add_child(debugEdge)
 

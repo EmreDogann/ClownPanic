@@ -39,7 +39,7 @@ func _process(delta):
 
 func _on_window_mouse_entered(isEdge: bool, type: int):
 	if (!isEdge):
-		if (type == 1):
+		if (type == 1 or type == 3):
 			$MouseSprite/Sprite.texture = mouseIcons[1] # Diagonal 1
 		else:
 			$MouseSprite/Sprite.texture = mouseIcons[2] # Diagonal 2

@@ -4,8 +4,9 @@ func _ready():
 	pass
 
 func _process(delta):
-	var winSize = OS.get_window_size()
+	var winSize = get_viewport().size
 	var nodes = get_tree().get_nodes_in_group("ScreenColliders")
+	
 	
 	# Taskbar Collider
 	var shape = nodes[0].shape as RectangleShape2D
