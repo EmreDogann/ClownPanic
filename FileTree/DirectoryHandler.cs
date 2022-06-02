@@ -270,7 +270,7 @@ public class DirectoryHandler : Node {
 
 		createSceneTree(tree, sceneTreeRoot);
 	}
-
+	
 	/* SIGNALS */
 
 	#region SIGNALS
