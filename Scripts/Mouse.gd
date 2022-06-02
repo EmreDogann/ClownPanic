@@ -19,7 +19,7 @@ var mode = MouseMode.FREE
 var prev_mouse_pos: Vector2
 
 func _ready():
-	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+#	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	$MouseSprite/Sprite.position = -$PhysicsMouse.rigidbody_origin
 
 func _process(delta: float) -> void:
