@@ -112,8 +112,8 @@ public class DirectoryHandler : Node {
 	void loadTrees() {
 		// create the root node and start the tree
 		// User File Tree
-//		userFileTree = new TreeNode<FileItem>(new FileItem(userRoot, "", FileItem.FILE_TYPE.DIRECTORY));
-//		getDirContents(userRoot, userFileTree);
+		userFileTree = new TreeNode<FileItem>(new FileItem(userRoot, "", FileItem.FILE_TYPE.DIRECTORY));
+		getDirContents(userRoot, userFileTree);
 
 		// Default game file tree
 		gameFileTree = new TreeNode<FileItem>(new FileItem(gameDirectoryRoot, "", FileItem.FILE_TYPE.DIRECTORY));
@@ -121,20 +121,15 @@ public class DirectoryHandler : Node {
 	}
 
 	// if Directory blank, it will add it in randomly.
-	void addVirus(string nameOfVirus, string directory = "", FileItem.FILE_TYPE fileType = FileItem.FILE_TYPE.FILE) {
+	void addVirusRandomly(string nameOfVirus, bool hidden, string directory = "", FileItem.FILE_TYPE fileType = FileItem.FILE_TYPE.FILE) {
 
-
+		
 
 		FileItem virusItem = new FileItem(directory + nameOfVirus, filetype: fileType);
 		virusItem.setIsVirus(true);
 		TreeNode<FileItem>.AddToTree(virusItem, currentDirectory, gameFileTree);
 		updateSelectedTreeNode(selectedTreeNode);
 	}
-
-	void addVirusRandomlyHidden() {
-
-	}
-
 
 
 
@@ -305,6 +300,7 @@ public class DirectoryHandler : Node {
 			updateSelectedTreeNode(TreeNode<FileItem>.GetChildNodeByPath(currentDirectory, gameFileTree));
 
 		}
+		nodeHistory.Clear();
 	}
 
 
@@ -351,6 +347,7 @@ public class DirectoryHandler : Node {
 			updateSelectedTreeNode(tempNode);
 			currentDirectory = path + "/";
 		}
+		nodeHistory.Clear();
 	}
 
 
@@ -366,6 +363,14 @@ public class DirectoryHandler : Node {
 		// TreeNode<FileItem>.DeleteNode(selectedItem);
 		// updateSceneTree(ref sceneTree, gameFileTree);
 		// populateSceneItemList(selectedTreeNode);
+		if(selectedItem.Value.IsVirus()){
+			deleteVirus();
+		}
+	}
+
+	/* Emmiting Signals */
+	private void deleteVirus(){
+		EmitSignal("virus_deleted");
 	}
 
 	#endregion
