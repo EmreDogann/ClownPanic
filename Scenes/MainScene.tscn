@@ -78,6 +78,10 @@ __meta__ = {
 }
 
 [node name="FileExplorer" parent="CanvasLayer" instance=ExtResource( 5 )]
+margin_left = 137.0
+margin_top = 92.0
+margin_right = 777.0
+margin_bottom = 452.0
 
 [node name="Mouse" type="Node2D" parent="CanvasLayer" groups=["Mouse"]]
 script = ExtResource( 2 )
@@ -129,6 +133,7 @@ __meta__ = {
 }
 
 [node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 1
