@@ -19,13 +19,15 @@ var mode = MouseMode.FREE
 var prev_mouse_pos: Vector2
 
 func _ready():
-	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED)
 	$MouseSprite/Sprite.position = -$PhysicsMouse.rigidbody_origin
 
 func _process(delta: float) -> void:
 	if (mode == MouseMode.PHYSICS):
 		$MouseSprite.position = $PhysicsMouse.position
-		$MouseSprite.rotation = $PhysicsMouse.rotation	
+		$MouseSprite.rotation = $PhysicsMouse.rotation
+	
+#	get_viewport().warp_mouse(Vector2(600, 300))
 	
 func _input(event: InputEvent) -> void:
 	if (Input.is_action_just_pressed("disable_mouse") == true):

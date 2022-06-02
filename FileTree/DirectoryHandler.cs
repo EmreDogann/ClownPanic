@@ -39,9 +39,19 @@ public class DirectoryHandler : Node {
 	int debugTreeDepthCounter = 0;
 
 	Texture treeItemIcon;
+	
+	Texture[] itemListIcons = new Texture[7];
 
 	public override void _Ready() {
 		treeItemIcon = (Texture)GD.Load("res://Images/Icons/Folder.png");
+		
+		itemListIcons[0] = (Texture)GD.Load("res://Images/Icons/Folder.png");
+		itemListIcons[1] = (Texture)GD.Load("res://Images/Icons/Image.png");
+		itemListIcons[2] = (Texture)GD.Load("res://Images/Icons/Video.png");
+		itemListIcons[3] = (Texture)GD.Load("res://Images/Icons/Audio.png");
+		itemListIcons[4] = (Texture)GD.Load("res://Images/Icons/Executable.png");
+		itemListIcons[5] = (Texture)GD.Load("res://Images/Icons/File.png");
+		itemListIcons[6] = (Texture)GD.Load("res://Images/Icons/File.png");
 
 		// create root path
 		if (OS.GetName() == "Windows") {
@@ -67,7 +77,7 @@ public class DirectoryHandler : Node {
 		GD.Print(OS.GetEnvironment("USERNAME"));
 
 		// Scene Tree
-		sceneItemList = (ItemList)GetNode("HBoxContainer/ScrollContainer2/VBoxContainer/ItemList");
+		sceneItemList = (ItemList)GetNode("HBoxContainer/VBoxContainer2/ItemList");
 
 		nodeHistory = new Stack<TreeNode<FileItem>>();
 
@@ -102,8 +112,8 @@ public class DirectoryHandler : Node {
 	void loadTrees() {
 		// create the root node and start the tree
 		// User File Tree
-		userFileTree = new TreeNode<FileItem>(new FileItem(userRoot, "", FileItem.FILE_TYPE.DIRECTORY));
-		getDirContents(userRoot, userFileTree);
+//		userFileTree = new TreeNode<FileItem>(new FileItem(userRoot, "", FileItem.FILE_TYPE.DIRECTORY));
+//		getDirContents(userRoot, userFileTree);
 
 		// Default game file tree
 		gameFileTree = new TreeNode<FileItem>(new FileItem(gameDirectoryRoot, "", FileItem.FILE_TYPE.DIRECTORY));
@@ -174,13 +184,16 @@ public class DirectoryHandler : Node {
 
 	void populateSceneItemList(TreeNode<FileItem> directory) {
 		sceneItemList.Clear();
-
+		
+		int i = 0;
 		foreach (TreeNode<FileItem> item in directory.Children) {
-			sceneItemList.AddItem(item.Value.getFileName());
+			sceneItemList.AddItem(item.Value.getFileName(), itemListIcons[(int)item.Value.getFileType()]);
+			sceneItemList.SetItemTooltipEnabled(i, false);
+			i++;
 		}
-
+		
+		sceneItemList.SortItemsByText();
 	}
-
 
 	void createSceneTree(TreeNode<FileItem> tree, TreeItem sceneTreeParent) {
 
