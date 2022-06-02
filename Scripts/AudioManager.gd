@@ -12,20 +12,26 @@ var time_delay
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	backgroundNoises.append(preload("res://Sound Effects/Background Noise/ComputerBackgroundNoise1.wav"))
-	backgroundNoises.append(preload("res://Sound Effects/Background Noise/ComputerBackgroundNoise2.wav"))
-	backgroundNoises.append(preload("res://Sound Effects/Background Noise/ComputerBackgroundNoise2 - FadeOut.wav"))
+	backgroundNoises.append(preload("res://SoundEffects/Background Noise/ComputerBackgroundNoise1.wav"))
+	backgroundNoises.append(preload("res://SoundEffects/Background Noise/ComputerBackgroundNoise2.wav"))
+	backgroundNoises.append(preload("res://SoundEffects/Background Noise/ComputerBackgroundNoise2 - FadeOut.wav"))
 	
+	# Set background noises 0 and 1 to loop
 	backgroundNoises[0].loop_mode = AudioStreamSample.LOOP_FORWARD
 	backgroundNoises[1].loop_mode = AudioStreamSample.LOOP_FORWARD
 	
 	for i in range(PLAYERS_COUNT):
-		var player = AudioStreamPlayer.new()
+		var player: AudioStreamPlayer = AudioStreamPlayer.new()
 		players.append(player)
 		add_child(player)
 #		player.connect("finished", self, "on_player_finished", [player])
 	
+	# Get estimated time delay for the audio to actually start playing on the player's audio device.
 	time_delay = AudioServer.get_time_to_next_mix() + AudioServer.get_output_latency()
+	
+	# Players 0 and 1 are reserved for background noises.
+	players[0].bus = "Background"
+	players[1].bus = "Background"
 	$BackgroundNoiseStartUp.play()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

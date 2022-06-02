@@ -1,0 +1,197 @@
+[gd_scene load_steps=15 format=2]
+
+[ext_resource path="res://WindowsXPTheme.theme" type="Theme" id=1]
+[ext_resource path="res://Images/Icons/My Documents.png" type="Texture" id=2]
+[ext_resource path="res://Scripts/Window-Resizing.gd" type="Script" id=3]
+[ext_resource path="res://Scripts/WindowXP-Titlebar.gd" type="Script" id=4]
+[ext_resource path="res://Shaders/Pixelate.tres" type="Material" id=5]
+[ext_resource path="res://Gradients/Window-TitleBar.tres" type="Texture" id=6]
+[ext_resource path="res://Images/Icons/Window Titlebar/Close Icon - Pressed.png" type="Texture" id=7]
+[ext_resource path="res://Images/Icons/Window Titlebar/Close Icon - Highlighted.png" type="Texture" id=8]
+[ext_resource path="res://Images/Icons/Window Titlebar/Maximize Icon.png" type="Texture" id=9]
+[ext_resource path="res://Images/Icons/Window Titlebar/Close Icon.png" type="Texture" id=10]
+[ext_resource path="res://Images/Icons/Window Titlebar/Minimize Icon.png" type="Texture" id=11]
+[ext_resource path="res://Fonts/DefaultDynamicFont_Bold.tres" type="DynamicFont" id=12]
+
+[sub_resource type="StyleBoxFlat" id=11]
+bg_color = Color( 1, 1, 1, 1 )
+
+[sub_resource type="StyleBoxFlat" id=13]
+bg_color = Color( 1, 1, 1, 1 )
+border_width_left = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color( 0, 0.206667, 0.62, 1 )
+
+[node name="Control" type="Control"]
+margin_right = 640.0
+margin_bottom = 360.0
+
+[node name="Window" type="Panel" parent="."]
+material = ExtResource( 5 )
+margin_right = 557.0
+margin_bottom = 351.0
+rect_min_size = Vector2( 300, 200 )
+mouse_filter = 1
+theme = ExtResource( 1 )
+custom_styles/panel = SubResource( 11 )
+script = ExtResource( 3 )
+enable_resizing = false
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Window"]
+use_parent_material = true
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/separation = 0
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Titlebar" type="TextureRect" parent="Window/VBoxContainer"]
+use_parent_material = true
+margin_right = 557.0
+margin_bottom = 22.0
+rect_min_size = Vector2( 0, 22 )
+size_flags_stretch_ratio = 0.07
+texture = ExtResource( 6 )
+expand = true
+stretch_mode = 1
+script = ExtResource( 4 )
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Window/VBoxContainer/Titlebar"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/separation = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="Window/VBoxContainer/Titlebar/HBoxContainer"]
+margin_right = 20.0
+margin_bottom = 22.0
+mouse_filter = 1
+custom_constants/margin_right = 5
+custom_constants/margin_top = 5
+custom_constants/margin_left = 5
+custom_constants/margin_bottom = 5
+
+[node name="Window Icon" type="TextureRect" parent="Window/VBoxContainer/Titlebar/HBoxContainer/MarginContainer"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 15.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 10, 10 )
+texture = ExtResource( 2 )
+expand = true
+stretch_mode = 5
+
+[node name="MarginContainer2" type="MarginContainer" parent="Window/VBoxContainer/Titlebar/HBoxContainer"]
+margin_left = 20.0
+margin_right = 98.0
+margin_bottom = 22.0
+mouse_filter = 1
+custom_constants/margin_top = 2
+
+[node name="Window Name" type="Label" parent="Window/VBoxContainer/Titlebar/HBoxContainer/MarginContainer2"]
+margin_top = 2.0
+margin_right = 78.0
+margin_bottom = 22.0
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 12 )
+text = "File Explorer"
+align = 1
+valign = 1
+
+[node name="MarginContainer3" type="MarginContainer" parent="Window/VBoxContainer/Titlebar/HBoxContainer"]
+margin_left = 98.0
+margin_right = 487.0
+margin_bottom = 22.0
+mouse_filter = 1
+size_flags_horizontal = 3
+custom_constants/margin_top = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Window/VBoxContainer/Titlebar/HBoxContainer"]
+margin_left = 487.0
+margin_right = 557.0
+margin_bottom = 22.0
+custom_constants/separation = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="Window/VBoxContainer/Titlebar/HBoxContainer/HBoxContainer"]
+margin_right = 22.0
+margin_bottom = 22.0
+custom_constants/margin_right = 3
+custom_constants/margin_top = 3
+custom_constants/margin_left = 3
+custom_constants/margin_bottom = 2
+
+[node name="Minimize" type="TextureRect" parent="Window/VBoxContainer/Titlebar/HBoxContainer/HBoxContainer/MarginContainer"]
+margin_left = 3.0
+margin_top = 3.0
+margin_right = 19.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 16, 16 )
+texture = ExtResource( 11 )
+expand = true
+stretch_mode = 5
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="MarginContainer2" type="MarginContainer" parent="Window/VBoxContainer/Titlebar/HBoxContainer/HBoxContainer"]
+margin_left = 22.0
+margin_right = 44.0
+margin_bottom = 22.0
+custom_constants/margin_right = 3
+custom_constants/margin_top = 3
+custom_constants/margin_left = 3
+custom_constants/margin_bottom = 2
+
+[node name="Maximize" type="TextureRect" parent="Window/VBoxContainer/Titlebar/HBoxContainer/HBoxContainer/MarginContainer2"]
+margin_left = 3.0
+margin_top = 3.0
+margin_right = 19.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 16, 16 )
+texture = ExtResource( 9 )
+expand = true
+stretch_mode = 5
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="MarginContainer3" type="MarginContainer" parent="Window/VBoxContainer/Titlebar/HBoxContainer/HBoxContainer"]
+margin_left = 44.0
+margin_right = 70.0
+margin_bottom = 22.0
+custom_constants/margin_right = 7
+custom_constants/margin_top = 3
+custom_constants/margin_left = 3
+custom_constants/margin_bottom = 2
+
+[node name="Close" type="TextureButton" parent="Window/VBoxContainer/Titlebar/HBoxContainer/HBoxContainer/MarginContainer3"]
+margin_left = 3.0
+margin_top = 3.0
+margin_right = 19.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 16, 16 )
+texture_normal = ExtResource( 10 )
+texture_pressed = ExtResource( 7 )
+texture_hover = ExtResource( 8 )
+expand = true
+stretch_mode = 4
+
+[node name="Body" type="Panel" parent="Window/VBoxContainer"]
+margin_top = 22.0
+margin_right = 557.0
+margin_bottom = 351.0
+mouse_filter = 1
+size_flags_vertical = 3
+custom_styles/panel = SubResource( 13 )
+
+[node name="MarginContainer" type="MarginContainer" parent="Window/VBoxContainer/Body"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 1
+custom_constants/margin_right = 4
+custom_constants/margin_left = 4
+custom_constants/margin_bottom = 4
+
+[connection signal="gui_input" from="Window/VBoxContainer/Titlebar" to="Window/VBoxContainer/Titlebar" method="_on_Titlebar_gui_input"]
+[connection signal="window_moved" from="Window/VBoxContainer/Titlebar" to="Window" method="_on_Titlebar_window_moved"]

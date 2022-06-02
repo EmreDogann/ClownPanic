@@ -1,0 +1,67 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://FileTree/DirectoryHandler.cs" type="Script" id=1]
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+
+[node name="VSplitContainer" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="ForwardBack" type="HBoxContainer" parent="VSplitContainer"]
+margin_right = 960.0
+margin_bottom = 20.0
+
+[node name="Back" type="Button" parent="VSplitContainer/ForwardBack"]
+margin_right = 317.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+text = "BACK"
+
+[node name="Forward" type="Button" parent="VSplitContainer/ForwardBack"]
+margin_left = 321.0
+margin_right = 638.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+text = "FORWARD"
+
+[node name="Delete" type="Button" parent="VSplitContainer/ForwardBack"]
+margin_left = 642.0
+margin_right = 960.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+text = "DELETE"
+
+[node name="HSplitContainer" type="HSplitContainer" parent="VSplitContainer"]
+margin_top = 24.0
+margin_right = 960.0
+margin_bottom = 522.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="CSTree" type="Tree" parent="VSplitContainer/HSplitContainer"]
+margin_right = 474.0
+margin_bottom = 498.0
+size_flags_horizontal = 3
+
+[node name="ItemList" type="ItemList" parent="VSplitContainer/HSplitContainer"]
+margin_left = 486.0
+margin_right = 960.0
+margin_bottom = 498.0
+size_flags_horizontal = 3
+
+[node name="Breadcrumb" type="Label" parent="VSplitContainer"]
+margin_top = 526.0
+margin_right = 960.0
+margin_bottom = 540.0
+size_flags_horizontal = 3
+
+[connection signal="pressed" from="VSplitContainer/ForwardBack/Back" to="." method="onBackButtonPressed"]
+[connection signal="pressed" from="VSplitContainer/ForwardBack/Forward" to="." method="onForwardButtonPressed"]
+[connection signal="pressed" from="VSplitContainer/ForwardBack/Delete" to="." method="onDeletePressed"]
+[connection signal="item_selected" from="VSplitContainer/HSplitContainer/CSTree" to="." method="onTreeItemSelected"]
+[connection signal="item_activated" from="VSplitContainer/HSplitContainer/ItemList" to="." method="onItemActivated"]
+[connection signal="item_selected" from="VSplitContainer/HSplitContainer/ItemList" to="." method="onItemListItemSelected"]
