@@ -2,10 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-
 public class DirectoryHandler : Node {
-
-
 	private Tree sceneTree;
 
 	private TreeItem sceneTreeRoot;
