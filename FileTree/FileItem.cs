@@ -3,97 +3,104 @@ using System;
 
 public class FileItem {
 
-	// TYPES
-	public enum FILE_TYPE {
-		DIRECTORY,
-		IMAGE,
-		VIDEO,
-		AUDIO,
-		FILE,
-		NULL
-	}
+    // TYPES
+    public enum FILE_TYPE {
+        DIRECTORY,
+        IMAGE,
+        VIDEO,
+        AUDIO,
+        EXECUTABLE,
+        FILE,
+        NULL
+    }
 
-	const string EXTENSIONS_IMAGE = ".jpeg.jpg.png.gif.tiff.psd.pdf.eps.ai.indd.raw.bmp.ico.apng.avif.jfif.pjepg.pjp.png.svg.webp.tif.";
-	const string EXTENSIONS_VIDEO = ".3g2.3gp.amv.asf.avi.flv.f4v.f4p.f4a.4fb.gifv.m4v.mkv.mng.mov.qt.mp4.mp2.mpeg.mpe.mpv.m2v.mts.m2ts.ts.mxf.nsv.ogv.ogg.rm.rmvb.roq.svi.viv.vob.webm.wmv.yuv"; // TODO Write these out again
-	const string EXTENSIONS_AUDIO = ".3gp.aa.aac.aax.act.aiff.alac.amr.ape.au.awb.dss.dvf.flac.gsm.iklax.ivs.m4a.m4b.mmf.mp3.mpc.msv.nmf.ogg.oga.mogg.opus.ra.rm.raw.rf64.tta.voc.vox.wav.wma.wv.webm.8svx.cda";
+    const string EXTENSIONS_IMAGE = ".jpeg.jpg.png.gif.tiff.psd.pdf.eps.ai.indd.raw.bmp.ico.apng.avif.jfif.pjepg.pjp.png.svg.webp.tif.";
+    const string EXTENSIONS_VIDEO = ".3g2.3gp.amv.asf.avi.flv.f4v.f4p.f4a.4fb.gifv.m4v.mkv.mng.mov.qt.mp4.mp2.mpeg.mpe.mpv.m2v.mts.m2ts.ts.mxf.nsv.ogv.ogg.rm.rmvb.roq.svi.viv.vob.webm.wmv.yuv"; // TODO Write these out again
+    const string EXTENSIONS_AUDIO = ".3gp.aa.aac.aax.act.aiff.alac.amr.ape.au.awb.dss.dvf.flac.gsm.iklax.ivs.m4a.m4b.mmf.mp3.mpc.msv.nmf.ogg.oga.mogg.opus.ra.rm.raw.rf64.tta.voc.vox.wav.wma.wv.webm.8svx.cda";
 
-	// MEMBERS
-	// private string filename;
-	private string filepath;
-	private FILE_TYPE filetype;
+    const string EXTENSIONS_EXECUTABLE = ".exe.bat.cgi.msi.cmd.bin.appimage.app.command.sh";
 
-	private string filename;
+    // MEMBERS
+    // private string filename;
+    private string filepath;
+    private FILE_TYPE filetype;
 
-	private bool isVirus = false;
+    private string filename;
 
-	// METHODS
+    private bool isVirus = false;
 
-	// PUBLIC
+    // METHODS
 
-	public FileItem(string filepath, string filename = "", FILE_TYPE filetype = FILE_TYPE.NULL) {
-		this.filepath = filepath;
+    // PUBLIC
 
-		if (filename == "") {
-			determineFileName();
-		} else {
-			this.filename = filename;
-		}
+    public FileItem(string filepath, string filename = "", FILE_TYPE filetype = FILE_TYPE.NULL) {
+        this.filepath = filepath;
 
-		if (filetype == FILE_TYPE.NULL) {
-			determineFileType();
-		} else {
-			this.filetype = filetype;
-		}
-	}
+        if (filename == "") {
+            determineFileName();
+        } else {
+            this.filename = filename;
+        }
 
-	public string getFilePath(){
-		return filepath;
-	}
+        if (filetype == FILE_TYPE.NULL) {
+            determineFileType();
+        } else {
+            this.filetype = filetype;
+        }
+    }
 
-	public string getFileName() {
-		if (filename == "") {
-		}
-		return filename;
-	}
+    public string getFilePath() {
+        return filepath;
+    }
 
-	public FILE_TYPE getFileType(){
-		return filetype;
-	}
+    public string getFileName() {
+        if (filename == "") {
+        }
+        return filename;
+    }
 
-	public bool isDirectory(){
-		return filetype == FILE_TYPE.DIRECTORY;
-	}
+    public FILE_TYPE getFileType() {
+        return filetype;
+    }
 
-	public bool IsVirus(){
-		return isVirus;
-	}
+    public bool isDirectory() {
+        return filetype == FILE_TYPE.DIRECTORY;
+    }
+    public bool isExecutable() {
+        return filetype == FILE_TYPE.EXECUTABLE;
+    }
+    public bool IsVirus() {
+        return isVirus;
+    }
 
-	public void setIsVirus(bool isVirus){
-		this.isVirus = isVirus;
-	}
+    public void setIsVirus(bool isVirus) {
+        this.isVirus = isVirus;
+    }
 
 
-	// PRIVATE
-	private void determineFileName() {
-		string[] splitPath = filepath.Split("/");
-		filename = splitPath[splitPath.Length - 1];
-	}
+    // PRIVATE
+    private void determineFileName() {
+        string[] splitPath = filepath.Split("/");
+        filename = splitPath[splitPath.Length - 1];
+    }
 
-	private void determineFileType() {
-		string[] splitName = filename.Split(".");
+    private void determineFileType() {
+        string[] splitName = filename.Split(".");
 
-		// no extension, therefore directory. Little iffy on this.
-		if (splitName.Length == 1)
-			filetype = FILE_TYPE.DIRECTORY;
-		else if (EXTENSIONS_IMAGE.Contains(splitName[1]))
-			filetype = FILE_TYPE.IMAGE;
-		else if (EXTENSIONS_AUDIO.Contains(splitName[1]))
-			filetype = FILE_TYPE.AUDIO;
-		else if (EXTENSIONS_VIDEO.Contains(splitName[1]))
-			filetype = FILE_TYPE.VIDEO;
-		else
-			filetype = FILE_TYPE.FILE;
-	}
+        // no extension, therefore directory. Little iffy on this.
+        if (splitName.Length == 1)
+            filetype = FILE_TYPE.DIRECTORY;
+        else if (EXTENSIONS_IMAGE.Contains(splitName[1]))
+            filetype = FILE_TYPE.IMAGE;
+        else if (EXTENSIONS_AUDIO.Contains(splitName[1]))
+            filetype = FILE_TYPE.AUDIO;
+        else if (EXTENSIONS_VIDEO.Contains(splitName[1]))
+            filetype = FILE_TYPE.VIDEO;
+        else if (EXTENSIONS_EXECUTABLE.Contains(splitName[1]))
+            filetype = FILE_TYPE.EXECUTABLE;
+        else
+            filetype = FILE_TYPE.FILE;
+    }
 
- 
+
 }
