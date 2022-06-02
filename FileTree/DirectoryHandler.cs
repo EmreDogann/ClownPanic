@@ -3,6 +3,12 @@ using System;
 using System.Collections.Generic;
 
 public class DirectoryHandler : Node {
+<<<<<<< HEAD
+=======
+
+	const int fileLimit = 1000;
+
+>>>>>>> fea1344701af3edbeebe1dcb37edc31a3ac25c5b
 	private Tree sceneTree;
 
 	private TreeItem sceneTreeRoot;
@@ -33,7 +39,7 @@ public class DirectoryHandler : Node {
 	Label sceneBreadCrumb;
 
 	int debugTreeDepthCounter = 0;
-	
+
 	Texture treeItemIcon;
 	
 	Texture[] itemListIcons = new Texture[7];
@@ -89,7 +95,7 @@ public class DirectoryHandler : Node {
 			mergeFileTrees(gameFileTree, userFileTree, 0.1f);
 			updateSceneTree(ref sceneTree, gameFileTree);
 
-//			addVirus();
+			//			addVirus();
 		}
 
 		// TODO
@@ -108,20 +114,25 @@ public class DirectoryHandler : Node {
 	void loadTrees() {
 		// create the root node and start the tree
 		// User File Tree
-//		userFileTree = new TreeNode<FileItem>(new FileItem(userRoot, "", FileItem.FILE_TYPE.DIRECTORY));
-//		getDirContents(userRoot, userFileTree);
+		userFileTree = new TreeNode<FileItem>(new FileItem(userRoot, "", FileItem.FILE_TYPE.DIRECTORY));
+		getDirContents(userRoot, userFileTree);
 
 		// Default game file tree
 		gameFileTree = new TreeNode<FileItem>(new FileItem(gameDirectoryRoot, "", FileItem.FILE_TYPE.DIRECTORY));
 		getDirContents(gameDirectoryRoot, gameFileTree);
 	}
 
-	void addVirus() {
-		FileItem virusItem = new FileItem(currentDirectory + "/ClownPanic.v", filetype: FileItem.FILE_TYPE.FILE);
+	// if Directory blank, it will add it in randomly.
+	void addVirusRandomly(string nameOfVirus, bool hidden, string directory = "", FileItem.FILE_TYPE fileType = FileItem.FILE_TYPE.FILE) {
+
+		
+
+		FileItem virusItem = new FileItem(directory + nameOfVirus, filetype: fileType);
 		virusItem.setIsVirus(true);
 		TreeNode<FileItem>.AddToTree(virusItem, currentDirectory, gameFileTree);
 		updateSelectedTreeNode(selectedTreeNode);
 	}
+
 
 
 	// create mergedTree by Blend B into A. Blend amount is blendValue (range 0-1)
@@ -205,7 +216,7 @@ public class DirectoryHandler : Node {
 
 		if (dir.Open(rootPath) == Error.Ok) {
 			dir.ListDirBegin(true, false);
-			addDirContents(dir, parent, rootPath);
+			addDirContents(dir, parent, rootPath, 0);
 		} else {
 			GD.PushError("An error occurred when trying to access the path.");
 		}
@@ -213,11 +224,11 @@ public class DirectoryHandler : Node {
 
 
 	// Reference: https://godotengine.org/qa/5175/how-to-get-all-the-files-inside-a-folder
-	void addDirContents(Directory dir, TreeNode<FileItem> parent, string rootPath) {
+	void addDirContents(Directory dir, TreeNode<FileItem> parent, string rootPath, int fileCount) {
 		string filename = dir.GetNext();
 
 
-		while (filename != "") {
+		while (filename != "" && fileCount < fileLimit) {
 			var path = dir.GetCurrentDir() + "/" + filename;
 
 			bool isValidDir = false;
@@ -237,12 +248,13 @@ public class DirectoryHandler : Node {
 
 							// for logical tree
 							TreeNode<FileItem> child = parent.AddChild(new FileItem(path, "", FileItem.FILE_TYPE.DIRECTORY));
-							addDirContents(subDir, child, rootPath);
+							addDirContents(subDir, child, rootPath, fileCount);
 						}
 					}
 				} else {
 					if (filename[0] != '.') {
 						TreeNode<FileItem> child = parent.AddChild(new FileItem(path));
+						fileCount += 1;
 					}
 				}
 			}
@@ -267,7 +279,7 @@ public class DirectoryHandler : Node {
 
 		createSceneTree(tree, sceneTreeRoot);
 	}
-
+	
 	/* SIGNALS */
 
 	#region SIGNALS
@@ -290,6 +302,7 @@ public class DirectoryHandler : Node {
 			updateSelectedTreeNode(TreeNode<FileItem>.GetChildNodeByPath(currentDirectory, gameFileTree));
 
 		}
+		nodeHistory.Clear();
 	}
 
 
@@ -336,6 +349,7 @@ public class DirectoryHandler : Node {
 			updateSelectedTreeNode(tempNode);
 			currentDirectory = path + "/";
 		}
+		nodeHistory.Clear();
 	}
 
 
@@ -351,6 +365,14 @@ public class DirectoryHandler : Node {
 		// TreeNode<FileItem>.DeleteNode(selectedItem);
 		// updateSceneTree(ref sceneTree, gameFileTree);
 		// populateSceneItemList(selectedTreeNode);
+		if(selectedItem.Value.IsVirus()){
+			deleteVirus();
+		}
+	}
+
+	/* Emmiting Signals */
+	private void deleteVirus(){
+		EmitSignal("virus_deleted");
 	}
 
 	#endregion
