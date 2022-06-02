@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=2]
+[gd_scene load_steps=26 format=2]
 
 [ext_resource path="res://Shaders/Pixelate.tres" type="Material" id=1]
 [ext_resource path="res://Images/Icons/My Documents.png" type="Texture" id=2]
@@ -44,6 +44,9 @@ bg_color = Color( 1, 1, 1, 1 )
 [sub_resource type="StyleBoxFlat" id=10]
 bg_color = Color( 1, 1, 1, 1 )
 
+[sub_resource type="RectangleShape2D" id=15]
+extents = Vector2( 278.5, 175.5 )
+
 [node name="Control" type="Control"]
 margin_right = 640.0
 margin_bottom = 360.0
@@ -57,6 +60,7 @@ mouse_filter = 1
 theme = ExtResource( 12 )
 custom_styles/panel = SubResource( 11 )
 script = ExtResource( 11 )
+enable_resizing = false
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Window"]
 use_parent_material = true
@@ -236,54 +240,48 @@ custom_constants/vseparation = 0
 custom_constants/hseparation = 15
 
 [node name="Label" type="Label" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/MenuBar/HFlowContainer"]
-margin_top = -1.0
 margin_right = 18.0
-margin_bottom = 11.8
+margin_bottom = 13.0
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_fonts/font = ExtResource( 5 )
 text = "File"
 
 [node name="Label2" type="Label" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/MenuBar/HFlowContainer"]
 margin_left = 33.0
-margin_top = -1.0
 margin_right = 53.0
-margin_bottom = 11.8
+margin_bottom = 13.0
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_fonts/font = ExtResource( 5 )
 text = "Edit"
 
 [node name="Label3" type="Label" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/MenuBar/HFlowContainer"]
 margin_left = 68.0
-margin_top = -1.0
 margin_right = 91.0
-margin_bottom = 11.8
+margin_bottom = 13.0
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_fonts/font = ExtResource( 5 )
 text = "View"
 
 [node name="Label4" type="Label" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/MenuBar/HFlowContainer"]
 margin_left = 106.0
-margin_top = -1.0
 margin_right = 155.0
-margin_bottom = 11.8
+margin_bottom = 13.0
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_fonts/font = ExtResource( 5 )
 text = "Favorites"
 
 [node name="Label5" type="Label" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/MenuBar/HFlowContainer"]
 margin_left = 170.0
-margin_top = -1.0
 margin_right = 197.0
-margin_bottom = 11.8
+margin_bottom = 13.0
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_fonts/font = ExtResource( 5 )
 text = "Tools"
 
 [node name="Label6" type="Label" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/MenuBar/HFlowContainer"]
 margin_left = 212.0
-margin_top = -1.0
 margin_right = 233.0
-margin_bottom = 11.8
+margin_bottom = 13.0
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_fonts/font = ExtResource( 5 )
 text = "Help"
@@ -343,7 +341,7 @@ custom_constants/margin_bottom = 1
 [node name="Label7" type="Label" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer/MarginContainer3"]
 margin_top = 5.0
 margin_right = 22.0
-margin_bottom = 17.8
+margin_bottom = 18.0
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_fonts/font = ExtResource( 5 )
 text = "Back"
@@ -377,7 +375,7 @@ custom_constants/margin_bottom = 1
 [node name="Label8" type="Label" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer/MarginContainer4"]
 margin_top = 5.0
 margin_right = 42.0
-margin_bottom = 17.8
+margin_bottom = 18.0
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_fonts/font = ExtResource( 5 )
 text = "Forward"
@@ -456,7 +454,7 @@ anchor_bottom = 1.0
 [node name="Label9" type="Label" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HBoxContainer/ScrollContainer/VBoxContainer/MarginContainer/Column Headers/HBoxContainer"]
 margin_top = 3.0
 margin_right = 38.0
-margin_bottom = 15.8
+margin_bottom = 16.0
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_fonts/font = ExtResource( 5 )
 text = "Folders"
@@ -511,7 +509,7 @@ custom_constants/separation = 60
 [node name="Label10" type="Label" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HBoxContainer/ScrollContainer2/VBoxContainer/MarginContainer/Column Headers/HBoxContainer"]
 margin_top = 3.0
 margin_right = 26.0
-margin_bottom = 15.8
+margin_bottom = 16.0
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_fonts/font = ExtResource( 5 )
 text = "Name"
@@ -520,7 +518,7 @@ text = "Name"
 margin_left = 86.0
 margin_top = 3.0
 margin_right = 107.0
-margin_bottom = 15.8
+margin_bottom = 16.0
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_fonts/font = ExtResource( 5 )
 text = "Size"
@@ -529,7 +527,7 @@ text = "Size"
 margin_left = 167.0
 margin_top = 3.0
 margin_right = 191.0
-margin_bottom = 15.8
+margin_bottom = 16.0
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_fonts/font = ExtResource( 5 )
 text = "Type"
@@ -538,7 +536,7 @@ text = "Type"
 margin_left = 251.0
 margin_top = 3.0
 margin_right = 322.0
-margin_bottom = 15.8
+margin_bottom = 16.0
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_fonts/font = ExtResource( 5 )
 text = "Date Modified"
@@ -558,6 +556,14 @@ margin_right = 500.0
 margin_bottom = 266.0
 size_flags_vertical = 3
 custom_styles/bg = SubResource( 10 )
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Window"]
+visible = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Window/StaticBody2D"]
+position = Vector2( 278.5, 175.5 )
+shape = SubResource( 15 )
+disabled = true
 
 [connection signal="gui_input" from="Window/VBoxContainer/Titlebar" to="Window/VBoxContainer/Titlebar" method="_on_Titlebar_gui_input"]
 [connection signal="window_moved" from="Window/VBoxContainer/Titlebar" to="Window" method="_on_Titlebar_window_moved"]

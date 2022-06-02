@@ -12,7 +12,8 @@ onready var debug_edge_pivots = [
 	Vector2(1.0, 0.5) # Left
 ]
 
-export(bool) var enable_resizing_debug_view = false 
+export(bool) var enable_debug_view = false 
+export(bool) var enable_resizing = true 
 
 var grabbing = false
 var grab_range_corner = 8.0
@@ -71,7 +72,7 @@ func _ready() -> void:
 			debugCorner.connect("mouse_entered", mouseRef, "_on_window_mouse_entered", [false, i])
 			debugCorner.connect("mouse_exited", mouseRef, "_on_window_mouse_exit")
 		
-		if (enable_resizing_debug_view):
+		if (enable_debug_view):
 			debugCorner.get_stylebox("panel").draw_center = true
 		add_child(debugCorner)
 		
@@ -98,7 +99,7 @@ func _ready() -> void:
 			
 		debugEdge.rect_pivot_offset = debug_edge_pivots[i]
 		
-		if (enable_resizing_debug_view):
+		if (enable_debug_view):
 			debugEdge.get_stylebox("panel").draw_center = true
 		add_child(debugEdge)
 
@@ -108,7 +109,7 @@ func _process(delta: float) -> void:
 	pass
 
 func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("mouse_left"):
+	if event.is_action_pressed("mouse_left") and enable_resizing:
 		for i in grab_points.size():
 			# Check corner collisions
 			if (i < 3):
@@ -128,7 +129,7 @@ func _input(event: InputEvent) -> void:
 				Input.set_default_cursor_shape(Input.CURSOR_ARROW)
 				mouse_default_cursor_shape = Control.CURSOR_ARROW
 				grabbing = false
-	if grabbing and event is InputEventMouseMotion:
+	if grabbing and event is InputEventMouseMotion and enable_resizing:
 		var new_position: Vector2
 		var new_size: Vector2
 		
@@ -168,4 +169,5 @@ func _input(event: InputEvent) -> void:
 		update_grab_points()
 
 func _on_Titlebar_window_moved() -> void:
-	update_grab_points()
+	if (enable_resizing):
+		update_grab_points()

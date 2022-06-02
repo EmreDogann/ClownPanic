@@ -7,10 +7,9 @@ func _process(delta):
 	var winSize = get_viewport().size
 	var nodes = get_tree().get_nodes_in_group("ScreenColliders")
 	
-	
 	# Taskbar Collider
 	var shape = nodes[0].shape as RectangleShape2D
-	nodes[0].position = Vector2(winSize.x/2.0, winSize.y-shape.extents.y)
+	nodes[0].position = Vector2(winSize.x/2.0, winSize.y+shape.extents.y)
 	shape.extents.x = winSize.x/2.0
 	
 	# Left Collider

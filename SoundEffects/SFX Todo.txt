@@ -1,0 +1,11 @@
+Mouse Click - DONE
+Scroll Wheel - DONE
+Typing - DONE
+Power on Noise - DONE
+Background computer noise - DONE
+Power off noise - DONE
+Computer beep noise for terminal - DONE
+Error noise - https://freesound.org/people/ecfike/sounds/135125/ - DONE
+Static - DONE
+Mouse Impact - DONE
+Trash/Delete

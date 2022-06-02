@@ -44,7 +44,7 @@ func set_reset_physics(reset):
 
 func _integrate_forces(state: Physics2DDirectBodyState):
 	if (reset_physics):
-		var t = Transform2D(0, self.get_global_mouse_position() + rigidbody_origin)
+		var t = Transform2D(0, mouseSpriteNode.position + rigidbody_origin)
 		state.set_transform(t)
 		state.linear_velocity = Vector2()
 		state.angular_velocity = 0
