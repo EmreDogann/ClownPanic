@@ -611,12 +611,10 @@ custom_styles/selected = SubResource( 19 )
 custom_styles/bg = SubResource( 17 )
 
 [node name="StaticBody2D" type="StaticBody2D" parent="Window"]
-visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Window/StaticBody2D"]
 position = Vector2( 278.5, 175.5 )
 shape = SubResource( 15 )
-disabled = true
 
 [connection signal="gui_input" from="Window/VBoxContainer/Titlebar" to="Window/VBoxContainer/Titlebar" method="_on_Titlebar_gui_input"]
 [connection signal="window_moved" from="Window/VBoxContainer/Titlebar" to="Window" method="_on_Titlebar_window_moved"]

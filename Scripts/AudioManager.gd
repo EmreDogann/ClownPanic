@@ -1,6 +1,8 @@
-extends Node2D
+extends Node
 
 var backgroundNoises: Array
+var mouseSFX: Array
+var keyboardSFX: Array
 
 var players: Array
 var currentPlayer: int = 0
@@ -10,11 +12,35 @@ var startupSound: bool = false
 
 var time_delay
 
+var rng = RandomNumberGenerator.new()
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	# ---- Load audio files ----
+	# Background Noise
 	backgroundNoises.append(preload("res://SoundEffects/Background Noise/ComputerBackgroundNoise1.wav"))
 	backgroundNoises.append(preload("res://SoundEffects/Background Noise/ComputerBackgroundNoise2.wav"))
 	backgroundNoises.append(preload("res://SoundEffects/Background Noise/ComputerBackgroundNoise2 - FadeOut.wav"))
+	
+	# Mouse SFX
+	mouseSFX.append(preload("res://SoundEffects/Mouse Impact/Mouse Disable.wav"))
+	mouseSFX.append(preload("res://SoundEffects/Mouse Impact/Mouse Impact.wav"))
+	mouseSFX.append(preload("res://SoundEffects/Foley/Mouse/Mouse - Pressed.wav"))
+	mouseSFX.append(preload("res://SoundEffects/Foley/Mouse/Mouse - Released.wav"))
+	
+	# Keyboard SFX
+	keyboardSFX.append(preload("res://SoundEffects/Foley/Keyboard/Keyboard1.wav"))
+	keyboardSFX.append(preload("res://SoundEffects/Foley/Keyboard/Keyboard2.wav"))
+	keyboardSFX.append(preload("res://SoundEffects/Foley/Keyboard/Keyboard3.wav"))
+	keyboardSFX.append(preload("res://SoundEffects/Foley/Keyboard/Keyboard4.wav"))
+	keyboardSFX.append(preload("res://SoundEffects/Foley/Keyboard/Keyboard5.wav"))
+	keyboardSFX.append(preload("res://SoundEffects/Foley/Keyboard/Keyboard6.wav"))
+	keyboardSFX.append(preload("res://SoundEffects/Foley/Keyboard/Keyboard7.wav"))
+	keyboardSFX.append(preload("res://SoundEffects/Foley/Keyboard/Keyboard8.wav"))
+	keyboardSFX.append(preload("res://SoundEffects/Foley/Keyboard/Keyboard9.wav"))
+	keyboardSFX.append(preload("res://SoundEffects/Foley/Keyboard/Keyboard10.wav"))
+	keyboardSFX.append(preload("res://SoundEffects/Foley/Keyboard/Keyboard11.wav"))
+	# --------------------------
 	
 	# Set background noises 0 and 1 to loop
 	backgroundNoises[0].loop_mode = AudioStreamSample.LOOP_FORWARD
@@ -33,6 +59,8 @@ func _ready() -> void:
 	players[0].bus = "Background"
 	players[1].bus = "Background"
 	$BackgroundNoiseStartUp.play()
+	
+	rng.randomize()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -52,6 +80,34 @@ func play(sample: AudioStreamSample) -> void:
 	currentPlayer += 1
 	if (currentPlayer % PLAYERS_COUNT == 0):
 		currentPlayer = 2 # players 0 and 1 are reserved for the background noise
+
+func play_random_pitch(sample: AudioStreamSample, pitch_intensity: int) -> void:
+	var randomPitchShift: AudioStreamRandomPitch = AudioStreamRandomPitch.new()
+	randomPitchShift.audio_stream = sample
+	randomPitchShift.random_pitch = pitch_intensity
+	
+	players[currentPlayer].stream = randomPitchShift
+	players[currentPlayer].play()
+	
+	currentPlayer += 1
+	if (currentPlayer % PLAYERS_COUNT == 0):
+		currentPlayer = 2 # players 0 and 1 are reserved for the background noise
+
+func mouse_disabled() -> void:
+	play(mouseSFX[0])
+
+func mouse_collided() -> void:
+	if (!$MouseImpact.playing):
+		$MouseImpact.play()
+
+func mouse_pressed() -> void:
+	play(mouseSFX[2])
+
+func mouse_released() -> void:
+	play(mouseSFX[3])
+
+func key_pressed() -> void:
+	play_random_pitch(keyboardSFX[rng.randi_range(0, 10)], 1.1)
 
 #func on_player_finished(player: AudioStreamPlayer) -> void:
 #	remove_child(player)
