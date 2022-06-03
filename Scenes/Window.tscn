@@ -480,14 +480,14 @@ scroll_vertical_enabled = false
 script = ExtResource( 26 )
 
 [node name="Breadcrumb" type="Label" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer/MarginContainer5/ScrollContainer"]
-margin_right = 769.0
+margin_right = 361.0
 margin_bottom = 17.0
 rect_min_size = Vector2( 0, 17 )
 size_flags_horizontal = 3
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_fonts/font = ExtResource( 5 )
 custom_styles/normal = SubResource( 18 )
-text = "C:/Users/...C:/Users/...C:/Users/...C:/Users/...C:/Users/...C:/Users/...C:/Users/...C:/Users/...C:/Users/...C:/Users/...C:/Users/...C:/Users/...C:/Users/...C:/Users/...C:/Users/..."
+text = "C:/Users/..."
 
 [node name="HSeparator3" type="HSeparator" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer"]
 margin_top = 47.0

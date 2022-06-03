@@ -8,9 +8,9 @@
 [ext_resource path="res://Gradients/Window-TitleBar.tres" type="Texture" id=6]
 [ext_resource path="res://Images/Icons/Window Titlebar/Close Icon - Pressed.png" type="Texture" id=7]
 [ext_resource path="res://Images/Icons/Window Titlebar/Close Icon - Highlighted.png" type="Texture" id=8]
-[ext_resource path="res://Images/Icons/Window Titlebar/Maximize Icon.png" type="Texture" id=9]
+[ext_resource path="res://Images/Icons/Window Titlebar/Minimize Icon - Disabled.png" type="Texture" id=9]
 [ext_resource path="res://Images/Icons/Window Titlebar/Close Icon.png" type="Texture" id=10]
-[ext_resource path="res://Images/Icons/Window Titlebar/Minimize Icon.png" type="Texture" id=11]
+[ext_resource path="res://Images/Icons/Window Titlebar/Maximize Icon - Disabled.png" type="Texture" id=11]
 [ext_resource path="res://Fonts/DefaultDynamicFont_Bold.tres" type="DynamicFont" id=12]
 
 [sub_resource type="StyleBoxFlat" id=11]
@@ -32,9 +32,9 @@ margin_bottom = 360.0
 
 [node name="Window" type="Panel" parent="."]
 material = ExtResource( 5 )
-margin_right = 557.0
-margin_bottom = 351.0
-rect_min_size = Vector2( 300, 200 )
+margin_right = 200.0
+margin_bottom = 200.0
+rect_min_size = Vector2( 200, 100 )
 mouse_filter = 1
 theme = ExtResource( 1 )
 custom_styles/panel = SubResource( 11 )
@@ -52,7 +52,7 @@ __meta__ = {
 
 [node name="Titlebar" type="TextureRect" parent="Window/VBoxContainer"]
 use_parent_material = true
-margin_right = 557.0
+margin_right = 200.0
 margin_bottom = 22.0
 rect_min_size = Vector2( 0, 22 )
 size_flags_stretch_ratio = 0.07
@@ -104,15 +104,15 @@ valign = 1
 
 [node name="MarginContainer3" type="MarginContainer" parent="Window/VBoxContainer/Titlebar/HBoxContainer"]
 margin_left = 98.0
-margin_right = 487.0
+margin_right = 130.0
 margin_bottom = 22.0
 mouse_filter = 1
 size_flags_horizontal = 3
 custom_constants/margin_top = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Window/VBoxContainer/Titlebar/HBoxContainer"]
-margin_left = 487.0
-margin_right = 557.0
+margin_left = 130.0
+margin_right = 200.0
 margin_bottom = 22.0
 custom_constants/separation = 0
 
@@ -130,7 +130,7 @@ margin_top = 3.0
 margin_right = 19.0
 margin_bottom = 20.0
 rect_min_size = Vector2( 16, 16 )
-texture = ExtResource( 11 )
+texture = ExtResource( 9 )
 expand = true
 stretch_mode = 5
 __meta__ = {
@@ -152,7 +152,7 @@ margin_top = 3.0
 margin_right = 19.0
 margin_bottom = 20.0
 rect_min_size = Vector2( 16, 16 )
-texture = ExtResource( 9 )
+texture = ExtResource( 11 )
 expand = true
 stretch_mode = 5
 __meta__ = {
@@ -182,8 +182,8 @@ stretch_mode = 4
 
 [node name="Body" type="Panel" parent="Window/VBoxContainer"]
 margin_top = 22.0
-margin_right = 557.0
-margin_bottom = 351.0
+margin_right = 200.0
+margin_bottom = 200.0
 mouse_filter = 1
 size_flags_vertical = 3
 custom_styles/panel = SubResource( 13 )
@@ -198,8 +198,8 @@ custom_constants/margin_bottom = 4
 
 [node name="Panel" type="Panel" parent="Window/VBoxContainer/Body/MarginContainer"]
 margin_left = 4.0
-margin_right = 553.0
-margin_bottom = 325.0
+margin_right = 196.0
+margin_bottom = 174.0
 custom_styles/panel = SubResource( 14 )
 
 [connection signal="gui_input" from="Window/VBoxContainer/Titlebar" to="Window/VBoxContainer/Titlebar" method="_on_Titlebar_gui_input"]
