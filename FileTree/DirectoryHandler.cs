@@ -3,64 +3,71 @@ using System;
 using System.Collections.Generic;
 
 public class DirectoryHandler : Node {
+	#region delegates
+
 	[Signal]
 	delegate void virus_deleted();
+
 	[Signal]
 	delegate void wrong_file_deleted();
 
-	string[] folderRoots = { "Documents", "Downloads", "Desktop", "Videos", "Music", "Pictures" };
+	#endregion
 
-	const int fileLimitPerMainDirectory = 5000;
+
+	private string[] folderRoots = {"Documents", "Downloads", "Desktop", "Videos", "Music", "Pictures"};
+
+	private const int fileLimitPerMainDirectory = 5000;
 
 	private Tree sceneTree;
 
 	private TreeItem sceneTreeRoot;
 
-	TreeNode<FileItem> userFileTree; // base logical file tree
-									 // string rootPath = "C:/Users/aum/Documents/Documents";
+	private TreeNode<FileItem> userFileTree; // base logical file tree
+	// string rootPath = "C:/Users/aum/Documents/Documents";
 
-	TreeNode<FileItem> gameFileTree;
+	private TreeNode<FileItem> gameFileTree;
 
-	TreeNode<FileItem> selectedTreeNode;
-	TreeNode<FileItem> selectedItem;
+	private TreeNode<FileItem> selectedTreeNode;
+	private TreeNode<FileItem> selectedItem;
 
-	TreeNode<FileItem> virusNode;
+	private TreeNode<FileItem> virusNode;
 
-	Stack<TreeNode<FileItem>> nodeHistory;
+	private Stack<TreeNode<FileItem>> nodeHistory;
 
 	// string rootPath = "C:/Users/aum/Documents/Documents/IDEAS";
-	string userRoot = ""; // C:/Users/<USERNAME>
+	private string userRoot = ""; // C:/Users/<USERNAME>
 
-	const string windowsRootDirectory = "C:/Users";
-	const string gameDirectoryRoot = "res://FileTree/GameDirectories";
+	private const string windowsRootDirectory = "C:/Users";
+	private const string gameDirectoryRoot = "res://FileTree/GameDirectories";
 
-	int fileCount = 0;
+	private int fileCount = 0;
 
 
-	string currentDirectory = ""; // Can be used as the breadcrumb
+	private string currentDirectory = ""; // Can be used as the breadcrumb
 
-	ItemList sceneItemList;
+	private ItemList sceneItemList;
 
-	Label sceneBreadCrumb;
+	private Label sceneBreadCrumb;
 
-	int debugTreeDepthCounter = 0;
+	private Texture treeItemIcon;
 
-	Texture treeItemIcon;
+	private Texture[] itemListIcons = new Texture[7];
 
-	Texture[] itemListIcons = new Texture[7];
+	private int userTotalFileCount;
 
-	private string mainDirBeingRead = "";
+	#region PublicMethods
 
+	/* PUBLIC METHODS */
 	public override void _Ready() {
-		treeItemIcon = (Texture)GD.Load("res://Images/Icons/Folder.png");
+		treeItemIcon = (Texture) GD.Load("res://Images/Icons/Folder.png");
 
-		itemListIcons[0] = (Texture)GD.Load("res://Images/Icons/Folder.png");
-		itemListIcons[1] = (Texture)GD.Load("res://Images/Icons/Image.png");
-		itemListIcons[2] = (Texture)GD.Load("res://Images/Icons/Video.png");
-		itemListIcons[3] = (Texture)GD.Load("res://Images/Icons/Audio.png");
-		itemListIcons[4] = (Texture)GD.Load("res://Images/Icons/Executable.png");
-		itemListIcons[5] = (Texture)GD.Load("res://Images/Icons/File.png");
-		itemListIcons[6] = (Texture)GD.Load("res://Images/Icons/File.png");
+		itemListIcons[0] = (Texture) GD.Load("res://Images/Icons/Folder.png");
+		itemListIcons[1] = (Texture) GD.Load("res://Images/Icons/Image.png");
+		itemListIcons[2] = (Texture) GD.Load("res://Images/Icons/Video.png");
+		itemListIcons[3] = (Texture) GD.Load("res://Images/Icons/Audio.png");
+		itemListIcons[4] = (Texture) GD.Load("res://Images/Icons/Executable.png");
+		itemListIcons[5] = (Texture) GD.Load("res://Images/Icons/File.png");
+		itemListIcons[6] = (Texture) GD.Load("res://Images/Icons/File.png");
 
 		// create root path
 		if (OS.GetName() == "Windows") {
@@ -71,6 +78,7 @@ public class DirectoryHandler : Node {
 
 		// TreeNode<FileItem>.PrintTree(userFileTree);
 
+		userTotalFileCount = userFileTree.Size();
 		GD.Print("User File Tree Size: ", userFileTree.Size());
 		GD.Print("Game File Tree Size: ", gameFileTree.Size());
 
@@ -79,7 +87,7 @@ public class DirectoryHandler : Node {
 
 
 		// Scene Tree
-		sceneTree = (Tree)GetNode("HBoxContainer/VBoxContainer/CSTree");
+		sceneTree = (Tree) GetNode("HBoxContainer/VBoxContainer/CSTree");
 		updateSceneTree(ref sceneTree, gameFileTree);
 		// sceneTreeRoot = sceneTree.CreateItem();
 		// sceneTreeRoot.SetText(0, "Directories");
@@ -91,23 +99,23 @@ public class DirectoryHandler : Node {
 		GD.Print(OS.GetEnvironment("USERNAME"));
 
 		// Scene Tree
-		sceneItemList = (ItemList)GetNode("HBoxContainer/VBoxContainer2/ItemList");
+		sceneItemList = (ItemList) GetNode("HBoxContainer/VBoxContainer2/ItemList");
 
 		nodeHistory = new Stack<TreeNode<FileItem>>();
 
 		selectedTreeNode = gameFileTree;
 
-		sceneBreadCrumb = (Label)GetNode("../Controls/HBoxContainer/MarginContainer5/ScrollContainer/Breadcrumb");
-		
+		sceneBreadCrumb = (Label) GetNode("../Controls/HBoxContainer/MarginContainer5/ScrollContainer/Breadcrumb");
+
 		// ---------------------------
 		// ----- Signal Connects -----
 		Node gameManagerRef = GetTree().Root.GetNode("Node2D/GameManager");
 		Node audioManagerRef = GetTree().Root.GetNode("Node2D/AudioManager");
-		
+
 		Connect("virus_deleted", gameManagerRef, "virus_deleted");
 		Connect("virus_deleted", audioManagerRef, "virus_deleted");
 		Connect("wrong_file_deleted", audioManagerRef, "wrong_file_deleted");
-		
+
 		// ---------------------------
 	}
 
@@ -116,7 +124,7 @@ public class DirectoryHandler : Node {
 		if (Input.IsActionJustPressed("merge_tree")) {
 			mergeFileTrees(gameFileTree, userFileTree, 1.0f);
 			updateSceneTree(ref sceneTree, gameFileTree);
-			
+
 			//			addVirus();
 		}
 
@@ -128,13 +136,55 @@ public class DirectoryHandler : Node {
 		// Custom Action, needs to be added in project settings: Assigned to BackSpace, MouseBackButton (4/5)
 		if (Input.IsActionJustPressed("ui_back")) {
 			onBackButtonPressed();
-		} else if (Input.IsActionJustPressed("ui_forward")) {
+		}
+		else if (Input.IsActionJustPressed("ui_forward")) {
 			onForwardButtonPressed();
 		}
 
 		if (sceneBreadCrumb.Text != currentDirectory)
 			sceneBreadCrumb.Text = currentDirectory;
 	}
+
+	public List<string> GetListOfFiles()
+	{
+		var listOfFiles = new List<string>();
+		userFileTree.Traverse((TreeNode<FileItem> fileNode) =>
+		{
+			listOfFiles.Add(fileNode.Value.GetFilePath());
+		});
+		return listOfFiles;
+	}
+	public TreeNode<FileItem> GetVirusNode() {
+		return virusNode;
+	}
+
+	public FileItem GetVirusFileItem() {
+		return virusNode.Value;
+	}
+
+	public int GetUserTotalFileCount() {
+		return userTotalFileCount;
+	}
+	
+	public void Shuffle(IList<int> list) {
+		Random rng = new Random();
+		int n = list.Count;
+		while (n > 1) {
+			n--;
+			int k = rng.Next(n + 1);
+			int value = list[k];
+			list[k] = list[n];
+			list[n] = value;
+		}
+	}
+	
+	
+
+	#endregion
+
+	#region PrivateMethods
+
+	/* PRIVATE METHODS */
 
 	void loadTrees() {
 		// create the root node and start the tree
@@ -154,21 +204,23 @@ public class DirectoryHandler : Node {
 		TreeNode<FileItem> dirToAddToo;
 		if (directory == "") {
 			dirToAddToo = TreeNode<FileItem>.GetRandomDirectory(gameFileTree);
-		} else {
+		}
+		else {
 			dirToAddToo = TreeNode<FileItem>.GetChildNodeByPath(directory, gameFileTree);
 		}
 
 		FileItem virusItem;
 		if (hidden) {
 			FileItem fileToCopy = TreeNode<FileItem>.GetRandomFile(dirToAddToo).Value;
-			virusItem = new FileItem(TreeNode<FileItem>.GetPathByNode(dirToAddToo) + "/" + fileToCopy.getFileName(),
-				filename: fileToCopy.getFileName(), filetype: fileToCopy.getFileType());
-		} else {
+			virusItem = new FileItem(TreeNode<FileItem>.GetPathByNode(dirToAddToo) + "/" + fileToCopy.GetFileName(),
+				filename: fileToCopy.GetFileName(), filetype: fileToCopy.GetFileType());
+		}
+		else {
 			virusItem = new FileItem(TreeNode<FileItem>.GetPathByNode(dirToAddToo) + "/" + nameOfVirus,
 				filetype: fileType);
 		}
 
-		virusItem.setIsVirus(true);
+		virusItem.SetIsVirus(true);
 		dirToAddToo.AddChild(virusItem);
 		updateSelectedTreeNode(selectedTreeNode);
 	}
@@ -193,7 +245,7 @@ public class DirectoryHandler : Node {
 		Random rnd = new Random();
 		// Should be main directories (Documents, Downloads, Desktop, etc...)
 		foreach (TreeNode<FileItem> mainDir in treeGiver.Children) {
-			int numFilesToAdd = (int)Math.Ceiling(((float)mainDir.Size() * blendValue));
+			int numFilesToAdd = (int) Math.Ceiling(((float) mainDir.Size() * blendValue));
 			int numFilesAdded = 0;
 			int numOfChildren = mainDir.Children.Count;
 			List<int> childUsed = new List<int>();
@@ -201,7 +253,7 @@ public class DirectoryHandler : Node {
 			// Get the matching Main Directory from the other tree
 			// GD.Print(mainDir.Value.getFileName());
 
-			TreeNode<FileItem> mergedMainDir = TreeNode<FileItem>.GetChildNodeByName(mainDir.Value.getFileName(), treeReciever);
+			TreeNode<FileItem> mergedMainDir = TreeNode<FileItem>.GetChildNodeByName(mainDir.Value.GetFileName(), treeReciever);
 
 			// GD.Print(mergedMainDir.Value.getFileName());
 
@@ -220,32 +272,20 @@ public class DirectoryHandler : Node {
 				mainDir.RemoveChild(mainDir[randomChildren[i]]);
 				childUsed.Add(randomChildren[i]);
 
-				if (numFilesAdded < numFilesToAdd) break;
+				if (numFilesAdded >= numFilesToAdd) break;
 			}
-
 		}
 
 		// TreeNode<FileItem>.PrintTree(treeA, "", true);
 	}
 
-	public void Shuffle(IList<int> list) {
-		Random rng = new Random();
-		int n = list.Count;
-		while (n > 1) {
-			n--;
-			int k = rng.Next(n + 1);
-			int value = list[k];
-			list[k] = list[n];
-			list[n] = value;
-		}
-	}
 
 	void populateSceneItemList(TreeNode<FileItem> directory) {
 		sceneItemList.Clear();
 
 		int i = 0;
 		foreach (TreeNode<FileItem> item in directory.Children) {
-			sceneItemList.AddItem(item.Value.getFileName(), itemListIcons[(int)item.Value.getFileType()]);
+			sceneItemList.AddItem(item.Value.GetFileName(), itemListIcons[(int) item.Value.GetFileType()]);
 			sceneItemList.SetItemTooltipEnabled(i, false);
 			i++;
 		}
@@ -253,12 +293,18 @@ public class DirectoryHandler : Node {
 		sceneItemList.SortItemsByText();
 	}
 
-	void createSceneTree(TreeNode<FileItem> tree, TreeItem sceneTreeParent) {
+	void createSceneTree(TreeNode<FileItem> tree, TreeItem sceneTreeParent, bool retainCollapsed = true) {
 		for (int i = 0; i < tree.Children.Count; i++) {
-			if (tree[i].Value.isDirectory()) {
+			if (tree[i].Value.IsDirectory()) {
 				TreeItem sceneTreeChild = sceneTree.CreateItem(sceneTreeParent);
-				sceneTreeChild.SetText(0, tree[i].Value.getFileName());
-				sceneTreeChild.Collapsed = true;
+				sceneTreeChild.SetText(0, tree[i].Value.GetFileName());
+				if (retainCollapsed) {
+					sceneTreeChild.Collapsed = tree[i].Value.IsCollapsed();
+				}
+				else {
+					sceneTreeChild.Collapsed = true;
+				}
+
 				sceneTreeChild.SetTooltip(0, " ");
 				sceneTreeChild.SetIcon(0, treeItemIcon);
 				sceneTreeChild.SetIconMaxWidth(0, 12);
@@ -275,17 +321,13 @@ public class DirectoryHandler : Node {
 
 		if (dir.Open(rootPath) == Error.Ok) {
 			dir.ListDirBegin(true, false);
-			mainDirBeingRead = "";
 			fileCount = 0;
 			addDirContents(dir, parent, rootPath, 0);
-			mainDirBeingRead = "";
-
-		} else {
+		}
+		else {
 			GD.PushError("An error occurred when trying to access the path.");
 		}
 	}
-
-
 
 
 	// Reference: https://godotengine.org/qa/5175/how-to-get-all-the-files-inside-a-folder
@@ -308,7 +350,6 @@ public class DirectoryHandler : Node {
 
 
 			if (isValidDir) {
-
 				if (dir.CurrentIsDir()) {
 					if (isValidDir) {
 						if (filename[0] != '.') {
@@ -323,7 +364,8 @@ public class DirectoryHandler : Node {
 							if (depth == 0) fileCount = 0;
 						}
 					}
-				} else {
+				}
+				else {
 					if (filename[0] != '.') {
 						TreeNode<FileItem> child = parent.AddChild(new FileItem(path));
 						fileCount += 1;
@@ -332,8 +374,6 @@ public class DirectoryHandler : Node {
 			}
 
 			filename = dir.GetNext();
-
-
 		}
 
 		dir.ListDirEnd();
@@ -348,6 +388,24 @@ public class DirectoryHandler : Node {
 	}
 
 	void updateSceneTree(ref Tree sceneTree, TreeNode<FileItem> tree) {
+		// before clearing, store the collapsed state
+
+		// if tree.get_root() != null:
+		// var child = tree.get_root().get_children()
+		// while child != null:
+		//     # put code here
+		//     print(child.get_text(0))
+		//     child = child.get_next() 
+
+		// Reference: https://www.reddit.com/r/godot/comments/3eaq8n/comment/ctd8yyo/?utm_source=share&utm_medium=web2x&context=3
+		if (sceneTree.GetRoot() != null) {
+			var child = sceneTree.GetRoot().GetChildren();
+			while (child != null) {
+				GD.Print(child.GetText(0));
+				child = child.GetNext();
+			}
+		}
+
 		sceneTree.Clear();
 
 		sceneTreeRoot = sceneTree.CreateItem();
@@ -356,19 +414,11 @@ public class DirectoryHandler : Node {
 		createSceneTree(tree, sceneTreeRoot);
 	}
 
-
-	public TreeNode<FileItem> getVirusNode() {
-		return virusNode;
-	}
-
-	public FileItem getVirusFileItem() {
-		return virusNode.Value;
-	}
-
-	/* SIGNALS */
+	#endregion
 
 	#region SIGNALS
-
+	
+	/* SIGNALS */
 	void onTreeItemSelected() {
 		// need to set the current directory string
 		TreeItem checkingDir = sceneTree.GetSelected();
@@ -379,7 +429,7 @@ public class DirectoryHandler : Node {
 		}
 
 		TreeNode<FileItem> tempNode = TreeNode<FileItem>.GetChildNodeByPath(currentDirectory, gameFileTree);
-		if (tempNode.Value.isDirectory()) {
+		if (tempNode.Value.IsDirectory()) {
 			currentDirectory = tempCurrentDir;
 			currentDirectory.Remove(currentDirectory.Length - 1, 1); // remove the last '/'
 
@@ -425,7 +475,7 @@ public class DirectoryHandler : Node {
 		// GD.Print(path);
 
 		var tempNode = TreeNode<FileItem>.GetChildNodeByPath(path, gameFileTree);
-		if (tempNode.Value.isDirectory()) {
+		if (tempNode.Value.IsDirectory()) {
 			updateSelectedTreeNode(tempNode);
 			currentDirectory = path + "/";
 		}
@@ -446,18 +496,32 @@ public class DirectoryHandler : Node {
 		// updateSceneTree(ref sceneTree, gameFileTree);
 		// populateSceneItemList(selectedTreeNode);
 		if (selectedItem.Value.IsVirus()) {
-			deleteVirus();
-		} else {
-			deletedWrongItem();
+			virusDeleted();
 		}
+		else {
+			wrongItemDeleted();
+		}
+
+		TreeNode<FileItem> nodeToDelete = selectedItem;
+		if (selectedItem.Value.IsDirectory()) {
+			if (selectedItem == selectedTreeNode) {
+				selectedTreeNode = selectedTreeNode.Parent;
+			}
+
+			selectedItem = selectedItem.Parent;
+		}
+
+		TreeNode<FileItem>.DeleteNode(nodeToDelete);
+		updateSceneTree(ref sceneTree, gameFileTree);
+		populateSceneItemList(selectedTreeNode);
 	}
 
 	/* Emmiting Signals */
-	private void deleteVirus() {
+	private void virusDeleted() {
 		EmitSignal(nameof(virus_deleted));
 	}
 
-	private void deletedWrongItem() {
+	private void wrongItemDeleted() {
 //		EmitSignal("friendly_deleted");
 		EmitSignal(nameof(wrong_file_deleted));
 	}

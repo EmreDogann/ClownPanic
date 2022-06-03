@@ -72,7 +72,7 @@ public class TreeNode<T> {
 
     public static TreeNode<FileItem> GetChildNodeByName(string filename, TreeNode<FileItem> parent) {
         foreach (TreeNode<FileItem> item in parent.Children) {
-            if (item.Value.getFileName().Equals(filename)) {
+            if (item.Value.GetFileName().Equals(filename)) {
                 return item;
             }
         }
@@ -102,7 +102,7 @@ public class TreeNode<T> {
         string path = "";
 
         while (node.Parent != null) {
-            path = node.Value.getFileName() + "/" + path;
+            path = node.Value.GetFileName() + "/" + path;
             node = node.Parent;
         }
 
@@ -113,7 +113,7 @@ public class TreeNode<T> {
     public static List<TreeNode<FileItem>> GetDirectoryChildren(TreeNode<FileItem> tree) {
         List<TreeNode<FileItem>> children = new List<TreeNode<FileItem>>();
         foreach (var treeChild in tree._children) {
-            if (treeChild.Value.isDirectory()) {
+            if (treeChild.Value.IsDirectory()) {
                 children.Add(treeChild);
             }
         }
@@ -125,7 +125,7 @@ public class TreeNode<T> {
     public static List<TreeNode<FileItem>> GetFileChildren(TreeNode<FileItem> tree) {
         List<TreeNode<FileItem>> children = new List<TreeNode<FileItem>>();
         foreach (var treeChild in tree._children) {
-            if (!treeChild.Value.isDirectory()) {
+            if (!treeChild.Value.IsDirectory()) {
                 children.Add(treeChild);
             }
         }
@@ -141,7 +141,7 @@ public class TreeNode<T> {
         TreeNode<FileItem> randomDirectory = tree;
 
         // keep going if the 
-        bool goSubDir = tree.Value.isDirectory();
+        bool goSubDir = tree.Value.IsDirectory();
 
         while (goSubDir) {
             List<TreeNode<FileItem>> dirChildren = GetDirectoryChildren(randomDirectory);
@@ -178,18 +178,26 @@ public class TreeNode<T> {
     }
 
 
-    public static void DeleteNode(TreeNode<T> tree) {
-        tree.Traverse((TreeNode<T> node) => {
-            node.Parent = null;
-            node = null;
-        });
-        tree = null;
+    public static void DeleteNode(TreeNode<FileItem> tree) {
+        // Delete all the file Children
+        foreach (var child in GetFileChildren(tree)) {
+            DeleteNode(child);
+        }
+        
+        // delete the directories
+        foreach (var child in GetDirectoryChildren(tree)) {
+            DeleteNode(child);
+        }
+        
+        // Dont remove if there is no parent
+        if(tree.Parent!=null)
+            tree.Parent.RemoveChild(tree);
     }
 
     // Reference: https://stackoverflow.com/a/8567550
     public static void PrintTree(TreeNode<FileItem> tree, String indent = "", bool last = true) {
         // Console.Write(indent + "+- " + tree.Value.getFileName());
-        GD.Print(indent + "+- " + tree.Value.getFileName());
+        GD.Print(indent + "+- " + tree.Value.GetFileName());
         indent += last ? "   " : "|  ";
 
         for (int i = 0; i < tree.Children.Count; i++) {

@@ -29,6 +29,8 @@ public class FileItem {
 
 	private bool isVirus = false;
 
+	private bool isCollapsed = true;
+
 	// METHODS
 
 	// PUBLIC
@@ -49,31 +51,39 @@ public class FileItem {
 		}
 	}
 
-	public string getFilePath() {
+	public string GetFilePath() {
 		return filepath;
 	}
 
-	public string getFileName() {
+	public string GetFileName() {
 		if (filename == "") {
 		}
 		return filename;
 	}
 
-	public FILE_TYPE getFileType() {
+	public FILE_TYPE GetFileType() {
 		return filetype;
 	}
 
-	public bool isDirectory() {
+	public bool IsDirectory() {
 		return filetype == FILE_TYPE.DIRECTORY;
 	}
-	public bool isExecutable() {
+	public bool IsExecutable() {
 		return filetype == FILE_TYPE.EXECUTABLE;
 	}
 	public bool IsVirus() {
 		return isVirus;
 	}
 
-	public void setIsVirus(bool isVirus) {
+	public bool IsCollapsed() {
+		return isCollapsed;
+	}
+
+	public void SetIsCollapsed() {
+		
+	}
+
+	public void SetIsVirus(bool isVirus) {
 		this.isVirus = isVirus;
 	}
 
