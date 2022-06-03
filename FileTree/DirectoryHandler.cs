@@ -9,7 +9,7 @@ public class DirectoryHandler : Node {
 
     string[] folderRoots = { "Documents", "Downloads", "Desktop", "Videos", "Music", "Pictures" };
 
-    const int fileLimitPerMainDirectory = 5000;
+    const int fileLimitPerMainDirectory = 2;
 
     private Tree sceneTree;
 
@@ -108,9 +108,13 @@ public class DirectoryHandler : Node {
     public override void _Process(float delta) {
         if (Input.IsActionJustPressed("merge_tree")) {
             // GD.Print("8");
+			GD.Print("Before");
+			TreeNode<FileItem>.PrintTree(userFileTree);
             mergeFileTrees(gameFileTree, userFileTree, 1.0f);
             updateSceneTree(ref sceneTree, gameFileTree);
 
+			GD.Print("After");
+			TreeNode<FileItem>.PrintTree(userFileTree);
             //			addVirus();
         }
 
@@ -169,7 +173,7 @@ public class DirectoryHandler : Node {
 
 
     // create mergedTree by Blend B into A. Blend amount is blendValue (range 0-1)
-    void mergeFileTrees(TreeNode<FileItem> treeA, TreeNode<FileItem> treeB, float blendValue) {
+    void mergeFileTrees(TreeNode<FileItem> treeReciever, TreeNode<FileItem> treeGiver, float blendValue) {
         // Clamp value between 0,1 Reference: https://stackoverflow.com/a/20443081
         blendValue = Math.Min(Math.Max(blendValue, 0), 1);
 
@@ -186,7 +190,7 @@ public class DirectoryHandler : Node {
 
         Random rnd = new Random();
         // Should be main directories (Documents, Downloads, Desktop, etc...)
-        foreach (TreeNode<FileItem> mainDir in treeB.Children) {
+        foreach (TreeNode<FileItem> mainDir in treeGiver.Children) {
             int numFilesToAdd = (int)Math.Ceiling(((float)mainDir.Size() * blendValue));
             int numFilesAdded = 0;
             int numOfChildren = mainDir.Children.Count;
@@ -195,20 +199,42 @@ public class DirectoryHandler : Node {
             // Get the matching Main Directory from the other tree
             // GD.Print(mainDir.Value.getFileName());
 
-            var mergedMainDir = TreeNode<FileItem>.GetChildNodeByName(mainDir.Value.getFileName(), treeA);
+            TreeNode<FileItem> mergedMainDir = TreeNode<FileItem>.GetChildNodeByName(mainDir.Value.getFileName(), treeReciever);
 
             // GD.Print(mergedMainDir.Value.getFileName());
 
-            while (numFilesAdded < numFilesToAdd) {
-                int randomChild = rnd.Next(numOfChildren);
+            List<int> randomChildren = new List<int>();
 
-                mergedMainDir.AddChildNode(mainDir[randomChild]);
-                numFilesAdded += mainDir[randomChild].Size();
-                childUsed.Add(randomChild);
+            for (int i = 0; i < numOfChildren; i++) {
+                randomChildren.Add(i);
             }
+
+            Shuffle(randomChildren);
+
+            for (int i = 0; i < numOfChildren; i++) {
+				var parent = mainDir[randomChildren[i]];
+                mergedMainDir.AddChildNode(ref parent);
+                numFilesAdded += parent.Size();
+                childUsed.Add(randomChildren[i]);
+
+                if (numFilesAdded < numFilesToAdd) break;
+            }
+
         }
 
         // TreeNode<FileItem>.PrintTree(treeA, "", true);
+    }
+
+    public void Shuffle(IList<int> list) {
+        Random rng = new Random();
+        int n = list.Count;
+        while (n > 1) {
+            n--;
+            int k = rng.Next(n + 1);
+            int value = list[k];
+            list[k] = list[n];
+            list[n] = value;
+        }
     }
 
     void populateSceneItemList(TreeNode<FileItem> directory) {
@@ -279,7 +305,7 @@ public class DirectoryHandler : Node {
 
 
             if (isValidDir) {
-      
+
                 if (dir.CurrentIsDir()) {
                     if (isValidDir) {
                         if (filename[0] != '.') {
@@ -289,9 +315,9 @@ public class DirectoryHandler : Node {
 
                             // for logical tree
                             TreeNode<FileItem> child = parent.AddChild(new FileItem(path, "", FileItem.FILE_TYPE.DIRECTORY));
-                            addDirContents(subDir, child, rootPath, depth+1);
-							// if coming out of the recursion, and it is back at the root, set file count to 0, as it is done checking main
-							if(depth == 0) fileCount = 0; 
+                            addDirContents(subDir, child, rootPath, depth + 1);
+                            // if coming out of the recursion, and it is back at the root, set file count to 0, as it is done checking main
+                            if (depth == 0) fileCount = 0;
                         }
                     }
                 } else {
@@ -303,7 +329,7 @@ public class DirectoryHandler : Node {
             }
 
             filename = dir.GetNext();
-      
+
 
         }
 

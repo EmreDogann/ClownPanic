@@ -33,7 +33,7 @@ public class TreeNode<T> {
         return node;
     }
 
-    public void AddChildNode(TreeNode<T> child) {
+    public void AddChildNode(ref TreeNode<T> child) {
         child.Parent = this; // change the parent to this, usefull when coming from another tree
         _children.Add(child);
     }
@@ -181,11 +181,11 @@ public class TreeNode<T> {
 
 
     public static void DeleteNode(TreeNode<T> tree) {
-        // tree.Traverse((TreeNode<T> node)=>{
-        // 	node.Parent = null;
-        // 	node = null;
-        // });
-        // tree = null;
+        tree.Traverse((TreeNode<T> node)=>{
+        	node.Parent = null;
+        	node = null;
+        });
+        tree = null;
     }
 
     // Reference: https://stackoverflow.com/a/8567550
