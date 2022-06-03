@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=2]
+[gd_scene load_steps=54 format=2]
 
 [ext_resource path="res://Scenes/Desktop.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scripts/Mouse.gd" type="Script" id=2]
@@ -23,6 +23,12 @@
 [ext_resource path="res://Shaders/Glitch.tres" type="Material" id=21]
 [ext_resource path="res://Shaders/CRTClose.tres" type="Material" id=22]
 [ext_resource path="res://Shaders/VirusGlitch.tres" type="Material" id=23]
+[ext_resource path="res://Scenes/Terminal.tscn" type="PackedScene" id=24]
+[ext_resource path="res://addons/imjp94.yafsm/src/transitions/Transition.gd" type="Script" id=25]
+[ext_resource path="res://addons/imjp94.yafsm/src/states/State.gd" type="Script" id=26]
+[ext_resource path="res://addons/imjp94.yafsm/src/states/StateMachine.gd" type="Script" id=27]
+[ext_resource path="res://addons/imjp94.yafsm/src/conditions/BooleanCondition.gd" type="Script" id=28]
+[ext_resource path="res://addons/imjp94.yafsm/src/StateMachinePlayer.gd" type="Script" id=29]
 
 [sub_resource type="PhysicsMaterial" id=2]
 absorbent = true
@@ -45,6 +51,8 @@ absorbent = true
 
 [sub_resource type="DynamicFont" id=10]
 size = 32
+outline_size = 1
+outline_color = Color( 0.952941, 0.952941, 0.952941, 1 )
 font_data = ExtResource( 13 )
 
 [sub_resource type="Animation" id=7]
@@ -61,6 +69,152 @@ tracks/0/keys = {
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 0,
 "values": [ Color( 0, 0, 0, 1 ), Color( 0, 0, 0, 1 ), Color( 0, 0, 0, 0 ) ]
+}
+
+[sub_resource type="Resource" id=12]
+script = ExtResource( 26 )
+__meta__ = {
+"graph_offset": Vector2( 208, 180 )
+}
+name = "Entry"
+
+[sub_resource type="Resource" id=13]
+script = ExtResource( 26 )
+__meta__ = {
+"graph_offset": Vector2( 870, 149 )
+}
+name = "Level 3"
+
+[sub_resource type="Resource" id=14]
+script = ExtResource( 26 )
+__meta__ = {
+"graph_offset": Vector2( 620, 195 )
+}
+name = "Level 2"
+
+[sub_resource type="Resource" id=15]
+script = ExtResource( 26 )
+__meta__ = {
+"graph_offset": Vector2( 188, 160 )
+}
+name = "Entry"
+
+[sub_resource type="Resource" id=16]
+script = ExtResource( 26 )
+__meta__ = {
+"graph_offset": Vector2( 1148, 160 )
+}
+name = "Exit"
+
+[sub_resource type="Resource" id=17]
+script = ExtResource( 26 )
+__meta__ = {
+"graph_offset": Vector2( 368.5, 120 )
+}
+name = "Spawn Virus"
+
+[sub_resource type="Resource" id=18]
+script = ExtResource( 26 )
+__meta__ = {
+"graph_offset": Vector2( 645, 120 )
+}
+name = "Virus Deleted"
+
+[sub_resource type="Resource" id=19]
+script = ExtResource( 26 )
+__meta__ = {
+"graph_offset": Vector2( 900.5, 120 )
+}
+name = "Play Transition"
+
+[sub_resource type="Resource" id=20]
+script = ExtResource( 25 )
+from = "Entry"
+to = "Spawn Virus"
+conditions = {
+}
+priority = 0
+
+[sub_resource type="Resource" id=21]
+script = ExtResource( 28 )
+name = "virus_deleted"
+comparation = 0
+value = true
+
+[sub_resource type="Resource" id=22]
+script = ExtResource( 25 )
+from = "Spawn Virus"
+to = "Virus Deleted"
+conditions = {
+"virus_deleted": SubResource( 21 )
+}
+priority = 0
+
+[sub_resource type="Resource" id=23]
+script = ExtResource( 25 )
+from = "Virus Deleted"
+to = "Play Transition"
+conditions = {
+}
+priority = 0
+
+[sub_resource type="Resource" id=24]
+script = ExtResource( 25 )
+from = "Play Transition"
+to = "Exit"
+conditions = {
+}
+priority = 0
+
+[sub_resource type="Resource" id=25]
+script = ExtResource( 27 )
+__meta__ = {
+"graph_offset": Vector2( 407, 200 )
+}
+name = "Level 1"
+states = {
+"Entry": SubResource( 15 ),
+"Exit": SubResource( 16 ),
+"Play Transition": SubResource( 19 ),
+"Spawn Virus": SubResource( 17 ),
+"Virus Deleted": SubResource( 18 )
+}
+transitions = {
+"Entry": {
+"Spawn Virus": SubResource( 20 )
+},
+"Play Transition": {
+"Exit": SubResource( 24 )
+},
+"Spawn Virus": {
+"Virus Deleted": SubResource( 22 )
+},
+"Virus Deleted": {
+"Play Transition": SubResource( 23 )
+}
+}
+
+[sub_resource type="Resource" id=26]
+script = ExtResource( 25 )
+from = "Entry"
+to = "Level 1"
+conditions = {
+}
+priority = 0
+
+[sub_resource type="Resource" id=27]
+script = ExtResource( 27 )
+name = ""
+states = {
+"Entry": SubResource( 12 ),
+"Level 1": SubResource( 25 ),
+"Level 2": SubResource( 14 ),
+"Level 3": SubResource( 13 )
+}
+transitions = {
+"Entry": {
+"Level 1": SubResource( 26 )
+}
 }
 
 [node name="Node2D" type="Node2D"]
@@ -103,6 +257,9 @@ margin_left = 137.0
 margin_top = 92.0
 margin_right = 777.0
 margin_bottom = 452.0
+
+[node name="Terminal" parent="CanvasLayer" instance=ExtResource( 24 )]
+mouse_filter = 2
 
 [node name="Mouse" type="Node2D" parent="CanvasLayer" groups=["Mouse"]]
 pause_mode = 2
@@ -157,6 +314,7 @@ mouse_filter = 2
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
+mouse_filter = 2
 
 [node name="Effect" type="ColorRect" parent="CanvasLayer/Post-Processing Effects/Wrong File Glitch"]
 material = ExtResource( 21 )
@@ -177,6 +335,7 @@ __meta__ = {
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
+mouse_filter = 2
 
 [node name="Effect" type="ColorRect" parent="CanvasLayer/Post-Processing Effects/Distortion"]
 material = ExtResource( 20 )
@@ -197,6 +356,7 @@ __meta__ = {
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
+mouse_filter = 2
 
 [node name="Effect" type="ColorRect" parent="CanvasLayer/Post-Processing Effects/Virus Glitch"]
 material = ExtResource( 23 )
@@ -216,6 +376,7 @@ __meta__ = {
 visible = false
 margin_right = 960.0
 margin_bottom = 540.0
+mouse_filter = 2
 
 [node name="Effect" type="ColorRect" parent="CanvasLayer/Post-Processing Effects/CRT Close"]
 material = ExtResource( 22 )
@@ -234,6 +395,7 @@ __meta__ = {
 [node name="CRT Filter" type="Control" parent="CanvasLayer/Post-Processing Effects"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+mouse_filter = 2
 
 [node name="CRT Filter" type="ColorRect" parent="CanvasLayer/Post-Processing Effects/CRT Filter"]
 material = ExtResource( 4 )
@@ -251,6 +413,7 @@ __meta__ = {
 }
 
 [node name="PauseScreen" type="Control" parent="CanvasLayer"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 16 )
@@ -320,5 +483,10 @@ bus = "Background"
 [node name="Keyboard" type="Node" parent="."]
 script = ExtResource( 19 )
 
+[node name="StateMachinePlayer" type="Node" parent="."]
+script = ExtResource( 29 )
+state_machine = SubResource( 27 )
+
 [connection signal="body_entered" from="CanvasLayer/Mouse/PhysicsMouse" to="CanvasLayer/Mouse/PhysicsMouse" method="_on_PhysicsMouse_body_entered"]
 [connection signal="pressed" from="CanvasLayer/PauseScreen/CenterContainer/VBoxContainer/CenterContainer2/TextureButton" to="CanvasLayer/PauseScreen/CenterContainer/VBoxContainer/CenterContainer2/TextureButton" method="_on_TextureButton_pressed"]
+[connection signal="updated" from="StateMachinePlayer" to="GameManager" method="_on_StateMachinePlayer_updated"]

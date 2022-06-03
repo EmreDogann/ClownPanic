@@ -20,9 +20,13 @@ enum MouseMode {
 var mode = MouseMode.FREE
 var prev_mouse_pos: Vector2
 
+var original_tree_position: int
+
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CONFINED)
 	Input.set_custom_mouse_cursor(preload("res://Images/TransparentPixel.png"))
+	
+	original_tree_position = get_index()
 	
 	connect("on_mouse_disable", get_tree().root.get_node("Node2D/AudioManager"), "mouse_disabled")
 	connect("on_mouse_pressed", get_tree().root.get_node("Node2D/AudioManager"), "mouse_pressed")

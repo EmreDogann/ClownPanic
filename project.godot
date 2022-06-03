@@ -28,6 +28,10 @@ window/size/test_height=1080
 window/stretch/mode="viewport"
 window/stretch/aspect="keep_height"
 
+[editor_plugins]
+
+enabled=PoolStringArray( "res://addons/imjp94.yafsm/plugin.cfg" )
+
 [global]
 
 vs=false

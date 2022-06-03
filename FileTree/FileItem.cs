@@ -5,13 +5,13 @@ public class FileItem {
 
 	// TYPES
 	public enum FILE_TYPE {
-		DIRECTORY,
-		IMAGE,
-		VIDEO,
-		AUDIO,
-		EXECUTABLE,
-		FILE,
-		NULL
+		DIRECTORY, // 0
+		IMAGE, // 1
+		VIDEO, // 2
+		AUDIO, // 3
+		EXECUTABLE, // 4
+		FILE, // 5
+		NULL // 6
 	}
 
 	const string EXTENSIONS_IMAGE = ".jpeg.jpg.png.gif.tiff.psd.pdf.eps.ai.indd.raw.bmp.ico.apng.avif.jfif.pjepg.pjp.png.svg.webp.tif.";
