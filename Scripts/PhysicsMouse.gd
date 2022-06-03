@@ -1,5 +1,7 @@
 extends RigidBody2D
 
+signal on_mouse_collide()
+
 var direction = Vector2(0.0, 0.0)
 var speed: float = 0.0
 var speedAccumulation = 0.0
@@ -20,7 +22,8 @@ func _ready():
 	mouseSpriteNode = get_parent().get_node("MouseSprite")
 	rigidbody_origin = self.position
 	rng.randomize()
-	pass
+	
+	connect("on_mouse_collide", get_tree().root.get_node("Node2D/AudioManager"), "mouse_collided")
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -57,3 +60,7 @@ func _integrate_forces(state: Physics2DDirectBodyState):
 		state.apply_impulse(random_offset, direction * speed)
 		
 		reset_physics = false
+
+
+func _on_PhysicsMouse_body_entered(body: Node) -> void:
+	emit_signal("on_mouse_collide")
