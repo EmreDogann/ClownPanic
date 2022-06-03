@@ -11,10 +11,10 @@
 [ext_resource path="res://Scripts/Transition.gd" type="Script" id=9]
 [ext_resource path="res://SoundEffects/Background Noise/Computer Boot Up With BackgroundNoise1 Fade In.wav" type="AudioStream" id=10]
 [ext_resource path="res://Scripts/GameManager.gd" type="Script" id=11]
-[ext_resource path="res://Images/Power.png" type="Texture" id=12]
+[ext_resource path="res://Images/Icons/Power/Power_Off_WindowsXP.png" type="Texture" id=12]
 [ext_resource path="res://Fonts/m6x11.ttf" type="DynamicFontData" id=13]
-[ext_resource path="res://Images/Power - Highlighted.png" type="Texture" id=14]
-[ext_resource path="res://Images/Power - Pressed.png" type="Texture" id=15]
+[ext_resource path="res://Images/Icons/Power/Power_Off_WindowsXP_Pressed.png" type="Texture" id=14]
+[ext_resource path="res://Images/Icons/Power/Power_Off_WindowsXP_Highlight.png" type="Texture" id=15]
 [ext_resource path="res://Scripts/PauseScreen.gd" type="Script" id=16]
 [ext_resource path="res://Scripts/QuitButton.gd" type="Script" id=17]
 [ext_resource path="res://Shaders/BackgroundBlur.tres" type="Material" id=18]
@@ -146,8 +146,8 @@ margin_left = 111.0
 margin_right = 143.0
 margin_bottom = 32.0
 texture_normal = ExtResource( 12 )
-texture_pressed = ExtResource( 15 )
-texture_hover = ExtResource( 14 )
+texture_pressed = ExtResource( 14 )
+texture_hover = ExtResource( 15 )
 script = ExtResource( 17 )
 
 [node name="Mouse" type="Node2D" parent="CanvasLayer" groups=["Mouse"]]
@@ -195,6 +195,7 @@ __meta__ = {
 }
 
 [node name="Post-Processing Effects" type="Control" parent="CanvasLayer"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2

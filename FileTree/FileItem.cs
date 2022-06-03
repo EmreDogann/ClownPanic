@@ -79,8 +79,8 @@ public class FileItem {
 		return isCollapsed;
 	}
 
-	public void SetIsCollapsed() {
-		
+	public void SetIsCollapsed(bool collapsed) {
+		isCollapsed = collapsed;
 	}
 
 	public void SetIsVirus(bool isVirus) {

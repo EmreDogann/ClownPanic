@@ -145,15 +145,12 @@ public class DirectoryHandler : Node {
 			sceneBreadCrumb.Text = currentDirectory;
 	}
 
-	public List<string> GetListOfFiles()
-	{
+	public List<string> GetListOfFiles() {
 		var listOfFiles = new List<string>();
-		userFileTree.Traverse((TreeNode<FileItem> fileNode) =>
-		{
-			listOfFiles.Add(fileNode.Value.GetFilePath());
-		});
+		userFileTree.Traverse((TreeNode<FileItem> fileNode) => { listOfFiles.Add(fileNode.Value.GetFilePath()); });
 		return listOfFiles;
 	}
+
 	public TreeNode<FileItem> GetVirusNode() {
 		return virusNode;
 	}
@@ -165,7 +162,7 @@ public class DirectoryHandler : Node {
 	public int GetUserTotalFileCount() {
 		return userTotalFileCount;
 	}
-	
+
 	public void Shuffle(IList<int> list) {
 		Random rng = new Random();
 		int n = list.Count;
@@ -177,8 +174,6 @@ public class DirectoryHandler : Node {
 			list[n] = value;
 		}
 	}
-	
-	
 
 	#endregion
 
@@ -245,10 +240,10 @@ public class DirectoryHandler : Node {
 		Random rnd = new Random();
 		// Should be main directories (Documents, Downloads, Desktop, etc...)
 		foreach (TreeNode<FileItem> mainDir in treeGiver.Children) {
-			int numFilesToAdd = (int) Math.Ceiling(((float) mainDir.Size() * blendValue));
+			int numFilesToAdd = (int) Math.Floor(((float) mainDir.Size() * blendValue));
 			int numFilesAdded = 0;
 			int numOfChildren = mainDir.Children.Count;
-			List<int> childUsed = new List<int>();
+			List<TreeNode<FileItem>> childrenUsed = new List<TreeNode<FileItem>>();
 
 			// Get the matching Main Directory from the other tree
 			// GD.Print(mainDir.Value.getFileName());
@@ -265,14 +260,20 @@ public class DirectoryHandler : Node {
 
 			Shuffle(randomChildren);
 
+			
 			for (int i = 0; i < numOfChildren; i++) {
+			
 				mergedMainDir.AddChildNode(mainDir[randomChildren[i]]);
 				numFilesAdded += mainDir[randomChildren[i]].Size();
 
-				mainDir.RemoveChild(mainDir[randomChildren[i]]);
-				childUsed.Add(randomChildren[i]);
+				childrenUsed.Add(mainDir[randomChildren[i]]);
 
+				// numOfChildren = mainDir.Children.Count;
 				if (numFilesAdded >= numFilesToAdd) break;
+			}
+
+			foreach (var child in childrenUsed) {
+				mainDir.RemoveChild(child);
 			}
 		}
 
@@ -417,7 +418,7 @@ public class DirectoryHandler : Node {
 	#endregion
 
 	#region SIGNALS
-	
+
 	/* SIGNALS */
 	void onTreeItemSelected() {
 		// need to set the current directory string
@@ -495,12 +496,17 @@ public class DirectoryHandler : Node {
 		// TreeNode<FileItem>.DeleteNode(selectedItem);
 		// updateSceneTree(ref sceneTree, gameFileTree);
 		// populateSceneItemList(selectedTreeNode);
+
+		// if nothing selected then dont do anything
+		if (selectedItem == null) return;
+
 		if (selectedItem.Value.IsVirus()) {
 			virusDeleted();
 		}
 		else {
 			wrongItemDeleted();
 		}
+
 
 		TreeNode<FileItem> nodeToDelete = selectedItem;
 		if (selectedItem.Value.IsDirectory()) {
@@ -514,6 +520,26 @@ public class DirectoryHandler : Node {
 		TreeNode<FileItem>.DeleteNode(nodeToDelete);
 		updateSceneTree(ref sceneTree, gameFileTree);
 		populateSceneItemList(selectedTreeNode);
+	}
+
+	private void onTreeItemCollapsed(object item) {
+		// Replace with function body.
+		// GD.Print("Collapsed: ", ((TreeItem) item).GetText(0));
+		TreeItem checkingDir = (TreeItem) item;
+		string itemDir = "";
+		while (checkingDir.GetParent() != null) {
+			itemDir = checkingDir.GetText(0) + "/" + itemDir;
+			checkingDir = checkingDir.GetParent();
+		}
+
+		TreeNode<FileItem> treeNode = TreeNode<FileItem>.GetChildNodeByPath(currentDirectory, gameFileTree);
+
+		treeNode.Value.SetIsCollapsed(checkingDir.Collapsed);
+	}
+
+
+	private void onItemListNothingSelected() {
+		selectedItem = null;
 	}
 
 	/* Emmiting Signals */
