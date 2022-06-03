@@ -3,8 +3,6 @@ using System;
 using System.Collections.Generic;
 
 public class DirectoryHandler : Node {
-
-
 	[Signal]
 	delegate void virus_deleted();
 
@@ -105,7 +103,6 @@ public class DirectoryHandler : Node {
 
 		gameManagerRef = GetTree().Root.GetNode("Node2D/GameManager");
 		Connect("virus_deleted", gameManagerRef, "virus_deleted");
-
 	}
 
 	// Frame by frame method
