@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=2]
+[gd_scene load_steps=32 format=2]
 
 [ext_resource path="res://Scenes/Desktop.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scripts/Mouse.gd" type="Script" id=2]
@@ -17,8 +17,12 @@
 [ext_resource path="res://Images/Power - Pressed.png" type="Texture" id=15]
 [ext_resource path="res://Scripts/PauseScreen.gd" type="Script" id=16]
 [ext_resource path="res://Scripts/QuitButton.gd" type="Script" id=17]
-[ext_resource path="res://SoundEffects/Mouse Impact/Mouse Impact.wav" type="AudioStream" id=18]
+[ext_resource path="res://Shaders/BackgroundBlur.tres" type="Material" id=18]
 [ext_resource path="res://Scripts/Keyboard.gd" type="Script" id=19]
+[ext_resource path="res://Shaders/Distortion.tres" type="Material" id=20]
+[ext_resource path="res://Shaders/Glitch.tres" type="Material" id=21]
+[ext_resource path="res://Shaders/CRTClose.tres" type="Material" id=22]
+[ext_resource path="res://Shaders/VirusGlitch.tres" type="Material" id=23]
 
 [sub_resource type="PhysicsMaterial" id=2]
 absorbent = true
@@ -34,20 +38,6 @@ extents = Vector2( 484, 20 )
 
 [sub_resource type="RectangleShape2D" id=5]
 extents = Vector2( 20, 273.75 )
-
-[sub_resource type="Shader" id=8]
-code = "shader_type canvas_item;
-
-uniform float blur_amount : hint_range(0, 5);
-
-void fragment() {
-	COLOR = textureLod(SCREEN_TEXTURE, SCREEN_UV, blur_amount);
-}
-"
-
-[sub_resource type="ShaderMaterial" id=9]
-shader = SubResource( 8 )
-shader_param/blur_amount = 2.0
 
 [sub_resource type="DynamicFont" id=10]
 size = 32
@@ -120,7 +110,7 @@ anchor_bottom = 1.0
 script = ExtResource( 16 )
 
 [node name="Background" type="ColorRect" parent="CanvasLayer/PauseScreen"]
-material = SubResource( 9 )
+material = ExtResource( 18 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color( 0, 0, 0, 0.501961 )
@@ -204,13 +194,69 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="BackBufferCopy" type="BackBufferCopy" parent="CanvasLayer"]
+[node name="Post-Processing Effects" type="Control" parent="CanvasLayer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="WrongFileDeleted - GlitchEffect" type="ColorRect" parent="CanvasLayer/Post-Processing Effects"]
+visible = false
+material = ExtResource( 21 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="BackBufferCopy" type="BackBufferCopy" parent="CanvasLayer/Post-Processing Effects"]
+visible = false
 copy_mode = 2
 __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="CRT Filter" type="ColorRect" parent="CanvasLayer"]
+[node name="WrongFileDeleted - DistortionEffect" type="ColorRect" parent="CanvasLayer/Post-Processing Effects"]
+visible = false
+material = ExtResource( 20 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="BackBufferCopy2" type="BackBufferCopy" parent="CanvasLayer/Post-Processing Effects"]
+visible = false
+copy_mode = 2
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Game Over - CRT Close Effect" type="ColorRect" parent="CanvasLayer/Post-Processing Effects"]
+visible = false
+material = ExtResource( 22 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Virus Glitch Effect" type="ColorRect" parent="CanvasLayer/Post-Processing Effects"]
+material = ExtResource( 23 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="BackBufferCopy3" type="BackBufferCopy" parent="CanvasLayer/Post-Processing Effects"]
+copy_mode = 2
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="CRT Filter" type="ColorRect" parent="CanvasLayer/Post-Processing Effects"]
 material = ExtResource( 4 )
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -238,11 +284,6 @@ script = ExtResource( 8 )
 
 [node name="BackgroundNoiseStartUp" type="AudioStreamPlayer" parent="AudioManager"]
 stream = ExtResource( 10 )
-bus = "Background"
-
-[node name="MouseImpact" type="AudioStreamPlayer" parent="AudioManager"]
-stream = ExtResource( 18 )
-volume_db = -8.0
 bus = "Background"
 
 [node name="Keyboard" type="Node" parent="."]

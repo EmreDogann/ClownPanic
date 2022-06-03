@@ -28,12 +28,12 @@ public class TreeNode<T> {
     }
 
     public TreeNode<T> AddChild(T value) {
-        var node = new TreeNode<T>(value) {Parent = this};
+        var node = new TreeNode<T>(value) { Parent = this };
         _children.Add(node);
         return node;
     }
 
-    public void AddChildNode(ref TreeNode<T> child) {
+    public void AddChildNode(TreeNode<T> child) {
         child.Parent = this; // change the parent to this, usefull when coming from another tree
         _children.Add(child);
     }
@@ -67,7 +67,7 @@ public class TreeNode<T> {
     }
 
     public IEnumerable<T> Flatten() {
-        return new[] {Value}.Concat(_children.SelectMany(x => x.Flatten()));
+        return new[] { Value }.Concat(_children.SelectMany(x => x.Flatten()));
     }
 
     public static TreeNode<FileItem> GetChildNodeByName(string filename, TreeNode<FileItem> parent) {
@@ -89,8 +89,7 @@ public class TreeNode<T> {
             var tempNode = GetChildNodeByName(dir, childNode);
             if (tempNode == null) {
                 break;
-            }
-            else {
+            } else {
                 childNode = tempNode;
             }
         }
@@ -152,8 +151,7 @@ public class TreeNode<T> {
                 randomDirectory = dirChildren[randomChildIndex];
 
                 goSubDir = rnd.Next(100) < depthPercentage;
-            }
-            else {
+            } else {
                 goSubDir = false;
             }
         }
@@ -181,9 +179,9 @@ public class TreeNode<T> {
 
 
     public static void DeleteNode(TreeNode<T> tree) {
-        tree.Traverse((TreeNode<T> node)=>{
-        	node.Parent = null;
-        	node = null;
+        tree.Traverse((TreeNode<T> node) => {
+            node.Parent = null;
+            node = null;
         });
         tree = null;
     }

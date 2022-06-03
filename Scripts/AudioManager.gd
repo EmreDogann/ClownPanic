@@ -3,6 +3,7 @@ extends Node
 var backgroundNoises: Array
 var mouseSFX: Array
 var keyboardSFX: Array
+var deletedSFX: Array
 
 var players: Array
 var currentPlayer: int = 0
@@ -10,7 +11,7 @@ var PLAYERS_COUNT: int = 20
 
 var startupSound: bool = false
 
-var time_delay
+var time_delay: float
 
 var rng = RandomNumberGenerator.new()
 
@@ -40,6 +41,10 @@ func _ready() -> void:
 	keyboardSFX.append(preload("res://SoundEffects/Foley/Keyboard/Keyboard9.wav"))
 	keyboardSFX.append(preload("res://SoundEffects/Foley/Keyboard/Keyboard10.wav"))
 	keyboardSFX.append(preload("res://SoundEffects/Foley/Keyboard/Keyboard11.wav"))
+	
+	# Deleted SFX
+	deletedSFX.append(preload("res://SoundEffects/Delete SFX/Delete Fail - Combined.wav"))
+	deletedSFX.append(preload("res://SoundEffects/Delete SFX/Virus Deleted - Final.wav"))
 	# --------------------------
 	
 	# Set background noises 0 and 1 to loop
@@ -73,41 +78,41 @@ func play_specific(sample: AudioStreamSample, player_num: int) -> void:
 	players[player_num].stream = sample
 	players[player_num].play()
 
-func play(sample: AudioStreamSample) -> void:
+func play(sample: AudioStream) -> void:
 	players[currentPlayer].stream = sample
 	players[currentPlayer].play()
 	
 	currentPlayer += 1
 	if (currentPlayer % PLAYERS_COUNT == 0):
-		currentPlayer = 2 # players 0 and 1 are reserved for the background noise
+		currentPlayer = 5 # players 0 and 1 are reserved for the background noise
 
 func play_random_pitch(sample: AudioStreamSample, pitch_intensity: int) -> void:
 	var randomPitchShift: AudioStreamRandomPitch = AudioStreamRandomPitch.new()
 	randomPitchShift.audio_stream = sample
 	randomPitchShift.random_pitch = pitch_intensity
-	
-	players[currentPlayer].stream = randomPitchShift
-	players[currentPlayer].play()
-	
-	currentPlayer += 1
-	if (currentPlayer % PLAYERS_COUNT == 0):
-		currentPlayer = 2 # players 0 and 1 are reserved for the background noise
+	play(randomPitchShift)
 
 func mouse_disabled() -> void:
 	play(mouseSFX[0])
 
 func mouse_collided() -> void:
-	if (!$MouseImpact.playing):
-		$MouseImpact.play()
+	if (!players[4].playing):
+		play_specific(mouseSFX[1], 4)
 
 func mouse_pressed() -> void:
-	play(mouseSFX[2])
+	play_specific(mouseSFX[2], 2)
 
 func mouse_released() -> void:
-	play(mouseSFX[3])
+	play_specific(mouseSFX[3], 3)
 
 func key_pressed() -> void:
 	play_random_pitch(keyboardSFX[rng.randi_range(0, 10)], 1.1)
+
+func virus_deleted() -> void:
+	play(deletedSFX[1])
+
+func wrong_file_deleted() -> void:
+	play(deletedSFX[0])
 
 #func on_player_finished(player: AudioStreamPlayer) -> void:
 #	remove_child(player)

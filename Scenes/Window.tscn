@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=2]
+[gd_scene load_steps=43 format=2]
 
 [ext_resource path="res://Shaders/Pixelate.tres" type="Material" id=1]
 [ext_resource path="res://Images/Icons/My Documents.png" type="Texture" id=2]
@@ -25,6 +25,7 @@
 [ext_resource path="res://Images/Icons/Recycle Bin (Full) - Pressed.png" type="Texture" id=23]
 [ext_resource path="res://Images/Icons/Tree Plus.png" type="Texture" id=24]
 [ext_resource path="res://Images/Icons/Tree Minus.png" type="Texture" id=25]
+[ext_resource path="res://Scripts/BreadcrumbScrolling.gd" type="Script" id=26]
 
 [sub_resource type="StyleBoxFlat" id=11]
 bg_color = Color( 1, 1, 1, 1 )
@@ -46,6 +47,27 @@ bg_color = Color( 0.803922, 0.792157, 0.733333, 1 )
 [sub_resource type="StyleBoxFlat" id=7]
 content_margin_top = 1.0
 bg_color = Color( 1, 1, 1, 1 )
+
+[sub_resource type="StreamTexture" id=20]
+
+[sub_resource type="StyleBoxEmpty" id=21]
+
+[sub_resource type="StyleBoxEmpty" id=22]
+
+[sub_resource type="Theme" id=23]
+HScrollBar/icons/decrement = SubResource( 20 )
+HScrollBar/icons/decrement_highlight = SubResource( 20 )
+HScrollBar/icons/decrement_pressed = SubResource( 20 )
+HScrollBar/icons/increment = SubResource( 20 )
+HScrollBar/icons/increment_highlight = SubResource( 20 )
+HScrollBar/icons/increment_pressed = SubResource( 20 )
+HScrollBar/styles/grabber = SubResource( 21 )
+HScrollBar/styles/grabber_highlight = SubResource( 21 )
+HScrollBar/styles/grabber_pressed = SubResource( 21 )
+HScrollBar/styles/scroll = SubResource( 21 )
+HScrollBar/styles/scroll_focus = SubResource( 22 )
+
+[sub_resource type="StyleBoxEmpty" id=24]
 
 [sub_resource type="StyleBoxFlat" id=18]
 content_margin_left = 3.0
@@ -442,18 +464,30 @@ text = "Delete"
 margin_left = 183.0
 margin_right = 549.0
 margin_bottom = 25.0
-rect_min_size = Vector2( 21, 0 )
 size_flags_horizontal = 3
 custom_constants/margin_right = 5
 
-[node name="Breadcrumb" type="Label" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer/MarginContainer5"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer/MarginContainer5"]
 margin_top = 4.0
 margin_right = 361.0
 margin_bottom = 21.0
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme = SubResource( 23 )
+custom_styles/bg = SubResource( 24 )
+follow_focus = true
+scroll_vertical_enabled = false
+script = ExtResource( 26 )
+
+[node name="Breadcrumb" type="Label" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer/MarginContainer5/ScrollContainer"]
+margin_right = 769.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 0, 17 )
+size_flags_horizontal = 3
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_fonts/font = ExtResource( 5 )
 custom_styles/normal = SubResource( 18 )
-text = "C:/Users/..."
+text = "C:/Users/...C:/Users/...C:/Users/...C:/Users/...C:/Users/...C:/Users/...C:/Users/...C:/Users/...C:/Users/...C:/Users/...C:/Users/...C:/Users/...C:/Users/...C:/Users/...C:/Users/..."
 
 [node name="HSeparator3" type="HSeparator" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer"]
 margin_top = 47.0
@@ -611,6 +645,7 @@ custom_styles/selected = SubResource( 19 )
 custom_styles/bg = SubResource( 17 )
 
 [node name="StaticBody2D" type="StaticBody2D" parent="Window"]
+visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Window/StaticBody2D"]
 position = Vector2( 278.5, 175.5 )

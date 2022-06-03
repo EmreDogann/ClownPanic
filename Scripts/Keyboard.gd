@@ -7,5 +7,5 @@ func _ready() -> void:
 	connect("on_key_pressed", get_tree().root.get_node("Node2D/AudioManager"), "key_pressed")
 
 func _input(event: InputEvent) -> void:
-	if event is InputEventKey and event.pressed:
+	if event is InputEventKey and !event.is_echo() and event.is_pressed():
 		emit_signal("on_key_pressed")
