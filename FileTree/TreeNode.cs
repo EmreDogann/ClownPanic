@@ -189,7 +189,7 @@ public class TreeNode<T> {
     }
 
     // Reference: https://stackoverflow.com/a/8567550
-    public static void PrintTree(TreeNode<FileItem> tree, String indent, bool last) {
+    public static void PrintTree(TreeNode<FileItem> tree, String indent = "", bool last = true) {
         // Console.Write(indent + "+- " + tree.Value.getFileName());
         GD.Print(indent + "+- " + tree.Value.getFileName());
         indent += last ? "   " : "|  ";

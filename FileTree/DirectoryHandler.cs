@@ -3,12 +3,16 @@ using System;
 using System.Collections.Generic;
 
 public class DirectoryHandler : Node {
-	
-	
+
+
 	[Signal]
 	delegate void virus_deleted();
 
-	const int fileLimitPerMainDirectory = 1000;
+
+	string[] folderRoots = { "Documents", "Downloads", "Desktop", "Videos", "Music", "Pictures" };
+
+	const int fileLimitPerMainDirectory = 5000;
+	private List<int> fileCounts;
 
 	private Tree sceneTree;
 
@@ -32,7 +36,7 @@ public class DirectoryHandler : Node {
 	const string windowsRootDirectory = "C:/Users";
 	const string gameDirectoryRoot = "res://FileTree/GameDirectories";
 
-	string[] folderRoots = { "Documents", "Downloads", "Desktop", "Videos", "Music", "Pictures" };
+
 
 	string currentDirectory = ""; // Can be used as the breadcrumb
 
@@ -43,7 +47,7 @@ public class DirectoryHandler : Node {
 	int debugTreeDepthCounter = 0;
 
 	Texture treeItemIcon;
-	
+
 	Texture[] itemListIcons = new Texture[7];
 
 	private Node gameManagerRef;
@@ -64,7 +68,12 @@ public class DirectoryHandler : Node {
 			userRoot = windowsRootDirectory + "/" + OS.GetEnvironment("USERNAME");
 		}
 
+		fileCounts = new List<int>();
+		for(var i = 0; i<folderRoots.Length; i++) fileCounts.Add(0); 
+
 		loadTrees();
+
+		// TreeNode<FileItem>.PrintTree(userFileTree);
 
 		GD.Print("User File Tree Size: ", userFileTree.Size());
 		GD.Print("Game File Tree Size: ", gameFileTree.Size());
@@ -241,8 +250,9 @@ public class DirectoryHandler : Node {
 
 		if (dir.Open(rootPath) == Error.Ok) {
 			dir.ListDirBegin(true, false);
-			var fileCount = 0;
-			addDirContents(dir, parent, rootPath, ref fileCount);
+			addDirContents(dir, parent, rootPath);
+			fileCounts = new List<int>();
+			for(var i = 0; i<folderRoots.Length; i++) fileCounts.Add(0);
 		} else {
 			GD.PushError("An error occurred when trying to access the path.");
 		}
@@ -250,18 +260,29 @@ public class DirectoryHandler : Node {
 
 
 	// Reference: https://godotengine.org/qa/5175/how-to-get-all-the-files-inside-a-folder
-	void addDirContents(Directory dir, TreeNode<FileItem> parent, string rootPath, ref int fileCount) {
+	void addDirContents(Directory dir, TreeNode<FileItem> parent, string rootPath, int fileCountIndex = 0) {
 		string filename = dir.GetNext();
 
 
-		while (filename != "" && fileCount < fileLimitPerMainDirectory) {
+		while (filename != "" && fileCounts[fileCountIndex] < fileLimitPerMainDirectory) {
 			var path = dir.GetCurrentDir() + "/" + filename;
 
 			bool isValidDir = false;
-			// Is Valid only in the main directories.
-			foreach (string mainFolder in folderRoots) {
-				isValidDir = path.Contains(rootPath + "/" + mainFolder);
-				if (isValidDir) break;
+			// int i = 0;
+			// // Is Valid only in the main directories.
+			// foreach (string mainFolder in folderRoots) {
+			// 	isValidDir = path.Contains(rootPath + "/" + mainFolder);
+			// 	if (isValidDir) break;
+			// 	i++;
+			// 	fileCountIndex = i;
+			// }
+
+			for (int i = 0; i < folderRoots.Length; i++) {
+				isValidDir = path.Contains(rootPath + "/" + folderRoots[i]);
+				if (isValidDir) {
+					fileCountIndex = i;
+					break;
+				}
 			}
 
 			if (isValidDir) {
@@ -275,13 +296,13 @@ public class DirectoryHandler : Node {
 							// for logical tree
 							TreeNode<FileItem> child =
 								parent.AddChild(new FileItem(path, "", FileItem.FILE_TYPE.DIRECTORY));
-							addDirContents(subDir, child, rootPath, ref fileCount);
+							addDirContents(subDir, child, rootPath, fileCountIndex);
 						}
 					}
 				} else {
 					if (filename[0] != '.') {
 						TreeNode<FileItem> child = parent.AddChild(new FileItem(path));
-						fileCount += 1;
+						fileCounts[fileCountIndex] += 1;
 					}
 				}
 			}
@@ -296,7 +317,7 @@ public class DirectoryHandler : Node {
 		selectedTreeNode = node;
 		populateSceneItemList(selectedTreeNode);
 		currentDirectory = TreeNode<FileItem>.GetPathByNode(selectedTreeNode);
-		GD.Print(currentDirectory);
+		// GD.Print(currentDirectory);
 		// updateItemList = true;
 	}
 
