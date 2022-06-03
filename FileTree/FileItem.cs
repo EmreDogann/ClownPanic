@@ -29,6 +29,8 @@ public class FileItem {
 
 	private bool isVirus = false;
 
+	private bool isCollapsed = true;
+
 	// METHODS
 
 	// PUBLIC
@@ -71,6 +73,10 @@ public class FileItem {
 	}
 	public bool IsVirus() {
 		return isVirus;
+	}
+
+	public bool IsCollapsed() {
+		return isCollapsed;
 	}
 
 	public void setIsVirus(bool isVirus) {

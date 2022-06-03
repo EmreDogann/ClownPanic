@@ -178,12 +178,20 @@ public class TreeNode<T> {
     }
 
 
-    public static void DeleteNode(TreeNode<T> tree) {
-        tree.Traverse((TreeNode<T> node) => {
-            node.Parent = null;
-            node = null;
-        });
-        tree = null;
+    public static void DeleteNode(TreeNode<FileItem> tree) {
+        // Delete all the file Children
+        foreach (var child in GetFileChildren(tree)) {
+            DeleteNode(child);
+        }
+        
+        // delete the directories
+        foreach (var child in GetDirectoryChildren(tree)) {
+            DeleteNode(child);
+        }
+        
+        // Dont remove if there is no parent
+        if(tree.Parent!=null)
+            tree.Parent.RemoveChild(tree);
     }
 
     // Reference: https://stackoverflow.com/a/8567550
