@@ -9,6 +9,7 @@ public class TreeNode<T> {
     private readonly T _value;
     private readonly List<TreeNode<T>> _children = new List<TreeNode<T>>();
 
+
     public TreeNode(T value) {
         _value = value;
     }
@@ -23,12 +24,13 @@ public class TreeNode<T> {
         get { return _value; }
     }
 
+
     public ReadOnlyCollection<TreeNode<T>> Children {
         get { return _children.AsReadOnly(); }
     }
 
     public TreeNode<T> AddChild(T value) {
-        var node = new TreeNode<T>(value) { Parent = this };
+        var node = new TreeNode<T>(value) {Parent = this};
         _children.Add(node);
         return node;
     }
@@ -52,14 +54,20 @@ public class TreeNode<T> {
             child.Traverse(action);
     }
 
-    //     public void Traverse(Action<T> action) {
-    //     action(Value);
-    //     foreach (var child in _children)
-    //         child.Traverse(action);
-    // }
-
     public int ChildrenCount() {
         return _children.Count;
+    }
+
+    public int Depth() {
+        int depthCount = 0;
+        var parent = Parent;
+
+        while (parent != null) {
+            depthCount += 1;
+            parent = parent.Parent;
+        }
+
+        return depthCount;
     }
 
     public int Size() {
@@ -67,7 +75,112 @@ public class TreeNode<T> {
     }
 
     public IEnumerable<T> Flatten() {
-        return new[] { Value }.Concat(_children.SelectMany(x => x.Flatten()));
+        return new[] {Value}.Concat(_children.SelectMany(x => x.Flatten()));
+    }
+
+    // IDEK did this while half asleep, I think it works.
+    // returns -1 if fails
+    public static int DistanceBetweenTwoNodes(TreeNode<FileItem> currentNode, TreeNode<FileItem> targetNode) {
+        int distance = -1;
+
+        if (!currentNode.Value.IsDirectory()) {
+            currentNode = currentNode.Parent;
+        }
+
+        if (!targetNode.Value.IsDirectory()) {
+            targetNode = targetNode.Parent;
+        }
+
+        if (targetNode == null || currentNode == null) {
+            GD.PrintErr("Cannot Find Distances, the passed values are not directories, neither are there parents.");
+            return -1;
+        }
+
+
+        // Root would be "" First Items would be Main Directories (ie. "Documents" or "Downloads")
+        string currentNodePath = GetPathByNode(currentNode);
+        string targetNodePath = GetPathByNode(targetNode);
+
+        // Removing the last '/'
+        if (currentNodePath.Length > 0)
+            currentNodePath = currentNodePath.Remove(currentNodePath.Length - 1);
+        if (targetNodePath.Length > 0)
+            targetNodePath = targetNodePath.Remove(targetNodePath.Length - 1);
+
+ 
+
+        var splitCurrentNodePath = currentNodePath.Split("/");
+        var splitTargetNodePath = targetNodePath.Split("/");
+
+        int lcaIndex = -1;
+        string lcaPath = "";
+
+
+        int minNumberOfDir = Math.Min(splitCurrentNodePath.Length, splitTargetNodePath.Length);
+
+        for (int i = 0; i < minNumberOfDir; i++) {
+            if (splitCurrentNodePath[i] == "" || splitTargetNodePath[i] == "") {
+                lcaPath = "";
+            }
+
+            if (splitCurrentNodePath[i] == splitTargetNodePath[i]) {
+                lcaPath += splitCurrentNodePath[i] + "/";
+            }
+        }
+
+
+        if (lcaPath == "") {
+            distance = Math.Max(splitCurrentNodePath.Length, splitTargetNodePath.Length);
+        }
+        else {
+            // remove '/' from lca path
+            if (lcaPath.Length > 0) {
+                if (lcaPath[lcaPath.Length - 1] == '/') {
+                    lcaPath.Remove(lcaPath.Length - 1);
+                }
+            }
+
+            // remove the LCA, giving the remaingin paths
+            currentNodePath.Replace(lcaPath, "");
+            targetNodePath.Replace(lcaPath, "");
+
+            int targetDistance = 0;
+            if (targetNodePath == "") {
+                targetDistance = 0;
+            }
+            else {
+                var temp = targetNodePath.Split("/");
+                foreach (string s in temp) {
+                    if (s != "") {
+                        targetDistance += 0;
+                    }
+                }
+            }
+
+            int currentDistance = 0;
+            if (currentNodePath == "") {
+                currentDistance = 0;
+            }
+            else {
+                var temp = currentNodePath.Split("/");
+                foreach (string s in temp) {
+                    if (s != "") {
+                        currentDistance += 0;
+                    }
+                }
+            }
+
+            distance = targetDistance + currentDistance;
+        }
+        
+        // GD.Print("_________________________________" );
+        // GD.Print("Current Path: " + currentNodePath );
+        // GD.Print("Target Path:  " + targetNodePath );
+        // GD.Print("Lca Path:  " + lcaPath);
+        // GD.Print("Distance:  " + distance);
+        // GD.Print("_________________________________" );
+        
+        return distance;
     }
 
     public static TreeNode<FileItem> GetChildNodeByName(string filename, TreeNode<FileItem> parent) {
@@ -89,7 +202,8 @@ public class TreeNode<T> {
             var tempNode = GetChildNodeByName(dir, childNode);
             if (tempNode == null) {
                 break;
-            } else {
+            }
+            else {
                 childNode = tempNode;
             }
         }
@@ -151,7 +265,8 @@ public class TreeNode<T> {
                 randomDirectory = dirChildren[randomChildIndex];
 
                 goSubDir = rnd.Next(100) < depthPercentage;
-            } else {
+            }
+            else {
                 goSubDir = false;
             }
         }
@@ -183,14 +298,14 @@ public class TreeNode<T> {
         foreach (var child in GetFileChildren(tree)) {
             DeleteNode(child);
         }
-        
+
         // delete the directories
         foreach (var child in GetDirectoryChildren(tree)) {
             DeleteNode(child);
         }
-        
+
         // Dont remove if there is no parent
-        if(tree.Parent!=null)
+        if (tree.Parent != null)
             tree.Parent.RemoveChild(tree);
     }
 

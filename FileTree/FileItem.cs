@@ -31,6 +31,7 @@ public class FileItem {
 
 	private bool isCollapsed = true;
 
+
 	// METHODS
 
 	// PUBLIC
@@ -86,6 +87,12 @@ public class FileItem {
 	public void SetIsVirus(bool isVirus) {
 		this.isVirus = isVirus;
 	}
+
+	// public int GetDepth() {
+	// 	
+	// 	return depth;
+	// }
+
 
 
 	// PRIVATE

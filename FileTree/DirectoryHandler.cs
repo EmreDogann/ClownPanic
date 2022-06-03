@@ -124,6 +124,9 @@ public class DirectoryHandler : Node {
 		if (Input.IsActionJustPressed("merge_tree")) {
 			mergeFileTrees(gameFileTree, userFileTree, 1.0f);
 			updateSceneTree(ref sceneTree, gameFileTree);
+			
+			// addVirusRandomly("Virus.dtf", false);
+			// int distance = TreeNode<FileItem>.DistanceBetweenTwoNodes(selectedTreeNode,virusNode);
 
 			//			addVirus();
 		}
