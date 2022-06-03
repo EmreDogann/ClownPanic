@@ -5,7 +5,7 @@ var fileItem
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	# call to add virus. if hidden is true, name of virus may be blank
-	fileItem = fileSystem.addVirusRandomly("Level1Virus", false)
+#	fileItem = fileSystem.addVirusRandomly("Level1Virus", false)
 	fileSystem.connect("virus_deleted", self, "next_level")
 	pass
 

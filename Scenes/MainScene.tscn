@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=27 format=2]
 
 [ext_resource path="res://Scenes/Desktop.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scripts/Mouse.gd" type="Script" id=2]
@@ -11,6 +11,12 @@
 [ext_resource path="res://Scripts/Transition.gd" type="Script" id=9]
 [ext_resource path="res://SoundEffects/Background Noise/Computer Boot Up With BackgroundNoise1 Fade In.wav" type="AudioStream" id=10]
 [ext_resource path="res://Scripts/GameManager.gd" type="Script" id=11]
+[ext_resource path="res://Images/Power.png" type="Texture" id=12]
+[ext_resource path="res://Fonts/m6x11.ttf" type="DynamicFontData" id=13]
+[ext_resource path="res://Images/Power - Highlighted.png" type="Texture" id=14]
+[ext_resource path="res://Images/Power - Pressed.png" type="Texture" id=15]
+[ext_resource path="res://Scripts/PauseScreen.gd" type="Script" id=16]
+[ext_resource path="res://Scripts/QuitButton.gd" type="Script" id=17]
 
 [sub_resource type="PhysicsMaterial" id=2]
 bounce = 0.3
@@ -27,11 +33,29 @@ extents = Vector2( 484, 20 )
 [sub_resource type="RectangleShape2D" id=5]
 extents = Vector2( 20, 273.75 )
 
+[sub_resource type="Shader" id=8]
+code = "shader_type canvas_item;
+
+uniform float blur_amount : hint_range(0, 5);
+
+void fragment() {
+	COLOR = textureLod(SCREEN_TEXTURE, SCREEN_UV, blur_amount);
+}
+"
+
+[sub_resource type="ShaderMaterial" id=9]
+shader = SubResource( 8 )
+shader_param/blur_amount = 2.0
+
+[sub_resource type="DynamicFont" id=10]
+size = 32
+font_data = ExtResource( 13 )
+
 [sub_resource type="Animation" id=7]
 resource_name = "fade_from_black"
 length = 10.0
 tracks/0/type = "value"
-tracks/0/path = NodePath("CanvasLayer/ColorRect:color")
+tracks/0/path = NodePath("CanvasLayer/FadeInTransition:color")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -84,7 +108,54 @@ margin_top = 92.0
 margin_right = 777.0
 margin_bottom = 452.0
 
+[node name="PauseScreen" type="Control" parent="CanvasLayer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 16 )
+
+[node name="Background" type="ColorRect" parent="CanvasLayer/PauseScreen"]
+material = SubResource( 9 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0, 0, 0, 0.501961 )
+
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/PauseScreen"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/PauseScreen/CenterContainer"]
+margin_left = 353.0
+margin_top = 238.0
+margin_right = 607.0
+margin_bottom = 302.0
+
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/PauseScreen/CenterContainer/VBoxContainer"]
+margin_right = 254.0
+margin_bottom = 28.0
+
+[node name="Label" type="Label" parent="CanvasLayer/PauseScreen/CenterContainer/VBoxContainer/CenterContainer"]
+margin_right = 254.0
+margin_bottom = 28.0
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 10 )
+text = "Do you wish to Quit?"
+
+[node name="CenterContainer2" type="CenterContainer" parent="CanvasLayer/PauseScreen/CenterContainer/VBoxContainer"]
+margin_top = 32.0
+margin_right = 254.0
+margin_bottom = 64.0
+
+[node name="TextureButton" type="TextureButton" parent="CanvasLayer/PauseScreen/CenterContainer/VBoxContainer/CenterContainer2"]
+margin_left = 111.0
+margin_right = 143.0
+margin_bottom = 32.0
+texture_normal = ExtResource( 12 )
+texture_pressed = ExtResource( 15 )
+texture_hover = ExtResource( 14 )
+script = ExtResource( 17 )
+
 [node name="Mouse" type="Node2D" parent="CanvasLayer" groups=["Mouse"]]
+pause_mode = 2
 script = ExtResource( 2 )
 
 [node name="MouseSprite" type="Position2D" parent="CanvasLayer/Mouse"]
@@ -124,6 +195,12 @@ __meta__ = {
 "_edit_lock_": true
 }
 
+[node name="BackBufferCopy" type="BackBufferCopy" parent="CanvasLayer"]
+copy_mode = 2
+__meta__ = {
+"_edit_lock_": true
+}
+
 [node name="CRT Filter" type="ColorRect" parent="CanvasLayer"]
 material = ExtResource( 4 )
 anchor_right = 1.0
@@ -133,7 +210,7 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+[node name="FadeInTransition" type="ColorRect" parent="CanvasLayer"]
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -150,3 +227,5 @@ bus = "Background"
 
 [node name="GameManager" type="Node" parent="."]
 script = ExtResource( 11 )
+
+[connection signal="pressed" from="CanvasLayer/PauseScreen/CenterContainer/VBoxContainer/CenterContainer2/TextureButton" to="CanvasLayer/PauseScreen/CenterContainer/VBoxContainer/CenterContainer2/TextureButton" method="_on_TextureButton_pressed"]
