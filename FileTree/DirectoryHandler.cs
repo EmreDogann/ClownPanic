@@ -248,9 +248,9 @@ public class DirectoryHandler : Node {
             dir.ListDirBegin(true, false);
             mainDirBeingRead = "";
             fileCount = 0;
-            addDirContents(dir, parent, rootPath);
+            addDirContents(dir, parent, rootPath, 0);
             mainDirBeingRead = "";
-                
+
         } else {
             GD.PushError("An error occurred when trying to access the path.");
         }
@@ -260,7 +260,7 @@ public class DirectoryHandler : Node {
 
 
     // Reference: https://godotengine.org/qa/5175/how-to-get-all-the-files-inside-a-folder
-    void addDirContents(Directory dir, TreeNode<FileItem> parent, string rootPath) {
+    void addDirContents(Directory dir, TreeNode<FileItem> parent, string rootPath, int depth) {
         string filename = dir.GetNext();
 
 
@@ -268,27 +268,18 @@ public class DirectoryHandler : Node {
             var path = dir.GetCurrentDir() + "/" + filename;
 
             bool isValidDir = false;
-            int i = 0;
+
+            // int i = 0;
             // Is Valid only in the main directories.
             foreach (string mainFolder in folderRoots) {
                 isValidDir = path.Contains(rootPath + "/" + mainFolder);
                 if (isValidDir) break;
-                i++;
+                // i++;
             }
 
 
             if (isValidDir) {
-                if (mainDirBeingRead == "") mainDirBeingRead = folderRoots[i];
-
-                if (mainDirBeingRead != folderRoots[i]) {
-                    GD.Print(rootPath + ": " + mainDirBeingRead + "   File Count : " + fileCount);
-					
-                    mainDirBeingRead = folderRoots[i];
-
-                    fileCount = 0;
-
-                }
-
+      
                 if (dir.CurrentIsDir()) {
                     if (isValidDir) {
                         if (filename[0] != '.') {
@@ -297,9 +288,10 @@ public class DirectoryHandler : Node {
                             subDir.ListDirBegin(true, false);
 
                             // for logical tree
-                            TreeNode<FileItem> child =
-                                parent.AddChild(new FileItem(path, "", FileItem.FILE_TYPE.DIRECTORY));
-                            addDirContents(subDir, child, rootPath);
+                            TreeNode<FileItem> child = parent.AddChild(new FileItem(path, "", FileItem.FILE_TYPE.DIRECTORY));
+                            addDirContents(subDir, child, rootPath, depth+1);
+							// if coming out of the recursion, and it is back at the root, set file count to 0, as it is done checking main
+							if(depth == 0) fileCount = 0; 
                         }
                     }
                 } else {
@@ -311,6 +303,8 @@ public class DirectoryHandler : Node {
             }
 
             filename = dir.GetNext();
+      
+
         }
 
         dir.ListDirEnd();
