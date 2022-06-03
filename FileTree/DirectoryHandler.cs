@@ -16,7 +16,7 @@ public class DirectoryHandler : Node {
 
 	private string[] folderRoots = {"Documents", "Downloads", "Desktop", "Videos", "Music", "Pictures"};
 
-	private const int fileLimitPerMainDirectory = 5000;
+	private const int fileLimitPerMainDirectory = 50;
 
 	private Tree sceneTree;
 
@@ -174,34 +174,16 @@ public class DirectoryHandler : Node {
 			list[n] = value;
 		}
 	}
-
-	#endregion
-
-	#region PrivateMethods
-
-	/* PRIVATE METHODS */
-
-	void loadTrees() {
-		// create the root node and start the tree
-		// User File Tree
-		userFileTree = new TreeNode<FileItem>(new FileItem(userRoot, "", FileItem.FILE_TYPE.DIRECTORY));
-		getDirContents(userRoot, userFileTree);
-
-		// Default game file tree
-		gameFileTree = new TreeNode<FileItem>(new FileItem(gameDirectoryRoot, "", FileItem.FILE_TYPE.DIRECTORY));
-		getDirContents(gameDirectoryRoot, gameFileTree);
-	}
-
+	
 	// Adds Virus randomly to the Game File Tree
 	// if Directory blank, it will add it in randomly.
-	void addVirusRandomly(string nameOfVirus, bool hidden, string directory = "",
+	public void addVirusRandomly(string nameOfVirus, bool hidden, string directory = "",
 		FileItem.FILE_TYPE fileType = FileItem.FILE_TYPE.FILE) {
-		
-		// delete the old virus node
+		// Delete the old virus node.
 		if (virusNode != null) {
 			TreeNode<FileItem>.DeleteNode(virusNode);
 		}
-
+		
 		TreeNode<FileItem> dirToAddToo;
 		if (directory == "") {
 			dirToAddToo = TreeNode<FileItem>.GetRandomDirectory(gameFileTree);
@@ -226,6 +208,22 @@ public class DirectoryHandler : Node {
 		updateSelectedTreeNode(selectedTreeNode);
 	}
 
+	#endregion
+
+	#region PrivateMethods
+
+	/* PRIVATE METHODS */
+
+	void loadTrees() {
+		// create the root node and start the tree
+		// User File Tree
+		userFileTree = new TreeNode<FileItem>(new FileItem(userRoot, "", FileItem.FILE_TYPE.DIRECTORY));
+		getDirContents(userRoot, userFileTree);
+
+		// Default game file tree
+		gameFileTree = new TreeNode<FileItem>(new FileItem(gameDirectoryRoot, "", FileItem.FILE_TYPE.DIRECTORY));
+		getDirContents(gameDirectoryRoot, gameFileTree);
+	}
 
 	// create mergedTree by Blend B into A. Blend amount is blendValue (range 0-1)
 	void mergeFileTrees(TreeNode<FileItem> treeReciever, TreeNode<FileItem> treeGiver, float blendValue) {
