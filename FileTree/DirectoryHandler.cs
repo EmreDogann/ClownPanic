@@ -87,7 +87,7 @@ public class DirectoryHandler : Node {
 
 
 		// Scene Tree
-		sceneTree = (Tree) GetNode("HBoxContainer/VBoxContainer/CSTree");
+		sceneTree = (Tree) GetNode("HSplitContainer/VBoxContainer/CSTree");
 		updateSceneTree(ref sceneTree, gameFileTree);
 		// sceneTreeRoot = sceneTree.CreateItem();
 		// sceneTreeRoot.SetText(0, "Directories");
@@ -99,7 +99,7 @@ public class DirectoryHandler : Node {
 		GD.Print(OS.GetEnvironment("USERNAME"));
 
 		// Scene Tree
-		sceneItemList = (ItemList) GetNode("HBoxContainer/VBoxContainer2/ItemList");
+		sceneItemList = (ItemList) GetNode("HSplitContainer/VBoxContainer2/ItemList");
 
 		nodeHistory = new Stack<TreeNode<FileItem>>();
 
@@ -543,7 +543,6 @@ public class DirectoryHandler : Node {
 
 		treeNode.Value.SetIsCollapsed(checkingDir.Collapsed);
 	}
-
 
 	private void onItemListNothingSelected() {
 		selectedItem = null;

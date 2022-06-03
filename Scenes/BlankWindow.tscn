@@ -27,13 +27,13 @@ border_color = Color( 0, 0.206667, 0.62, 1 )
 bg_color = Color( 0, 0, 0, 1 )
 
 [node name="Control" type="Control"]
-margin_right = 640.0
-margin_bottom = 360.0
+margin_right = 200.0
+margin_bottom = 200.0
 
 [node name="Window" type="Panel" parent="."]
 material = ExtResource( 5 )
-margin_right = 200.0
-margin_bottom = 200.0
+anchor_right = 1.0
+anchor_bottom = 1.0
 rect_min_size = Vector2( 200, 100 )
 mouse_filter = 1
 theme = ExtResource( 1 )
