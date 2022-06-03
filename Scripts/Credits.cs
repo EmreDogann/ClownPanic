@@ -3,8 +3,10 @@ using Godot;
 using System.Collections.Generic;
 using System.Linq;
 
-public class Credits : Label {
-	private ScrollContainer scrollContainer;
+public class Credits : RichTextLabel {
+	[Signal]
+	delegate void terminal_game_over();
+
 	private DirectoryHandler filesDirectoryReference;
 	private LinkedList<string> fileDirectoryList;
 	private String rootDirectory;
@@ -14,12 +16,19 @@ public class Credits : Label {
 	private float timer;
 	private float timerIncrement;
 
+	private bool is_blink_on = true;
+	private float blinkingCooldown = 0.75f;
+
+	private bool is_game_over = false;
+
 	private int numberOfFilesDeleted = 1;
+
+	private DynamicFont bigFont = GD.Load<DynamicFont>("res://Fonts/DefaultDynamicFont-Big.tres");
 
 	public override void _Ready() {
 		filesDirectoryReference = (DirectoryHandler)GetTree().Root
 			.GetNode("Node2D/CanvasLayer/FileExplorer/Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files");
-		
+
 		var fileExplorerWindowIndex = GetTree().Root.GetNode("Node2D/CanvasLayer/FileExplorer").GetIndex();
 		GetTree().Root.GetNode("Node2D/CanvasLayer").CallDeferred("move_child", GetTree().Root.GetNode("Node2D/CanvasLayer/Terminal"), fileExplorerWindowIndex);
 
@@ -29,15 +38,19 @@ public class Credits : Label {
 
 		timerIncrement = gameOverTimeLimit / filesDirectoryReference.GetUserTotalFileCount();
 
-		scrollContainer = GetParent<ScrollContainer>();
-		// Text += rootDirectory + "> GAME OVER.\n";
+		Node gameManagerRef = GetTree().Root.GetNode("Node2D/GameManager");
+
+		Connect("terminal_game_over", gameManagerRef, "terminal_game_over");
 	}
 
 	public override void _Process(float delta) {
 		timer += delta;
 
-		if (timer > timerIncrement) {
+		if (timer > timerIncrement && !is_game_over) {
 			addDebugStatementToTerminal();
+			timer = 0;
+		} else if (timer > blinkingCooldown) {
+			blinkLastText();
 			timer = 0;
 		}
 	}
@@ -49,23 +62,33 @@ public class Credits : Label {
 	public void addDebugStatementToTerminal() {
 		if (fileDirectoryList.Count > 1) {
 			var finalFileLocation = fileDirectoryList.First.Next.Value.Replace(rootDirectory, "");
-			
-			String textToAdd = rootDirectory + "> (" + numberOfFilesDeleted + "/" + (filesDirectoryReference.GetUserTotalFileCount() - 1) + ") DELETING " + finalFileLocation + "\n";
 
-			Text += textToAdd;
+			String textToAdd = rootDirectory + "> [color=yellow](" + numberOfFilesDeleted + "/" + (filesDirectoryReference.GetUserTotalFileCount() - 1) + ")[/color] [color=red]DELETING[/color] [color=green]" + finalFileLocation + "[/color]\n";
+
+			BbcodeText += textToAdd;
 			fileDirectoryList.Remove(fileDirectoryList.First.Next);
 
 			numberOfFilesDeleted += 1;
 		}
 
 		if (IsGameOver()) {
-			Text += "GAME OVER - go home now!\n";
-		}
-		
-		if (Text.Count() > MAX_CHARACTER_LIMIT) {
-			Text = Text.Remove(0, Text.Count() - MAX_CHARACTER_LIMIT);
+			BbcodeText += "[color=yellow]GAME OVER - go home now![/color]";
+			EmitSignal(nameof(terminal_game_over));
+			is_game_over = true;
 		}
 
-		scrollContainer.ScrollVertical = (int)scrollContainer.GetVScrollbar().MaxValue;
+		if (BbcodeText.Count() > MAX_CHARACTER_LIMIT) {
+			BbcodeText = BbcodeText.Remove(0, BbcodeText.Count() - MAX_CHARACTER_LIMIT);
+		}
+	}
+
+	public void blinkLastText() {
+		if (is_blink_on) {
+			BbcodeText = BbcodeText.Remove(BbcodeText.LastIndexOf('\n') + 1);
+			is_blink_on = false;
+		} else {
+			BbcodeText += "[color=yellow]GAME OVER - go home now![/color]";
+			is_blink_on = true;
+		}
 	}
 }

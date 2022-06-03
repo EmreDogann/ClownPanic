@@ -48,9 +48,13 @@ func virus_deleted():
 func spawn_window() -> void:
 	pass
 
+func terminal_game_over() -> void:
+	print("Game Over!")
+
 func _on_StateMachinePlayer_updated(state, delta) -> void:
 	match state:
 #	print(state)
 		"Level 1/Spawn Virus":
 #			print(fileSystem.GetListOfFiles())
-			fileSystem.addVirusRandomly("VIRUS.v", false, "", FILE_TYPE.FILE)
+#			fileSystem.addVirusRandomly("VIRUS.v", false, "", FILE_TYPE.FILE)
+			pass

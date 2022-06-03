@@ -8,9 +8,9 @@
 [ext_resource path="res://Gradients/Window-TitleBar.tres" type="Texture" id=6]
 [ext_resource path="res://Images/Icons/Window Titlebar/Close Icon - Pressed.png" type="Texture" id=7]
 [ext_resource path="res://Images/Icons/Window Titlebar/Close Icon - Highlighted.png" type="Texture" id=8]
-[ext_resource path="res://Images/Icons/Window Titlebar/Maximize Icon.png" type="Texture" id=9]
+[ext_resource path="res://Images/Icons/Window Titlebar/Maximize Icon - Disabled.png" type="Texture" id=9]
 [ext_resource path="res://Images/Icons/Window Titlebar/Close Icon.png" type="Texture" id=10]
-[ext_resource path="res://Images/Icons/Window Titlebar/Minimize Icon.png" type="Texture" id=11]
+[ext_resource path="res://Images/Icons/Window Titlebar/Minimize Icon - Disabled.png" type="Texture" id=11]
 [ext_resource path="res://Fonts/DefaultDynamicFont_Bold.tres" type="DynamicFont" id=12]
 [ext_resource path="res://Fonts/DefaultDynamicFont.tres" type="DynamicFont" id=13]
 [ext_resource path="res://Scripts/Credits.cs" type="Script" id=14]
@@ -203,19 +203,15 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 color = Color( 0, 0, 0, 1 )
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Window/VBoxContainer/Body/MarginContainer/ColorRect"]
+[node name="RichTextLabel" type="RichTextLabel" parent="Window/VBoxContainer/Body/MarginContainer/ColorRect"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-follow_focus = true
-
-[node name="TerminalText" type="Label" parent="Window/VBoxContainer/Body/MarginContainer/ColorRect/ScrollContainer"]
-margin_right = 549.0
-margin_bottom = 325.0
 size_flags_horizontal = 3
-size_flags_vertical = 3
-theme = ExtResource( 1 )
-custom_fonts/font = ExtResource( 13 )
-autowrap = true
+custom_colors/default_color = Color( 1, 1, 1, 1 )
+custom_fonts/normal_font = ExtResource( 13 )
+bbcode_enabled = true
+scroll_following = true
+deselect_on_focus_loss_enabled = false
 script = ExtResource( 14 )
 
 [connection signal="gui_input" from="Window/VBoxContainer/Titlebar" to="Window/VBoxContainer/Titlebar" method="_on_Titlebar_gui_input"]

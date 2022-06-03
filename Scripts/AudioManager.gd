@@ -6,7 +6,7 @@ var keyboardSFX: Array
 var deletedSFX: Array
 
 var players: Array
-var currentPlayer: int = 0
+var currentPlayer: int = 5
 var PLAYERS_COUNT: int = 20
 
 var startupSound: bool = false
@@ -84,7 +84,7 @@ func play(sample: AudioStream) -> void:
 	
 	currentPlayer += 1
 	if (currentPlayer % PLAYERS_COUNT == 0):
-		currentPlayer = 5 # players 0 and 1 are reserved for the background noise
+		currentPlayer = 5 # players 0 and 1 are reserved for the background noise. 2 and 3 are reserved for mouse clicks.
 
 func play_random_pitch(sample: AudioStreamSample, pitch_intensity: int) -> void:
 	var randomPitchShift: AudioStreamRandomPitch = AudioStreamRandomPitch.new()

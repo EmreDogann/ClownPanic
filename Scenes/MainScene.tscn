@@ -1,4 +1,4 @@
-[gd_scene load_steps=54 format=2]
+[gd_scene load_steps=59 format=2]
 
 [ext_resource path="res://Scenes/Desktop.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scripts/Mouse.gd" type="Script" id=2]
@@ -27,7 +27,7 @@
 [ext_resource path="res://addons/imjp94.yafsm/src/transitions/Transition.gd" type="Script" id=25]
 [ext_resource path="res://addons/imjp94.yafsm/src/states/State.gd" type="Script" id=26]
 [ext_resource path="res://addons/imjp94.yafsm/src/states/StateMachine.gd" type="Script" id=27]
-[ext_resource path="res://addons/imjp94.yafsm/src/conditions/BooleanCondition.gd" type="Script" id=28]
+[ext_resource path="res://addons/imjp94.yafsm/src/conditions/Condition.gd" type="Script" id=28]
 [ext_resource path="res://addons/imjp94.yafsm/src/StateMachinePlayer.gd" type="Script" id=29]
 
 [sub_resource type="PhysicsMaterial" id=2]
@@ -109,52 +109,41 @@ name = "Exit"
 [sub_resource type="Resource" id=17]
 script = ExtResource( 26 )
 __meta__ = {
-"graph_offset": Vector2( 368.5, 120 )
+"graph_offset": Vector2( 388.5, 0 )
 }
 name = "Spawn Virus"
-
-[sub_resource type="Resource" id=18]
-script = ExtResource( 26 )
-__meta__ = {
-"graph_offset": Vector2( 645, 120 )
-}
-name = "Virus Deleted"
 
 [sub_resource type="Resource" id=19]
 script = ExtResource( 26 )
 __meta__ = {
-"graph_offset": Vector2( 900.5, 120 )
+"graph_offset": Vector2( 700.5, 120 )
 }
 name = "Play Transition"
 
-[sub_resource type="Resource" id=20]
-script = ExtResource( 25 )
-from = "Entry"
-to = "Spawn Virus"
-conditions = {
+[sub_resource type="Resource" id=18]
+script = ExtResource( 26 )
+__meta__ = {
+"graph_offset": Vector2( 709.5, 0 )
 }
-priority = 0
+name = "Delete Virus"
 
-[sub_resource type="Resource" id=21]
+[sub_resource type="Resource" id=28]
+script = ExtResource( 26 )
+__meta__ = {
+"graph_offset": Vector2( 408, 120 )
+}
+name = "Idle"
+
+[sub_resource type="Resource" id=29]
 script = ExtResource( 28 )
-name = "virus_deleted"
-comparation = 0
-value = true
+name = "VirusDeleted"
 
 [sub_resource type="Resource" id=22]
 script = ExtResource( 25 )
 from = "Spawn Virus"
-to = "Virus Deleted"
+to = "Delete Virus"
 conditions = {
-"virus_deleted": SubResource( 21 )
-}
-priority = 0
-
-[sub_resource type="Resource" id=23]
-script = ExtResource( 25 )
-from = "Virus Deleted"
-to = "Play Transition"
-conditions = {
+"VirusDeleted": SubResource( 29 )
 }
 priority = 0
 
@@ -166,6 +155,51 @@ conditions = {
 }
 priority = 0
 
+[sub_resource type="Resource" id=30]
+script = ExtResource( 25 )
+from = "Play Transition"
+to = "Idle"
+conditions = {
+}
+priority = 0
+
+[sub_resource type="Resource" id=23]
+script = ExtResource( 25 )
+from = "Delete Virus"
+to = "Play Transition"
+conditions = {
+}
+priority = 0
+
+[sub_resource type="Resource" id=20]
+script = ExtResource( 25 )
+from = "Entry"
+to = "Idle"
+conditions = {
+}
+priority = 0
+
+[sub_resource type="Resource" id=31]
+script = ExtResource( 25 )
+from = "Idle"
+to = "Spawn Virus"
+conditions = {
+}
+priority = 0
+
+[sub_resource type="Resource" id=32]
+script = ExtResource( 28 )
+name = "WrongFileDeleted"
+
+[sub_resource type="Resource" id=33]
+script = ExtResource( 25 )
+from = "Idle"
+to = "Play Transition"
+conditions = {
+"WrongFileDeleted": SubResource( 32 )
+}
+priority = 0
+
 [sub_resource type="Resource" id=25]
 script = ExtResource( 27 )
 __meta__ = {
@@ -173,24 +207,30 @@ __meta__ = {
 }
 name = "Level 1"
 states = {
+"Delete Virus": SubResource( 18 ),
 "Entry": SubResource( 15 ),
 "Exit": SubResource( 16 ),
+"Idle": SubResource( 28 ),
 "Play Transition": SubResource( 19 ),
-"Spawn Virus": SubResource( 17 ),
-"Virus Deleted": SubResource( 18 )
+"Spawn Virus": SubResource( 17 )
 }
 transitions = {
+"Delete Virus": {
+"Play Transition": SubResource( 23 )
+},
 "Entry": {
-"Spawn Virus": SubResource( 20 )
+"Idle": SubResource( 20 )
+},
+"Idle": {
+"Play Transition": SubResource( 33 ),
+"Spawn Virus": SubResource( 31 )
 },
 "Play Transition": {
-"Exit": SubResource( 24 )
+"Exit": SubResource( 24 ),
+"Idle": SubResource( 30 )
 },
 "Spawn Virus": {
-"Virus Deleted": SubResource( 22 )
-},
-"Virus Deleted": {
-"Play Transition": SubResource( 23 )
+"Delete Virus": SubResource( 22 )
 }
 }
 
@@ -456,8 +496,8 @@ margin_left = 111.0
 margin_right = 143.0
 margin_bottom = 32.0
 texture_normal = ExtResource( 12 )
-texture_pressed = ExtResource( 15 )
-texture_hover = ExtResource( 14 )
+texture_pressed = ExtResource( 14 )
+texture_hover = ExtResource( 15 )
 script = ExtResource( 17 )
 
 [node name="FadeInTransition" type="ColorRect" parent="CanvasLayer"]
