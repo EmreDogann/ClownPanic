@@ -51,24 +51,24 @@ public class FileItem {
 		}
 	}
 
-	public string getFilePath() {
+	public string GetFilePath() {
 		return filepath;
 	}
 
-	public string getFileName() {
+	public string GetFileName() {
 		if (filename == "") {
 		}
 		return filename;
 	}
 
-	public FILE_TYPE getFileType() {
+	public FILE_TYPE GetFileType() {
 		return filetype;
 	}
 
-	public bool isDirectory() {
+	public bool IsDirectory() {
 		return filetype == FILE_TYPE.DIRECTORY;
 	}
-	public bool isExecutable() {
+	public bool IsExecutable() {
 		return filetype == FILE_TYPE.EXECUTABLE;
 	}
 	public bool IsVirus() {
@@ -79,7 +79,11 @@ public class FileItem {
 		return isCollapsed;
 	}
 
-	public void setIsVirus(bool isVirus) {
+	public void SetIsCollapsed() {
+		
+	}
+
+	public void SetIsVirus(bool isVirus) {
 		this.isVirus = isVirus;
 	}
 

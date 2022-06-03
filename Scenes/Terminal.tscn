@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://WindowsXPTheme.theme" type="Theme" id=1]
 [ext_resource path="res://Images/Icons/My Documents.png" type="Texture" id=2]
@@ -12,6 +12,8 @@
 [ext_resource path="res://Images/Icons/Window Titlebar/Close Icon.png" type="Texture" id=10]
 [ext_resource path="res://Images/Icons/Window Titlebar/Minimize Icon.png" type="Texture" id=11]
 [ext_resource path="res://Fonts/DefaultDynamicFont_Bold.tres" type="DynamicFont" id=12]
+[ext_resource path="res://Fonts/DefaultDynamicFont.tres" type="DynamicFont" id=13]
+[ext_resource path="res://Scripts/Credits.cs" type="Script" id=14]
 
 [sub_resource type="StyleBoxFlat" id=11]
 bg_color = Color( 1, 1, 1, 1 )
@@ -84,23 +86,23 @@ stretch_mode = 5
 
 [node name="MarginContainer2" type="MarginContainer" parent="Window/VBoxContainer/Titlebar/HBoxContainer"]
 margin_left = 20.0
-margin_right = 98.0
+margin_right = 210.0
 margin_bottom = 22.0
 mouse_filter = 1
 custom_constants/margin_top = 2
 
 [node name="Window Name" type="Label" parent="Window/VBoxContainer/Titlebar/HBoxContainer/MarginContainer2"]
 margin_top = 2.0
-margin_right = 78.0
+margin_right = 190.0
 margin_bottom = 22.0
 size_flags_vertical = 1
 custom_fonts/font = ExtResource( 12 )
-text = "File Explorer"
+text = "c:\\WINDOWS\\system32\\cmd.exe"
 align = 1
 valign = 1
 
 [node name="MarginContainer3" type="MarginContainer" parent="Window/VBoxContainer/Titlebar/HBoxContainer"]
-margin_left = 98.0
+margin_left = 210.0
 margin_right = 487.0
 margin_bottom = 22.0
 mouse_filter = 1
@@ -192,6 +194,29 @@ mouse_filter = 1
 custom_constants/margin_right = 4
 custom_constants/margin_left = 4
 custom_constants/margin_bottom = 4
+
+[node name="ColorRect" type="ColorRect" parent="Window/VBoxContainer/Body/MarginContainer"]
+margin_left = 4.0
+margin_right = 553.0
+margin_bottom = 325.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color( 0, 0, 0, 1 )
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Window/VBoxContainer/Body/MarginContainer/ColorRect"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+follow_focus = true
+
+[node name="TerminalText" type="Label" parent="Window/VBoxContainer/Body/MarginContainer/ColorRect/ScrollContainer"]
+margin_right = 549.0
+margin_bottom = 325.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource( 1 )
+custom_fonts/font = ExtResource( 13 )
+autowrap = true
+script = ExtResource( 14 )
 
 [connection signal="gui_input" from="Window/VBoxContainer/Titlebar" to="Window/VBoxContainer/Titlebar" method="_on_Titlebar_gui_input"]
 [connection signal="window_moved" from="Window/VBoxContainer/Titlebar" to="Window" method="_on_Titlebar_window_moved"]
