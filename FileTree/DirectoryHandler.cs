@@ -2,8 +2,8 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-
 public class DirectoryHandler : Node {
+
     const int fileLimitPerMainDirectory = 1000;
 
     private Tree sceneTree;
@@ -11,7 +11,7 @@ public class DirectoryHandler : Node {
     private TreeItem sceneTreeRoot;
 
     TreeNode<FileItem> userFileTree; // base logical file tree
-    // string rootPath = "C:/Users/aum/Documents/Documents";
+                                     // string rootPath = "C:/Users/aum/Documents/Documents";
 
     TreeNode<FileItem> gameFileTree;
 
@@ -19,7 +19,6 @@ public class DirectoryHandler : Node {
     TreeNode<FileItem> selectedItem;
 
     TreeNode<FileItem> virusNode;
-
 
     Stack<TreeNode<FileItem>> nodeHistory;
 
@@ -29,7 +28,7 @@ public class DirectoryHandler : Node {
     const string windowsRootDirectory = "C:/Users";
     const string gameDirectoryRoot = "res://FileTree/GameDirectories";
 
-    string[] folderRoots = {"Documents", "Downloads", "Desktop", "Videos", "Music", "Pictures"};
+    string[] folderRoots = { "Documents", "Downloads", "Desktop", "Videos", "Music", "Pictures" };
 
     string currentDirectory = ""; // Can be used as the breadcrumb
 
@@ -44,15 +43,15 @@ public class DirectoryHandler : Node {
     Texture[] itemListIcons = new Texture[7];
 
     public override void _Ready() {
-        treeItemIcon = (Texture) GD.Load("res://Images/Icons/Folder.png");
+        treeItemIcon = (Texture)GD.Load("res://Images/Icons/Folder.png");
 
-        itemListIcons[0] = (Texture) GD.Load("res://Images/Icons/Folder.png");
-        itemListIcons[1] = (Texture) GD.Load("res://Images/Icons/Image.png");
-        itemListIcons[2] = (Texture) GD.Load("res://Images/Icons/Video.png");
-        itemListIcons[3] = (Texture) GD.Load("res://Images/Icons/Audio.png");
-        itemListIcons[4] = (Texture) GD.Load("res://Images/Icons/Executable.png");
-        itemListIcons[5] = (Texture) GD.Load("res://Images/Icons/File.png");
-        itemListIcons[6] = (Texture) GD.Load("res://Images/Icons/File.png");
+        itemListIcons[0] = (Texture)GD.Load("res://Images/Icons/Folder.png");
+        itemListIcons[1] = (Texture)GD.Load("res://Images/Icons/Image.png");
+        itemListIcons[2] = (Texture)GD.Load("res://Images/Icons/Video.png");
+        itemListIcons[3] = (Texture)GD.Load("res://Images/Icons/Audio.png");
+        itemListIcons[4] = (Texture)GD.Load("res://Images/Icons/Executable.png");
+        itemListIcons[5] = (Texture)GD.Load("res://Images/Icons/File.png");
+        itemListIcons[6] = (Texture)GD.Load("res://Images/Icons/File.png");
 
         // create root path
         if (OS.GetName() == "Windows") {
@@ -60,8 +59,8 @@ public class DirectoryHandler : Node {
         }
 
         loadTrees();
-        
-        GD.Print("User File Tree Size: ",userFileTree.Size());
+
+        GD.Print("User File Tree Size: ", userFileTree.Size());
         GD.Print("Game File Tree Size: ", gameFileTree.Size());
 
         // merged File Tree
@@ -69,7 +68,7 @@ public class DirectoryHandler : Node {
 
 
         // Scene Tree
-        sceneTree = (Tree) GetNode("HBoxContainer/VBoxContainer/CSTree");
+        sceneTree = (Tree)GetNode("HBoxContainer/VBoxContainer/CSTree");
         updateSceneTree(ref sceneTree, gameFileTree);
         // sceneTreeRoot = sceneTree.CreateItem();
         // sceneTreeRoot.SetText(0, "Directories");
@@ -81,13 +80,13 @@ public class DirectoryHandler : Node {
         GD.Print(OS.GetEnvironment("USERNAME"));
 
         // Scene Tree
-        sceneItemList = (ItemList) GetNode("HBoxContainer/VBoxContainer2/ItemList");
+        sceneItemList = (ItemList)GetNode("HBoxContainer/VBoxContainer2/ItemList");
 
         nodeHistory = new Stack<TreeNode<FileItem>>();
 
         selectedTreeNode = gameFileTree;
 
-        sceneBreadCrumb = (Label) GetNode("../Controls/HBoxContainer/MarginContainer5/Breadcrumb");
+        sceneBreadCrumb = (Label)GetNode("../Controls/HBoxContainer/MarginContainer5/Breadcrumb");
     }
 
     // Frame by frame method
@@ -108,8 +107,7 @@ public class DirectoryHandler : Node {
         // Custom Action, needs to be added in project settings: Assigned to BackSpace, MouseBackButton (4/5)
         if (Input.IsActionJustPressed("ui_back")) {
             onBackButtonPressed();
-        }
-        else if (Input.IsActionJustPressed("ui_forward")) {
+        } else if (Input.IsActionJustPressed("ui_forward")) {
             onForwardButtonPressed();
         }
 
@@ -135,8 +133,7 @@ public class DirectoryHandler : Node {
         TreeNode<FileItem> dirToAddToo;
         if (directory == "") {
             dirToAddToo = TreeNode<FileItem>.GetRandomDirectory(gameFileTree);
-        }
-        else {
+        } else {
             dirToAddToo = TreeNode<FileItem>.GetChildNodeByPath(directory, gameFileTree);
         }
 
@@ -145,8 +142,7 @@ public class DirectoryHandler : Node {
             FileItem fileToCopy = TreeNode<FileItem>.GetRandomFile(dirToAddToo).Value;
             virusItem = new FileItem(TreeNode<FileItem>.GetPathByNode(dirToAddToo) + "/" + fileToCopy.getFileName(),
                 filename: fileToCopy.getFileName(), filetype: fileToCopy.getFileType());
-        }
-        else {
+        } else {
             virusItem = new FileItem(TreeNode<FileItem>.GetPathByNode(dirToAddToo) + "/" + nameOfVirus,
                 filetype: fileType);
         }
@@ -176,7 +172,7 @@ public class DirectoryHandler : Node {
         Random rnd = new Random();
         // Should be main directories (Documents, Downloads, Desktop, etc...)
         foreach (TreeNode<FileItem> mainDir in treeB.Children) {
-            int numFilesToAdd = (int)Math.Ceiling(((float) mainDir.Size() * blendValue));
+            int numFilesToAdd = (int)Math.Ceiling(((float)mainDir.Size() * blendValue));
             int numFilesAdded = 0;
             int numOfChildren = mainDir.Children.Count;
             List<int> childUsed = new List<int>();
@@ -205,7 +201,7 @@ public class DirectoryHandler : Node {
 
         int i = 0;
         foreach (TreeNode<FileItem> item in directory.Children) {
-            sceneItemList.AddItem(item.Value.getFileName(), itemListIcons[(int) item.Value.getFileType()]);
+            sceneItemList.AddItem(item.Value.getFileName(), itemListIcons[(int)item.Value.getFileType()]);
             sceneItemList.SetItemTooltipEnabled(i, false);
             i++;
         }
@@ -237,8 +233,7 @@ public class DirectoryHandler : Node {
             dir.ListDirBegin(true, false);
             var fileCount = 0;
             addDirContents(dir, parent, rootPath, ref fileCount);
-        }
-        else {
+        } else {
             GD.PushError("An error occurred when trying to access the path.");
         }
     }
@@ -260,7 +255,7 @@ public class DirectoryHandler : Node {
             }
 
             if (isValidDir) {
-                if (dir.CurrentIsDir()) { 
+                if (dir.CurrentIsDir()) {
                     if (isValidDir) {
                         if (filename[0] != '.') {
                             Directory subDir = new Directory();
@@ -273,8 +268,7 @@ public class DirectoryHandler : Node {
                             addDirContents(subDir, child, rootPath, ref fileCount);
                         }
                     }
-                }
-                else {
+                } else {
                     if (filename[0] != '.') {
                         TreeNode<FileItem> child = parent.AddChild(new FileItem(path));
                         fileCount += 1;
