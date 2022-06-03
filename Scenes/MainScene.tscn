@@ -258,57 +258,8 @@ margin_top = 92.0
 margin_right = 777.0
 margin_bottom = 452.0
 
-<<<<<<< HEAD
-[node name="PauseScreen" type="Control" parent="CanvasLayer"]
-visible = false
-anchor_right = 1.0
-anchor_bottom = 1.0
-script = ExtResource( 16 )
-
-[node name="Background" type="ColorRect" parent="CanvasLayer/PauseScreen"]
-material = ExtResource( 18 )
-anchor_right = 1.0
-anchor_bottom = 1.0
-color = Color( 0, 0, 0, 0.501961 )
-
-[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/PauseScreen"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/PauseScreen/CenterContainer"]
-margin_left = 353.0
-margin_top = 238.0
-margin_right = 607.0
-margin_bottom = 302.0
-
-[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/PauseScreen/CenterContainer/VBoxContainer"]
-margin_right = 254.0
-margin_bottom = 28.0
-
-[node name="Label" type="Label" parent="CanvasLayer/PauseScreen/CenterContainer/VBoxContainer/CenterContainer"]
-margin_right = 254.0
-margin_bottom = 28.0
-custom_colors/font_color = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 10 )
-text = "Do you wish to Quit?"
-
-[node name="CenterContainer2" type="CenterContainer" parent="CanvasLayer/PauseScreen/CenterContainer/VBoxContainer"]
-margin_top = 32.0
-margin_right = 254.0
-margin_bottom = 64.0
-
-[node name="TextureButton" type="TextureButton" parent="CanvasLayer/PauseScreen/CenterContainer/VBoxContainer/CenterContainer2"]
-margin_left = 111.0
-margin_right = 143.0
-margin_bottom = 32.0
-texture_normal = ExtResource( 12 )
-texture_pressed = ExtResource( 14 )
-texture_hover = ExtResource( 15 )
-script = ExtResource( 17 )
-=======
 [node name="Terminal" parent="CanvasLayer" instance=ExtResource( 24 )]
 mouse_filter = 2
->>>>>>> c9c62cc1ca94b661edca83aca715066b4b203b1f
 
 [node name="Mouse" type="Node2D" parent="CanvasLayer" groups=["Mouse"]]
 pause_mode = 2
