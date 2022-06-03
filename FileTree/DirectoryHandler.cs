@@ -196,6 +196,12 @@ public class DirectoryHandler : Node {
 	// if Directory blank, it will add it in randomly.
 	void addVirusRandomly(string nameOfVirus, bool hidden, string directory = "",
 		FileItem.FILE_TYPE fileType = FileItem.FILE_TYPE.FILE) {
+		
+		// delete the old virus node
+		if (virusNode != null) {
+			TreeNode<FileItem>.DeleteNode(virusNode);
+		}
+
 		TreeNode<FileItem> dirToAddToo;
 		if (directory == "") {
 			dirToAddToo = TreeNode<FileItem>.GetRandomDirectory(gameFileTree);
@@ -216,7 +222,7 @@ public class DirectoryHandler : Node {
 		}
 
 		virusItem.SetIsVirus(true);
-		dirToAddToo.AddChild(virusItem);
+		virusNode = dirToAddToo.AddChild(virusItem);
 		updateSelectedTreeNode(selectedTreeNode);
 	}
 
