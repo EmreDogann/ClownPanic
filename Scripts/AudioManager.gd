@@ -90,7 +90,7 @@ func _process(delta: float) -> void:
 		else:
 #			print(staticVolume)
 			staticVolumeLerpWeight += (delta  / staticVolumeLerpTime) * sign(staticVolumeTargetWeight - staticVolumeLerpWeight)
-			staticVolume = lerp(staticVolumeInitial, -5.0, staticVolumeLerpWeight)
+			staticVolume = lerp(staticVolumeInitial, 0.0, staticVolumeLerpWeight)
 			
 			players[5].volume_db = staticVolume
 		
@@ -149,6 +149,7 @@ func wrong_file_deleted() -> void:
 	play(deletedSFX[0])
 
 func play_static() -> void:
+	players[5].bus = "Static"
 	players[5].volume_db = staticVolumeInitial
 	play_specific(backgroundNoises[4], 5)
 

@@ -1,9 +1,9 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://Shaders/Pixelate.tres" type="Material" id=1]
-[ext_resource path="res://Shaders/CRT.tres" type="Material" id=2]
+[ext_resource path="res://Shaders/Crossfade.tres" type="Material" id=2]
 [ext_resource path="res://Shaders/StartMenuMask.tres" type="Material" id=3]
-[ext_resource path="res://Images/Clowns.png" type="Texture" id=4]
+[ext_resource path="res://Scripts/Wallpaper.gd" type="Script" id=4]
 [ext_resource path="res://Gradients/StartMenu-TaskBar-Transition.tres" type="Texture" id=5]
 [ext_resource path="res://Gradients/TaskBar-ItemBar-Transition.tres" type="Texture" id=6]
 [ext_resource path="res://Fonts/m6x11.ttf" type="DynamicFontData" id=7]
@@ -11,6 +11,7 @@
 [ext_resource path="res://Gradients/StartMenu.tres" type="Texture" id=9]
 [ext_resource path="res://Gradients/Itembar.tres" type="Texture" id=10]
 [ext_resource path="res://Scripts/Time.gd" type="Script" id=11]
+[ext_resource path="res://Images/Wallpapers/Level 1/Image-1.png" type="Texture" id=12]
 
 [sub_resource type="Gradient" id=3]
 
@@ -70,9 +71,15 @@ __meta__ = {
 [node name="Wallpaper" type="TextureRect" parent="Panel"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-texture = ExtResource( 4 )
+texture = ExtResource( 12 )
 expand = true
 stretch_mode = 1
+script = ExtResource( 4 )
+
+[node name="Crossfade" type="ColorRect" parent="Panel"]
+material = ExtResource( 2 )
+anchor_right = 1.0
+anchor_bottom = 1.0
 
 [node name="TaskBar" type="TextureRect" parent="Panel"]
 material = ExtResource( 1 )
@@ -174,14 +181,3 @@ align = 1
 valign = 1
 uppercase = true
 script = ExtResource( 11 )
-
-[node name="WhiteBG" type="ColorRect" parent="Panel"]
-visible = false
-anchor_right = 1.0
-anchor_bottom = 1.0
-
-[node name="CRT Filter" type="ColorRect" parent="Panel"]
-visible = false
-material = ExtResource( 2 )
-anchor_right = 1.0
-anchor_bottom = 1.0

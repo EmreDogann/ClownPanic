@@ -1,5 +1,7 @@
 extends Node
 
+signal change_wallpaper
+
 #onready var smp = get_node("../StateMachinePlayer")
 onready var smp = $StateMachinePlayer
 const YAFSM = preload("res://addons/imjp94.yafsm/YAFSM.gd")
@@ -12,6 +14,7 @@ onready var blankWindow = preload("res://Scenes/BlankWindow.tscn")
 
 onready var fileSystem = get_tree().root.get_node("Node2D/CanvasLayer/FileExplorer/Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files")
 onready var audioManager = get_tree().root.get_node("Node2D/AudioManager")
+onready var wallpaperNode = get_tree().root.get_node("Node2D/CanvasLayer/Desktop/Panel/Wallpaper")
 
 onready var wrongFileGlitch = get_node("../CanvasLayer/Post-Processing Effects/Wrong File Glitch/Effect")
 onready var distortion = get_node("../CanvasLayer/Post-Processing Effects/Distortion/Effect")
@@ -39,6 +42,10 @@ var staticIntensityTargetWeight: float
 var staticIntensityLerpWeight: float
 var staticIntensityLerpTime: float = 2.0
 var shouldChangeStaticIntensity = false
+
+var wallpaperTransitionReady: bool = false
+var wallpaperTimerCooldown = 4.0
+var wallpaperTimer = wallpaperTimerCooldown
 
 # get_node("../CanvasLayer/FileExplorer/Window/VBoxContainer/Titlebar/HBoxContainer/HBoxContainer")
 onready var player_health: int = 4;
@@ -75,23 +82,34 @@ func _ready():
 	smp.set_param("Level1/IdleTimer", 0.0)
 	smp.set_param("isVirusDeleted", false)
 	
+	connect("change_wallpaper", wallpaperNode, "change_wallpaper")
+	
 	rng.randomize()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
+	if (wallpaperTransitionReady):
+		wallpaperTimer -= delta
+	
+	if (wallpaperTimer <= 0.0):
+		emit_signal("change_wallpaper")
+		wallpaperTimer = wallpaperTimerCooldown
+		wallpaperTransitionReady = false
+	
 	if (shouldChangeStaticIntensity):
 		if (abs(staticIntensityLerpWeight - staticIntensityTargetWeight) <= 0.01):
 			shouldChangeStaticIntensity = false
 		else:
-#			print(staticVolume)
 			staticIntensityLerpWeight += (delta  / staticIntensityLerpTime) * sign(staticIntensityTargetWeight - staticIntensityLerpWeight)
 			staticIntensity = lerp(0.1, 0.6, clamp(staticIntensityLerpWeight, 0.0, 1.0))
 			
 			crtFilter.material.set('shader_param/static_noise_intensity', staticIntensity)
 			
 
+func wallpaper_transition_finished():
+	wallpaperTransitionReady = true
+
 func virus_distance_update(incrementAmount: float):
-	print(incrementAmount)
 	audioManager.increase_static_volume(incrementAmount)
 	shouldChangeStaticIntensity = true
 	staticIntensityTargetWeight = 1 - 0.2 * (incrementAmount + 1)
@@ -206,7 +224,7 @@ func _on_StateMachinePlayer_updated(state, delta) -> void:
 			distortion.material.set('shader_param/time', transitionTimer)
 			wrongFileGlitch.material.set('shader_param/amplitude', transitionFadeOutAmplitude)
 			distortion.material.set('shader_param/amplitude', transitionFadeOutAmplitude)
-			print (gameOverTimer)
+			
 			if (gameOverTimer <= 0.0):
 				smp.set_trigger("GameOverTransition")
 		"GameOverTransition":
@@ -230,7 +248,6 @@ func _on_StateMachinePlayer_transited(from, to) -> void:
 	prints("Transition(%s -> %s)" % [from, to])
 	match to:
 		"Level1/Spawn Virus":
-			print("Virus Spawned!")
 			fileSystem.addVirusRandomly("VIRUS.v", false, "Desktop/Games", FILE_TYPE.FILE)
 			var distance = fileSystem.getDistanceToVirus()
 			
@@ -240,6 +257,8 @@ func _on_StateMachinePlayer_transited(from, to) -> void:
 			
 			shouldChangeStaticIntensity = true
 			staticIntensityTargetWeight = 1 - 0.2 * (distance + 1)
+			
+			wallpaperTransitionReady = true
 			
 			smp.set_trigger("SpawnVirusTransition")
 		"Level1/Play Wrong Transition":
