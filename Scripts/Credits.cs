@@ -11,8 +11,10 @@ public class Credits : RichTextLabel {
 	private LinkedList<string> fileDirectoryList;
 	private String rootDirectory;
 
+	private bool is_terminal_active = false;
+
 	private const int MAX_CHARACTER_LIMIT = 5000;
-	private const float gameOverTimeLimit = 1.0f; // Game Over Time Limit in seconds
+	private const float gameOverTimeLimit = 120.0f; // Game Over Time Limit in seconds
 	private float timer;
 	private float timerIncrement;
 
@@ -22,8 +24,6 @@ public class Credits : RichTextLabel {
 	private bool is_game_over = false;
 
 	private int numberOfFilesDeleted = 1;
-
-	private DynamicFont bigFont = GD.Load<DynamicFont>("res://Fonts/DefaultDynamicFont-Big.tres");
 
 	public override void _Ready() {
 		filesDirectoryReference = (DirectoryHandler)GetTree().Root
@@ -44,19 +44,25 @@ public class Credits : RichTextLabel {
 	}
 
 	public override void _Process(float delta) {
-		timer += delta;
+		if (is_terminal_active) {
+			timer += delta;
 
-		if (timer > timerIncrement && !is_game_over) {
-			addDebugStatementToTerminal();
-			timer = 0;
-		} else if (timer > blinkingCooldown) {
-			blinkLastText();
-			timer = 0;
+			if (timer > timerIncrement && !is_game_over) {
+				addDebugStatementToTerminal();
+				timer = 0;
+			} else if (timer > blinkingCooldown) {
+				blinkLastText();
+				timer = 0;
+			}
 		}
 	}
 
 	public bool IsGameOver() {
 		return numberOfFilesDeleted >= filesDirectoryReference.GetUserTotalFileCount();
+	}
+
+	public void begin_credits() {
+		is_terminal_active = true;
 	}
 
 	public void addDebugStatementToTerminal() {

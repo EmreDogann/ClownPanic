@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://WindowsXPTheme.theme" type="Theme" id=1]
 [ext_resource path="res://Images/Icons/My Documents.png" type="Texture" id=2]
@@ -14,6 +14,7 @@
 [ext_resource path="res://Fonts/DefaultDynamicFont_Bold.tres" type="DynamicFont" id=12]
 [ext_resource path="res://Fonts/DefaultDynamicFont.tres" type="DynamicFont" id=13]
 [ext_resource path="res://Scripts/Credits.cs" type="Script" id=14]
+[ext_resource path="res://Scripts/Terminal.gd" type="Script" id=15]
 
 [sub_resource type="StyleBoxFlat" id=11]
 bg_color = Color( 1, 1, 1, 1 )
@@ -28,6 +29,7 @@ border_color = Color( 0, 0.206667, 0.62, 1 )
 [node name="Control" type="Control"]
 margin_right = 640.0
 margin_bottom = 360.0
+script = ExtResource( 15 )
 
 [node name="Window" type="Panel" parent="."]
 material = ExtResource( 5 )
@@ -216,3 +218,4 @@ script = ExtResource( 14 )
 
 [connection signal="gui_input" from="Window/VBoxContainer/Titlebar" to="Window/VBoxContainer/Titlebar" method="_on_Titlebar_gui_input"]
 [connection signal="window_moved" from="Window/VBoxContainer/Titlebar" to="Window" method="_on_Titlebar_window_moved"]
+[connection signal="pressed" from="Window/VBoxContainer/Titlebar/HBoxContainer/HBoxContainer/MarginContainer3/Close" to="." method="_on_Close_pressed"]
