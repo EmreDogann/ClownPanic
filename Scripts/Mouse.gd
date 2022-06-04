@@ -64,9 +64,9 @@ func _input(event: InputEvent) -> void:
 		emit_signal("on_mouse_pressed")
 	elif (Input.is_action_just_released("mouse_right") == true):
 		emit_signal("on_mouse_released")
-	elif (Input.is_action_just_pressed("ui_back") == true):
+	elif (event is InputEventMouseButton and Input.is_action_just_pressed("ui_back") == true):
 		emit_signal("on_mouse_pressed")
-	elif (Input.is_action_just_released("ui_back") == true):
+	elif (event is InputEventMouseButton and Input.is_action_just_released("ui_back") == true):
 		emit_signal("on_mouse_released")
 	elif (Input.is_action_just_pressed("ui_forward") == true):
 		emit_signal("on_mouse_pressed")
@@ -78,20 +78,22 @@ func _input(event: InputEvent) -> void:
 			$MouseSprite.position = self.get_global_mouse_position()
 
 func _on_window_mouse_entered(isEdge: bool, type: int):
-	if (mode == MouseMode.FREE):
-		if (!isEdge):
-			if (type == 1 or type == 3):
-				$MouseSprite/Sprite.texture = mouseIcons[1] # Diagonal 1
-			else:
-				$MouseSprite/Sprite.texture = mouseIcons[2] # Diagonal 2
-		else:
-			if (type == 1):
-				$MouseSprite/Sprite.texture = mouseIcons[3] # Horizontal
-			else:
-				$MouseSprite/Sprite.texture = mouseIcons[4] # Vertical
-		
-		$MouseSprite/Sprite.centered = true
+#	if (mode == MouseMode.FREE):
+#		if (!isEdge):
+#			if (type == 1 or type == 3):
+#				$MouseSprite/Sprite.texture = mouseIcons[1] # Diagonal 1
+#			else:
+#				$MouseSprite/Sprite.texture = mouseIcons[2] # Diagonal 2
+#		else:
+#			if (type == 1):
+#				$MouseSprite/Sprite.texture = mouseIcons[3] # Horizontal
+#			else:
+#				$MouseSprite/Sprite.texture = mouseIcons[4] # Vertical
+#
+#		$MouseSprite/Sprite.centered = true
+	pass
 
 func _on_window_mouse_exit():
-	$MouseSprite/Sprite.texture = mouseIcons[0] # Arrow
-	$MouseSprite/Sprite.centered = false
+#	$MouseSprite/Sprite.texture = mouseIcons[0] # Arrow
+#	$MouseSprite/Sprite.centered = false
+	pass

@@ -358,13 +358,18 @@ custom_styles/panel = SubResource( 14 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 
-[node name="MarginContainer" type="MarginContainer" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer"]
+[node name="ControlButtons" type="Control" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer"]
+margin_right = 180.0
+margin_bottom = 25.0
+rect_min_size = Vector2( 180, 0 )
+
+[node name="MarginContainer" type="MarginContainer" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer/ControlButtons"]
 margin_right = 21.0
 margin_bottom = 25.0
 rect_min_size = Vector2( 21, 0 )
 custom_constants/margin_left = 3
 
-[node name="BackButton" type="TextureButton" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer/MarginContainer"]
+[node name="BackButton" type="TextureButton" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer/ControlButtons/MarginContainer"]
 margin_left = 3.0
 margin_right = 21.0
 margin_bottom = 25.0
@@ -375,14 +380,14 @@ texture_hover = ExtResource( 6 )
 expand = true
 stretch_mode = 5
 
-[node name="MarginContainer3" type="MarginContainer" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer"]
+[node name="MarginContainer3" type="MarginContainer" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer/ControlButtons"]
 margin_left = 25.0
 margin_right = 47.0
 margin_bottom = 25.0
 rect_min_size = Vector2( 21, 0 )
 custom_constants/margin_bottom = 1
 
-[node name="Back" type="Label" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer/MarginContainer3"]
+[node name="Back" type="Label" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer/ControlButtons/MarginContainer3"]
 margin_top = 5.0
 margin_right = 22.0
 margin_bottom = 18.0
@@ -390,14 +395,14 @@ custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_fonts/font = ExtResource( 5 )
 text = "Back"
 
-[node name="MarginContainer2" type="MarginContainer" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer"]
+[node name="MarginContainer2" type="MarginContainer" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer/ControlButtons"]
 margin_left = 51.0
 margin_right = 72.0
 margin_bottom = 25.0
 rect_min_size = Vector2( 21, 0 )
 custom_constants/margin_left = 3
 
-[node name="ForwardButton" type="TextureButton" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer/MarginContainer2"]
+[node name="ForwardButton" type="TextureButton" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer/ControlButtons/MarginContainer2"]
 margin_left = 3.0
 margin_right = 21.0
 margin_bottom = 25.0
@@ -409,14 +414,14 @@ texture_hover = ExtResource( 8 )
 expand = true
 stretch_mode = 5
 
-[node name="MarginContainer4" type="MarginContainer" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer"]
+[node name="MarginContainer4" type="MarginContainer" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer/ControlButtons"]
 margin_left = 76.0
 margin_right = 118.0
 margin_bottom = 25.0
 rect_min_size = Vector2( 21, 0 )
 custom_constants/margin_bottom = 1
 
-[node name="Forward" type="Label" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer/MarginContainer4"]
+[node name="Forward" type="Label" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer/ControlButtons/MarginContainer4"]
 margin_top = 5.0
 margin_right = 42.0
 margin_bottom = 18.0
@@ -424,14 +429,14 @@ custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_fonts/font = ExtResource( 5 )
 text = "Forward"
 
-[node name="MarginContainer6" type="MarginContainer" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer"]
+[node name="MarginContainer6" type="MarginContainer" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer/ControlButtons"]
 margin_left = 122.0
 margin_right = 143.0
 margin_bottom = 25.0
 rect_min_size = Vector2( 21, 0 )
 custom_constants/margin_left = 3
 
-[node name="DeleteButton" type="TextureButton" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer/MarginContainer6"]
+[node name="DeleteButton" type="TextureButton" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer/ControlButtons/MarginContainer6"]
 margin_left = 3.0
 margin_right = 21.0
 margin_bottom = 25.0
@@ -443,14 +448,14 @@ texture_hover = ExtResource( 21 )
 expand = true
 stretch_mode = 5
 
-[node name="MarginContainer7" type="MarginContainer" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer"]
+[node name="MarginContainer7" type="MarginContainer" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer/ControlButtons"]
 margin_left = 147.0
 margin_right = 179.0
 margin_bottom = 25.0
 rect_min_size = Vector2( 21, 0 )
 custom_constants/margin_bottom = 1
 
-[node name="Delete" type="Label" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer/MarginContainer7"]
+[node name="Delete" type="Label" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer/ControlButtons/MarginContainer7"]
 margin_top = 5.0
 margin_right = 32.0
 margin_bottom = 18.0
@@ -459,15 +464,17 @@ custom_fonts/font = ExtResource( 5 )
 text = "Delete"
 
 [node name="MarginContainer5" type="MarginContainer" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer"]
-margin_left = 183.0
+margin_left = 184.0
 margin_right = 549.0
 margin_bottom = 25.0
 size_flags_horizontal = 3
 custom_constants/margin_right = 5
+custom_constants/margin_left = 5
 
 [node name="ScrollContainer" type="ScrollContainer" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer/MarginContainer5"]
+margin_left = 5.0
 margin_top = 4.0
-margin_right = 361.0
+margin_right = 360.0
 margin_bottom = 21.0
 size_flags_horizontal = 3
 size_flags_vertical = 4
@@ -478,7 +485,7 @@ scroll_vertical_enabled = false
 script = ExtResource( 26 )
 
 [node name="Breadcrumb" type="Label" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer/MarginContainer5/ScrollContainer"]
-margin_right = 361.0
+margin_right = 355.0
 margin_bottom = 17.0
 rect_min_size = Vector2( 0, 17 )
 size_flags_horizontal = 3
@@ -649,9 +656,9 @@ shape = SubResource( 15 )
 
 [connection signal="gui_input" from="Window/VBoxContainer/Titlebar" to="Window/VBoxContainer/Titlebar" method="_on_Titlebar_gui_input"]
 [connection signal="window_moved" from="Window/VBoxContainer/Titlebar" to="Window" method="_on_Titlebar_window_moved"]
-[connection signal="pressed" from="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer/MarginContainer/BackButton" to="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files" method="onBackButtonPressed"]
-[connection signal="pressed" from="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer/MarginContainer2/ForwardButton" to="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files" method="onForwardButtonPressed"]
-[connection signal="pressed" from="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer/MarginContainer6/DeleteButton" to="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files" method="onDeletePressed"]
+[connection signal="pressed" from="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer/ControlButtons/MarginContainer/BackButton" to="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files" method="onBackButtonPressed"]
+[connection signal="pressed" from="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer/ControlButtons/MarginContainer2/ForwardButton" to="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files" method="onForwardButtonPressed"]
+[connection signal="pressed" from="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer/ControlButtons/MarginContainer6/DeleteButton" to="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files" method="onDeletePressed"]
 [connection signal="gui_input" from="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer" to="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer" method="_on_HSplitContainer_gui_input"]
 [connection signal="item_collapsed" from="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer/VBoxContainer/CSTree" to="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files" method="onTreeItemCollapsed"]
 [connection signal="item_selected" from="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer/VBoxContainer/CSTree" to="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files" method="onTreeItemSelected"]

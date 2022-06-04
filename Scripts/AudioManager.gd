@@ -6,7 +6,7 @@ var keyboardSFX: Array
 var deletedSFX: Array
 
 var players: Array
-var currentPlayer: int = 5
+var currentPlayer: int = 6
 var PLAYERS_COUNT: int = 20
 
 var startupSound: bool = false
@@ -15,6 +15,12 @@ var time_delay: float
 
 var rng = RandomNumberGenerator.new()
 
+var staticVolume: float = -30.0
+var staticVolumeBefore: float = 0.0
+var staticVolumeIncrementSpeed: float = 1.0
+var staticVolumeIncrementAmount: float
+var shouldIncreaseStaticVolume: bool = false
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	# ---- Load audio files ----
@@ -22,6 +28,8 @@ func _ready() -> void:
 	backgroundNoises.append(preload("res://SoundEffects/Background Noise/ComputerBackgroundNoise1.wav"))
 	backgroundNoises.append(preload("res://SoundEffects/Background Noise/ComputerBackgroundNoise2.wav"))
 	backgroundNoises.append(preload("res://SoundEffects/Background Noise/ComputerBackgroundNoise2 - FadeOut.wav"))
+	backgroundNoises.append(preload("res://SoundEffects/Background Noise/Computer Turn Off.wav"))
+	backgroundNoises.append(preload("res://SoundEffects/Static/Static.wav"))
 	
 	# Mouse SFX
 	mouseSFX.append(preload("res://SoundEffects/Mouse Impact/Mouse Disable.wav"))
@@ -73,6 +81,15 @@ func _process(delta: float) -> void:
 		play_specific(backgroundNoises[1], 0)
 		play_specific(backgroundNoises[0], 1)
 		startupSound = true
+	
+	if (shouldIncreaseStaticVolume):
+		print(staticVolume)
+		staticVolume += (delta / (staticVolumeBefore + staticVolumeIncrementAmount)) * staticVolumeIncrementSpeed
+		
+		players[5].volume_db = staticVolume
+		
+		if (staticVolume >= staticVolumeBefore + staticVolumeIncrementAmount):
+			shouldIncreaseStaticVolume = false
 
 func play_specific(sample: AudioStreamSample, player_num: int) -> void:
 	players[player_num].stream = sample
@@ -83,14 +100,24 @@ func play(sample: AudioStream) -> void:
 	players[currentPlayer].play()
 	
 	currentPlayer += 1
+	
+	# players 0 and 1 are reserved for the background noise.
+	# 2 and 3 are reserved for mouse clicks.
+	# 4 is for mouse collisions.
+	# 5 is for virus static noise.
 	if (currentPlayer % PLAYERS_COUNT == 0):
-		currentPlayer = 5 # players 0 and 1 are reserved for the background noise. 2 and 3 are reserved for mouse clicks.
+		currentPlayer = 6
 
 func play_random_pitch(sample: AudioStreamSample, pitch_intensity: int) -> void:
 	var randomPitchShift: AudioStreamRandomPitch = AudioStreamRandomPitch.new()
 	randomPitchShift.audio_stream = sample
 	randomPitchShift.random_pitch = pitch_intensity
 	play(randomPitchShift)
+
+func shutdown_pc() -> void:
+	play_specific(backgroundNoises[2], 0)
+	players[1].volume_db = 10.0
+	play_specific(backgroundNoises[3], 1)
 
 func mouse_disabled() -> void:
 	play(mouseSFX[0])
@@ -113,6 +140,15 @@ func virus_deleted() -> void:
 
 func wrong_file_deleted() -> void:
 	play(deletedSFX[0])
+
+func play_static() -> void:
+	players[5].volume_db = staticVolume
+	play_specific(backgroundNoises[4], 5)
+
+func increase_static_volume(incrementAmount: float) -> void:
+	staticVolumeBefore = staticVolume
+	staticVolumeIncrementAmount = incrementAmount
+	shouldIncreaseStaticVolume = true
 
 #func on_player_finished(player: AudioStreamPlayer) -> void:
 #	remove_child(player)

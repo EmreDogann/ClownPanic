@@ -5,9 +5,12 @@ code = "// From: https://www.shadertoy.com/view/MltBzf
 
 shader_type canvas_item;
 
+uniform float time = 0.0;
+uniform float amplitude = 1.0;
+
 float rand(vec2 p)
 {
-    float t = floor(TIME * 20.) / 10.;
+    float t = floor(time * 20.) / 10.;
     return fract(sin(dot(p, vec2(t * 12.9898, t * 78.233))) * 43758.5453);
 }
 
@@ -58,19 +61,19 @@ void fragment()
     //id.x /= floor(texture(iChannel0, vec2(id / 8.0)).r * 8.0);
 
     // Generate shift amplitude
-    float shift = glitchAmplitude * pow(fbm(uv2, int(rand(id) * 6.), glitchBlockiness, glitchNarrowness), glitchMinimizer);
+    float shift = amplitude * glitchAmplitude * pow(fbm(uv2, int(rand(id) * 6.), glitchBlockiness, glitchNarrowness), glitchMinimizer);
     
     // Create a scanline effect
     float scanline = abs(cos(uv.y * 400.));
     scanline = smoothstep(0.0, 2.0, scanline);
-    shift = smoothstep(0.00001, 0.2, shift);
+    shift = amplitude * smoothstep(0.00001, 0.2, shift);
     
     // Apply glitch and RGB shift
-    float colR = texture(SCREEN_TEXTURE, vec2(uv.x + shift, uv.y)).r * (1. - shift) ;
+    float colR = texture(SCREEN_TEXTURE, vec2(uv.x + shift, uv.y)).r * (1. - shift);
     float colG = texture(SCREEN_TEXTURE, vec2(uv.x - shift, uv.y)).g * (1. - shift) + rand(id) * shift;
     float colB = texture(SCREEN_TEXTURE, vec2(uv.x - shift, uv.y)).b * (1. - shift);
     // Mix with the scanline effect
-    vec3 f = vec3(colR, colG, colB) - (0.1 * scanline);
+    vec3 f = vec3(colR, colG, colB) - (0.1 * scanline * amplitude);
     
     // Output to screen
     COLOR = vec4(f, 1.0);
@@ -78,3 +81,5 @@ void fragment()
 
 [resource]
 shader = SubResource( 1 )
+shader_param/time = 0.0
+shader_param/amplitude = 1.0
