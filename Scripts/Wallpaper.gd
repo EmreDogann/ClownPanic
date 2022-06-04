@@ -36,10 +36,9 @@ onready var wallpapers: Array = [
 
 var currentWallpaperIndex = 0
 var transitionWallpaper: bool = false
-var transitionTimerCooldown = 1.0
+var transitionTimerCooldown = 5.0
 var transitionTimer = transitionTimerCooldown
 var crossfadeValue = 0.0
-onready var crossfadeMaterial = get_node("../Crossfade").material
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -52,14 +51,14 @@ func _process(delta: float) -> void:
 		transitionTimer -= delta
 		crossfadeValue += delta / transitionTimerCooldown
 		
-		crossfadeMaterial.set('shader_param/crossfade', crossfadeValue)
+		material.set('shader_param/crossfade', crossfadeValue)
 
 		if (transitionTimer <= 0.0):
 			transitionTimer = transitionTimerCooldown
 			crossfadeValue = 0.0
 			transitionWallpaper = false
 			emit_signal("wallpaper_transition_finished")
-#
+
 #func _input(event: InputEvent) -> void:
 #	if (event is InputEventMouseButton and event.is_action_pressed("mouse_right")):
 #		change_wallpaper()
@@ -67,6 +66,6 @@ func _process(delta: float) -> void:
 func change_wallpaper() -> void:
 	transitionWallpaper = true
 	currentWallpaperIndex = clamp(currentWallpaperIndex + 1, 0, 19)
-	crossfadeMaterial.set('shader_param/crossfade', 0.0)
-	crossfadeMaterial.set('shader_param/textureOld', wallpapers[currentWallpaperIndex-1])
-	crossfadeMaterial.set('shader_param/textureNew', wallpapers[currentWallpaperIndex])
+	material.set('shader_param/crossfade', 0.0)
+	material.set('shader_param/textureOld', wallpapers[currentWallpaperIndex-1])
+	material.set('shader_param/textureNew', wallpapers[currentWallpaperIndex])

@@ -44,8 +44,9 @@ var staticIntensityLerpTime: float = 2.0
 var shouldChangeStaticIntensity = false
 
 var wallpaperTransitionReady: bool = false
-var wallpaperTimerCooldown = 4.0
+var wallpaperTimerCooldown = 10.0
 var wallpaperTimer = wallpaperTimerCooldown
+var totalWallpaperTransition = 0
 
 # get_node("../CanvasLayer/FileExplorer/Window/VBoxContainer/Titlebar/HBoxContainer/HBoxContainer")
 onready var player_health: int = 4;
@@ -88,13 +89,14 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	if (wallpaperTransitionReady):
+	if (wallpaperTransitionReady and totalWallpaperTransition <= 4):
 		wallpaperTimer -= delta
 	
 	if (wallpaperTimer <= 0.0):
 		emit_signal("change_wallpaper")
 		wallpaperTimer = wallpaperTimerCooldown
 		wallpaperTransitionReady = false
+		totalWallpaperTransition += 1
 	
 	if (shouldChangeStaticIntensity):
 		if (abs(staticIntensityLerpWeight - staticIntensityTargetWeight) <= 0.01):

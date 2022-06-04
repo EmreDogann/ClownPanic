@@ -69,17 +69,13 @@ __meta__ = {
 }
 
 [node name="Wallpaper" type="TextureRect" parent="Panel"]
+material = ExtResource( 2 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 texture = ExtResource( 12 )
 expand = true
 stretch_mode = 1
 script = ExtResource( 4 )
-
-[node name="Crossfade" type="ColorRect" parent="Panel"]
-material = ExtResource( 2 )
-anchor_right = 1.0
-anchor_bottom = 1.0
 
 [node name="TaskBar" type="TextureRect" parent="Panel"]
 material = ExtResource( 1 )
