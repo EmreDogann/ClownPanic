@@ -128,55 +128,60 @@ public class TreeNode<T> {
             }
         }
 
+        GD.Print("_________________________________");
+        GD.Print("Current Path: " + currentNodePath);
+        GD.Print("Target Path:  " + targetNodePath);
+        GD.Print("Lca Path:  " + lcaPath);
 
-        if (lcaPath == "") {
-            distance = Math.Max(splitCurrentNodePath.Length, splitTargetNodePath.Length);
-        } else {
-            // remove '/' from lca path
-            if (lcaPath.Length > 0) {
-                if (lcaPath[lcaPath.Length - 1] == '/') {
-                    lcaPath = lcaPath.Remove(lcaPath.Length - 1);
-                }
+
+        // if (lcaPath == "") {
+        // 	distance = Math.Max(splitCurrentNodePath.Length, splitTargetNodePath.Length);
+        // } else {
+
+        // remove '/' from lca path
+        if (lcaPath.Length > 0) {
+            if (lcaPath[lcaPath.Length - 1] == '/') {
+                lcaPath = lcaPath.Remove(lcaPath.Length - 1);
             }
-
-            // remove the LCA, giving the remaingin paths
-            var lcaCurrentNodePath = currentNodePath.Replace(lcaPath, "");
-            var lcaTargetNodePath = targetNodePath.Replace(lcaPath, "");
-
-            int targetDistance = 0;
-            if (lcaTargetNodePath == "") {
-                targetDistance = 0;
-            } else {
-                var temp = lcaTargetNodePath.Split("/");
-                foreach (string s in temp) {
-                    GD.Print(s);
-                    if (s != "") {
-                        targetDistance += 1;
-                    }
-                }
-            }
-
-            int currentDistance = 0;
-            if (lcaCurrentNodePath == "") {
-                currentDistance = 0;
-            } else {
-                var temp = lcaCurrentNodePath.Split("/");
-                foreach (string s in temp) {
-                    if (s != "") {
-                        currentDistance += 1;
-                    }
-                }
-            }
-
-            distance = targetDistance + currentDistance;
         }
 
-        // GD.Print("_________________________________");
-        // GD.Print("Current Path: " + currentNodePath);
-        // GD.Print("Target Path:  " + targetNodePath);
-        // GD.Print("Lca Path:  " + lcaPath);
-        // GD.Print("Distance:  " + distance);
-        // GD.Print("_________________________________");
+        // Remove the LCA, giving the remainging paths
+        if (lcaPath.Length > 0) {
+            currentNodePath = currentNodePath.Replace(lcaPath, "");
+            targetNodePath = targetNodePath.Replace(lcaPath, "");
+        }
+
+        int targetDistance = 0;
+        if (targetNodePath == "") {
+            targetDistance = 0;
+        } else {
+            var temp = targetNodePath.Split("/");
+            foreach (string s in temp) {
+                GD.Print(s);
+                if (s != "") {
+                    targetDistance += 1;
+                }
+            }
+        }
+
+        int currentDistance = 0;
+        if (currentNodePath == "") {
+            currentDistance = 0;
+        } else {
+            var temp = currentNodePath.Split("/");
+            foreach (string s in temp) {
+                if (s != "") {
+                    currentDistance += 1;
+                }
+            }
+        }
+
+        distance = targetDistance + currentDistance;
+
+        // }
+
+        GD.Print("Distance:  " + distance);
+        GD.Print("_________________________________");
 
         return distance;
     }

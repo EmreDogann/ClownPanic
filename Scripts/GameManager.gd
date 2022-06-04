@@ -37,7 +37,7 @@ onready var crtCloseFadeOutTimer = crtCloseFadeOutCooldown
 var staticIntensity: float = 0.1
 var staticIntensityTargetWeight: float
 var staticIntensityLerpWeight: float
-var staticIntensityLerpTime: float = 3.0
+var staticIntensityLerpTime: float = 2.0
 var shouldChangeStaticIntensity = false
 
 # get_node("../CanvasLayer/FileExplorer/Window/VBoxContainer/Titlebar/HBoxContainer/HBoxContainer")
@@ -85,7 +85,7 @@ func _process(delta):
 		else:
 #			print(staticVolume)
 			staticIntensityLerpWeight += (delta  / staticIntensityLerpTime) * sign(staticIntensityTargetWeight - staticIntensityLerpWeight)
-			staticIntensity = lerp(0.1, 0.8, staticIntensityLerpWeight)
+			staticIntensity = lerp(0.1, 0.6, clamp(staticIntensityLerpWeight, 0.0, 1.0))
 			
 			crtFilter.material.set('shader_param/static_noise_intensity', staticIntensity)
 			
@@ -93,8 +93,8 @@ func _process(delta):
 func virus_distance_update(incrementAmount: float):
 	print(incrementAmount)
 	audioManager.increase_static_volume(incrementAmount)
-#	shouldChangeStaticIntensity = true
-#	staticIntensityTargetWeight = 1 - 0.1 * (incrementAmount + 1)
+	shouldChangeStaticIntensity = true
+	staticIntensityTargetWeight = 1 - 0.2 * (incrementAmount + 1)
 
 func virus_deleted():
 	audioManager.virus_deleted()
@@ -232,9 +232,15 @@ func _on_StateMachinePlayer_transited(from, to) -> void:
 		"Level1/Spawn Virus":
 			print("Virus Spawned!")
 			fileSystem.addVirusRandomly("VIRUS.v", false, "Desktop/Games", FILE_TYPE.FILE)
+			var distance = fileSystem.getDistanceToVirus()
+			
 			audioManager.virus_deleted()
 			audioManager.play_static()
-			audioManager.increase_static_volume(fileSystem.getDistanceToVirus())
+			audioManager.increase_static_volume(distance)
+			
+			shouldChangeStaticIntensity = true
+			staticIntensityTargetWeight = 1 - 0.2 * (distance + 1)
+			
 			smp.set_trigger("SpawnVirusTransition")
 		"Level1/Play Wrong Transition":
 			transitionFadeOutAmplitude = 1.0 * transitionFadeOutAmplitudeMultipler
