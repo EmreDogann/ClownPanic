@@ -120,7 +120,7 @@ public class TreeNode<T> {
 
         for (int i = 0; i < minNumberOfDir; i++) {
             if (splitCurrentNodePath[i] == "" || splitTargetNodePath[i] == "") {
-                lcaPath = "";
+                lcaPath += "";
             }
 
             if (splitCurrentNodePath[i] == splitTargetNodePath[i]) {
@@ -135,20 +135,21 @@ public class TreeNode<T> {
             // remove '/' from lca path
             if (lcaPath.Length > 0) {
                 if (lcaPath[lcaPath.Length - 1] == '/') {
-                    lcaPath.Remove(lcaPath.Length - 1);
+                    lcaPath = lcaPath.Remove(lcaPath.Length - 1);
                 }
             }
 
             // remove the LCA, giving the remaingin paths
-            currentNodePath.Replace(lcaPath, "");
-            targetNodePath.Replace(lcaPath, "");
+            var lcaCurrentNodePath = currentNodePath.Replace(lcaPath, "");
+            var lcaTargetNodePath = targetNodePath.Replace(lcaPath, "");
 
             int targetDistance = 0;
-            if (targetNodePath == "") {
+            if (lcaTargetNodePath == "") {
                 targetDistance = 0;
             } else {
-                var temp = targetNodePath.Split("/");
+                var temp = lcaTargetNodePath.Split("/");
                 foreach (string s in temp) {
+                    GD.Print(s);
                     if (s != "") {
                         targetDistance += 1;
                     }
@@ -156,10 +157,10 @@ public class TreeNode<T> {
             }
 
             int currentDistance = 0;
-            if (currentNodePath == "") {
+            if (lcaCurrentNodePath == "") {
                 currentDistance = 0;
             } else {
-                var temp = currentNodePath.Split("/");
+                var temp = lcaCurrentNodePath.Split("/");
                 foreach (string s in temp) {
                     if (s != "") {
                         currentDistance += 1;

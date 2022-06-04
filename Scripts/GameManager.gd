@@ -34,8 +34,14 @@ onready var gameOverTimer = gameOverCooldown
 onready var crtCloseFadeOutCooldown = 1.0
 onready var crtCloseFadeOutTimer = crtCloseFadeOutCooldown
 
+var staticIntensity: float = 0.1
+var staticIntensityTargetWeight: float
+var staticIntensityLerpWeight: float
+var staticIntensityLerpTime: float = 3.0
+var shouldChangeStaticIntensity = false
+
 # get_node("../CanvasLayer/FileExplorer/Window/VBoxContainer/Titlebar/HBoxContainer/HBoxContainer")
-onready var player_health: int = 1;
+onready var player_health: int = 4;
 onready var ui_elements_to_turn_off: Dictionary = {
 	3: [get_node("../CanvasLayer/FileExplorer/Window/VBoxContainer/Titlebar/HBoxContainer/HBoxContainer")],
 	2: get_node("../CanvasLayer/Desktop/Panel/TaskBar"),
@@ -72,12 +78,23 @@ func _ready():
 	rng.randomize()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#pass
+func _process(delta):
+	if (shouldChangeStaticIntensity):
+		if (abs(staticIntensityLerpWeight - staticIntensityTargetWeight) <= 0.01):
+			shouldChangeStaticIntensity = false
+		else:
+#			print(staticVolume)
+			staticIntensityLerpWeight += (delta  / staticIntensityLerpTime) * sign(staticIntensityTargetWeight - staticIntensityLerpWeight)
+			staticIntensity = lerp(0.1, 0.8, staticIntensityLerpWeight)
+			
+			crtFilter.material.set('shader_param/static_noise_intensity', staticIntensity)
+			
 
 func virus_distance_update(incrementAmount: float):
 	print(incrementAmount)
 	audioManager.increase_static_volume(incrementAmount)
+#	shouldChangeStaticIntensity = true
+#	staticIntensityTargetWeight = 1 - 0.1 * (incrementAmount + 1)
 
 func virus_deleted():
 	audioManager.virus_deleted()
@@ -214,7 +231,7 @@ func _on_StateMachinePlayer_transited(from, to) -> void:
 	match to:
 		"Level1/Spawn Virus":
 			print("Virus Spawned!")
-			fileSystem.addVirusRandomly("VIRUS.v", false, "", FILE_TYPE.FILE)
+			fileSystem.addVirusRandomly("VIRUS.v", false, "Desktop/Games", FILE_TYPE.FILE)
 			audioManager.virus_deleted()
 			audioManager.play_static()
 			audioManager.increase_static_volume(fileSystem.getDistanceToVirus())
