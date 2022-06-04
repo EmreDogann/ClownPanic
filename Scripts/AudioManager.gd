@@ -32,6 +32,7 @@ func _ready() -> void:
 	backgroundNoises.append(preload("res://SoundEffects/Background Noise/ComputerBackgroundNoise2 - FadeOut.wav"))
 	backgroundNoises.append(preload("res://SoundEffects/Background Noise/Computer Turn Off.wav"))
 	backgroundNoises.append(preload("res://SoundEffects/Static/Static.wav"))
+	backgroundNoises.append(preload("res://SoundEffects/Terminal Beep 1.wav"))
 	
 	# Mouse SFX
 	mouseSFX.append(preload("res://SoundEffects/Mouse Impact/Mouse Disable.wav"))
@@ -88,7 +89,6 @@ func _process(delta: float) -> void:
 		if (abs(staticVolumeLerpWeight - staticVolumeTargetWeight) <= 0.01):
 			shouldIncreaseStaticVolume = false
 		else:
-#			print(staticVolume)
 			staticVolumeLerpWeight += (delta  / staticVolumeLerpTime) * sign(staticVolumeTargetWeight - staticVolumeLerpWeight)
 			staticVolume = lerp(staticVolumeInitial, 0.0, staticVolumeLerpWeight)
 			
@@ -154,8 +154,13 @@ func play_static() -> void:
 	play_specific(backgroundNoises[4], 5)
 
 func increase_static_volume(incrementAmount: float) -> void:
+	if (!players[5].playing):
+		play_static()
 	staticVolumeTargetWeight = 1 - 0.1 * (incrementAmount + 1)
 	shouldIncreaseStaticVolume = true
+
+func terminal_beep() -> void:
+	play(backgroundNoises[5])
 
 #func on_player_finished(player: AudioStreamPlayer) -> void:
 #	remove_child(player)

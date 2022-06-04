@@ -1,4 +1,4 @@
-[gd_scene load_steps=148 format=2]
+[gd_scene load_steps=146 format=2]
 
 [ext_resource path="res://Scenes/Desktop.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scripts/Mouse.gd" type="Script" id=2]
@@ -76,7 +76,7 @@ tracks/0/keys = {
 [sub_resource type="Resource" id=12]
 script = ExtResource( 26 )
 __meta__ = {
-"graph_offset": Vector2( 188, 140 )
+"graph_offset": Vector2( 548, -20 )
 }
 name = "Entry"
 
@@ -104,7 +104,7 @@ name = "GameOverTransition"
 [sub_resource type="Resource" id=98]
 script = ExtResource( 26 )
 __meta__ = {
-"graph_offset": Vector2( 571.5, 220 )
+"graph_offset": Vector2( 571.5, 320 )
 }
 name = "Activate Terminal"
 
@@ -128,19 +128,6 @@ __meta__ = {
 "graph_offset": Vector2( 608, 80 )
 }
 name = "Idle"
-
-[sub_resource type="Resource" id=107]
-script = ExtResource( 31 )
-name = "TerminalActive"
-
-[sub_resource type="Resource" id=102]
-script = ExtResource( 27 )
-from = "Activate Terminal"
-to = "Idle"
-conditions = {
-"TerminalActive": SubResource( 107 )
-}
-priority = 0
 
 [sub_resource type="Resource" id=99]
 script = ExtResource( 27 )
@@ -175,6 +162,19 @@ from = "Idle"
 to = "Exit"
 conditions = {
 "Health": SubResource( 105 )
+}
+priority = 0
+
+[sub_resource type="Resource" id=107]
+script = ExtResource( 31 )
+name = "TerminalActive"
+
+[sub_resource type="Resource" id=102]
+script = ExtResource( 27 )
+from = "Activate Terminal"
+to = "Idle"
+conditions = {
+"TerminalActive": SubResource( 107 )
 }
 priority = 0
 
@@ -537,12 +537,6 @@ conditions = {
 }
 priority = 0
 
-[sub_resource type="Resource" id=147]
-script = ExtResource( 25 )
-name = "isVirusSpawned"
-comparation = 0
-value = false
-
 [sub_resource type="Resource" id=148]
 script = ExtResource( 31 )
 name = "SpawnVirus"
@@ -552,8 +546,7 @@ script = ExtResource( 27 )
 from = "Idle"
 to = "Spawn Virus"
 conditions = {
-"SpawnVirus": SubResource( 148 ),
-"isVirusSpawned": SubResource( 147 )
+"SpawnVirus": SubResource( 148 )
 }
 priority = 0
 
@@ -669,19 +662,12 @@ priority = 0
 script = ExtResource( 31 )
 name = "VirusSpawned"
 
-[sub_resource type="Resource" id=149]
-script = ExtResource( 25 )
-name = "isVirusSpawned"
-comparation = 0
-value = true
-
 [sub_resource type="Resource" id=133]
 script = ExtResource( 27 )
 from = "Spawn Virus"
 to = "Idle"
 conditions = {
-"VirusSpawned": SubResource( 132 ),
-"isVirusSpawned": SubResource( 149 )
+"VirusSpawned": SubResource( 132 )
 }
 priority = 0
 
@@ -728,14 +714,6 @@ transitions = {
 "Idle": SubResource( 133 )
 }
 }
-
-[sub_resource type="Resource" id=22]
-script = ExtResource( 27 )
-from = "Entry"
-to = "Level1"
-conditions = {
-}
-priority = 0
 
 [sub_resource type="Resource" id=70]
 script = ExtResource( 31 )
@@ -913,6 +891,14 @@ conditions = {
 }
 priority = 0
 
+[sub_resource type="Resource" id=22]
+script = ExtResource( 27 )
+from = "Entry"
+to = "Level2"
+conditions = {
+}
+priority = 0
+
 [sub_resource type="Resource" id=24]
 script = ExtResource( 29 )
 name = ""
@@ -929,7 +915,7 @@ states = {
 }
 transitions = {
 "Entry": {
-"Level1": SubResource( 22 )
+"Level2": SubResource( 22 )
 },
 "GameOver": {
 "GameOverTransition": SubResource( 71 )

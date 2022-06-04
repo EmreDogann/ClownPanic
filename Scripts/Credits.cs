@@ -6,6 +6,8 @@ using System.Linq;
 public class Credits : RichTextLabel {
 	[Signal]
 	delegate void terminal_game_over();
+	
+	private Node gameManagerRef;
 
 	private DirectoryHandler filesDirectoryReference;
 	private LinkedList<string> fileDirectoryList;
@@ -14,12 +16,15 @@ public class Credits : RichTextLabel {
 	private bool is_terminal_active = false;
 
 	private const int MAX_CHARACTER_LIMIT = 5000;
-	private const float gameOverTimeLimit = 120.0f; // Game Over Time Limit in seconds
+	private const float gameOverTimeLimit = 10.0f; // Game Over Time Limit in seconds
 	private float timer;
 	private float timerIncrement;
 
 	private bool is_blink_on = true;
 	private float blinkingCooldown = 0.75f;
+	
+	private float gameOverCooldown = 6.0f;
+	private float gameOverTimer;
 
 	private bool is_game_over = false;
 
@@ -37,8 +42,10 @@ public class Credits : RichTextLabel {
 		rootDirectory = fileDirectoryList.ElementAt(0);
 
 		timerIncrement = gameOverTimeLimit / filesDirectoryReference.GetUserTotalFileCount();
+		
+		gameOverTimer = gameOverCooldown;
 
-		Node gameManagerRef = GetTree().Root.GetNode("Node2D/GameManager");
+		gameManagerRef = GetTree().Root.GetNode("Node2D/GameManager");
 
 		Connect("terminal_game_over", gameManagerRef, "terminal_game_over");
 	}
@@ -46,6 +53,10 @@ public class Credits : RichTextLabel {
 	public override void _Process(float delta) {
 		if (is_terminal_active) {
 			timer += delta;
+			
+			if (is_game_over) {
+				gameOverTimer -= delta;
+			}
 
 			if (timer > timerIncrement && !is_game_over) {
 				addDebugStatementToTerminal();
@@ -53,6 +64,15 @@ public class Credits : RichTextLabel {
 			} else if (timer > blinkingCooldown) {
 				blinkLastText();
 				timer = 0;
+				
+				if (gameOverTimer > 0.0 && is_blink_on) {
+					gameManagerRef.Call("play_terminal_beep");
+				}
+			}
+			
+			if (gameOverTimer <= 0.0) {
+				SetProcess(false);
+				EmitSignal(nameof(terminal_game_over));
 			}
 		}
 	}
@@ -79,7 +99,7 @@ public class Credits : RichTextLabel {
 
 		if (IsGameOver()) {
 			BbcodeText += "[color=yellow]GAME OVER - go home now![/color]";
-			EmitSignal(nameof(terminal_game_over));
+			gameManagerRef.Call("play_terminal_beep");
 			is_game_over = true;
 		}
 

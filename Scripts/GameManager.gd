@@ -86,7 +86,6 @@ func _ready():
 	smp.set_param("Health", player_health)
 	smp.set_param("Level1/IdleTimer", 0.0)
 	smp.set_param("isVirusDeleted", false)
-	smp.set_param("isVirusSpawned", false)
 	
 	connect("change_wallpaper", wallpaperNode, "change_wallpaper")
 	connect("activate_terminal", terminalNode, "activate_terminal")
@@ -144,9 +143,12 @@ func wrong_file_deleted():
 func spawn_window() -> void:
 	pass
 
+func play_terminal_beep() -> void:
+	audioManager.terminal_beep()
+
 func terminal_game_over() -> void:
 	smp.set_param("Health", 0)
-	pass
+	audioManager.increase_static_volume(0)
 
 func _on_StateMachinePlayer_updated(state, delta) -> void:
 	match state:
@@ -282,20 +284,24 @@ func _on_StateMachinePlayer_transited(from, to) -> void:
 		"Level2/Entry":
 			smp.set_param("isVirusDeleted", false)
 		"Level2/Idle":
-			smp.set_trigger("SpawnVirus")
+			if (from == "Level2/Entry"):
+				smp.set_trigger("SpawnVirus")
 		"Level2/Spawn Virus":
 			fileSystem.addVirusRandomly("VIRUS.v", false, "", FILE_TYPE.FILE)
 			
 			wallpaperTransitionReady = true
 			totalWallpaperTransition = 0
 			
-			smp.set_param("isVirusSpawned", true)
 			smp.set_trigger("VirusSpawned")
+		"Level2/Fade Out Correct Transition":
+			fileSystem.bleedFileTrees(0.35);
 		"Level3/Idle":
-			smp.set_trigger("ActivateTerminal")
+			if (from == "Level3/Entry"):
+				smp.set_trigger("ActivateTerminal")
+			#fileSystem.bleedFileTrees(0.35 * smp.get_param("currentLevel")-1);
 		"Level3/Activate Terminal":
 			emit_signal("activate_terminal")
-#			smp.set_trigger("TerminalActive")
+			smp.set_trigger("TerminalActive")
 		"GameOver":
 			transitionTimer = -1.5
 			transitionFadeOutAmplitude = 1.0
@@ -306,16 +312,17 @@ func _on_StateMachinePlayer_transited(from, to) -> void:
 			wrongFileGlitch.get_parent().visible = true;
 			distortion.get_parent().visible = true;
 		"GameOverTransition":
+			audioManager.increase_static_volume(10)
 			audioManager.shutdown_pc()
 			
 			yield(get_tree().create_timer(5.0), "timeout")
 			get_tree().quit()
 
-#func _on_StateMachinePlayer_entered(to) -> void:
+func _on_StateMachinePlayer_entered(to) -> void:
 #	match to:
 #		"Level2/SpawnVirus":
 #			print("Level 2 Virus Spawned!")
-#	pass
+	pass
 
 
 func _on_StateMachinePlayer_exited(from) -> void:
