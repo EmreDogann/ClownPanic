@@ -10,15 +10,17 @@ var currentPlayer: int = 6
 var PLAYERS_COUNT: int = 20
 
 var startupSound: bool = false
+var shutdown: bool = false
 
 var time_delay: float
 
 var rng = RandomNumberGenerator.new()
 
-var staticVolume: float = -30.0
-var staticVolumeBefore: float = 0.0
-var staticVolumeIncrementSpeed: float = 1.0
-var staticVolumeIncrementAmount: float
+var staticVolumeInitial: float = -30.0
+var staticVolume: float = staticVolumeInitial
+var staticVolumeTargetWeight: float
+var staticVolumeLerpWeight: float
+var staticVolumeLerpTime: float = 3.0
 var shouldIncreaseStaticVolume: bool = false
 
 # Called when the node enters the scene tree for the first time.
@@ -83,30 +85,34 @@ func _process(delta: float) -> void:
 		startupSound = true
 	
 	if (shouldIncreaseStaticVolume):
-		print(staticVolume)
-		staticVolume += (delta / (staticVolumeBefore + staticVolumeIncrementAmount)) * staticVolumeIncrementSpeed
-		
-		players[5].volume_db = staticVolume
-		
-		if (staticVolume >= staticVolumeBefore + staticVolumeIncrementAmount):
+		if (abs(staticVolumeLerpWeight - staticVolumeTargetWeight) <= 0.01):
 			shouldIncreaseStaticVolume = false
+		else:
+#			print(staticVolume)
+			staticVolumeLerpWeight += (delta  / staticVolumeLerpTime) * sign(staticVolumeTargetWeight - staticVolumeLerpWeight)
+			staticVolume = lerp(staticVolumeInitial, -5.0, staticVolumeLerpWeight)
+			
+			players[5].volume_db = staticVolume
+		
 
 func play_specific(sample: AudioStreamSample, player_num: int) -> void:
-	players[player_num].stream = sample
-	players[player_num].play()
+	if (!shutdown):
+		players[player_num].stream = sample
+		players[player_num].play()
 
 func play(sample: AudioStream) -> void:
-	players[currentPlayer].stream = sample
-	players[currentPlayer].play()
-	
-	currentPlayer += 1
-	
-	# players 0 and 1 are reserved for the background noise.
-	# 2 and 3 are reserved for mouse clicks.
-	# 4 is for mouse collisions.
-	# 5 is for virus static noise.
-	if (currentPlayer % PLAYERS_COUNT == 0):
-		currentPlayer = 6
+	if (!shutdown):
+		players[currentPlayer].stream = sample
+		players[currentPlayer].play()
+		
+		currentPlayer += 1
+		
+		# players 0 and 1 are reserved for the background noise.
+		# 2 and 3 are reserved for mouse clicks.
+		# 4 is for mouse collisions.
+		# 5 is for virus static noise.
+		if (currentPlayer % PLAYERS_COUNT == 0):
+			currentPlayer = 6
 
 func play_random_pitch(sample: AudioStreamSample, pitch_intensity: int) -> void:
 	var randomPitchShift: AudioStreamRandomPitch = AudioStreamRandomPitch.new()
@@ -118,6 +124,7 @@ func shutdown_pc() -> void:
 	play_specific(backgroundNoises[2], 0)
 	players[1].volume_db = 10.0
 	play_specific(backgroundNoises[3], 1)
+	shutdown = true
 
 func mouse_disabled() -> void:
 	play(mouseSFX[0])
@@ -142,12 +149,11 @@ func wrong_file_deleted() -> void:
 	play(deletedSFX[0])
 
 func play_static() -> void:
-	players[5].volume_db = staticVolume
+	players[5].volume_db = staticVolumeInitial
 	play_specific(backgroundNoises[4], 5)
 
 func increase_static_volume(incrementAmount: float) -> void:
-	staticVolumeBefore = staticVolume
-	staticVolumeIncrementAmount = incrementAmount
+	staticVolumeTargetWeight = 1 - 0.1 * (incrementAmount + 1)
 	shouldIncreaseStaticVolume = true
 
 #func on_player_finished(player: AudioStreamPlayer) -> void:

@@ -209,7 +209,7 @@ public class DirectoryHandler : Node {
 		virusNode = dirToAddToo.AddChild(virusItem);
 		updateSelectedTreeNode(selectedTreeNode);
 	}
-	
+
 	// Returns the distance to the virus from the current directory.
 	public int getDistanceToVirus() {
 		return TreeNode<FileItem>.DistanceBetweenTwoNodes(TreeNode<FileItem>.GetChildNodeByPath(currentDirectory, gameFileTree), virusNode);
@@ -442,8 +442,10 @@ public class DirectoryHandler : Node {
 			currentDirectory = tempCurrentDir;
 			currentDirectory.Remove(currentDirectory.Length - 1, 1); // remove the last '/'
 
-
 			updateSelectedTreeNode(TreeNode<FileItem>.GetChildNodeByPath(currentDirectory, gameFileTree));
+
+			int distance = TreeNode<FileItem>.DistanceBetweenTwoNodes(TreeNode<FileItem>.GetChildNodeByPath(currentDirectory, gameFileTree), virusNode);
+			EmitSignal(nameof(virus_distance_update), distance);
 		}
 
 		nodeHistory.Clear();
@@ -464,6 +466,9 @@ public class DirectoryHandler : Node {
 		if (selectedTreeNode.Parent != null) {
 			nodeHistory.Push(selectedTreeNode);
 			updateSelectedTreeNode(selectedTreeNode.Parent);
+
+			int distance = TreeNode<FileItem>.DistanceBetweenTwoNodes(selectedTreeNode, virusNode);
+			EmitSignal(nameof(virus_distance_update), distance);
 		}
 	}
 
@@ -472,7 +477,11 @@ public class DirectoryHandler : Node {
 	private void onForwardButtonPressed() {
 		// Replace with function body.
 		if (nodeHistory.Count > 0) {
-			updateSelectedTreeNode(nodeHistory.Pop());
+			TreeNode<FileItem> node = nodeHistory.Pop();
+			updateSelectedTreeNode(node);
+
+			int distance = TreeNode<FileItem>.DistanceBetweenTwoNodes(node, virusNode);
+			EmitSignal(nameof(virus_distance_update), distance);
 		}
 	}
 

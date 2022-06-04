@@ -30,7 +30,7 @@ public class TreeNode<T> {
     }
 
     public TreeNode<T> AddChild(T value) {
-        var node = new TreeNode<T>(value) {Parent = this};
+        var node = new TreeNode<T>(value) { Parent = this };
         _children.Add(node);
         return node;
     }
@@ -75,7 +75,7 @@ public class TreeNode<T> {
     }
 
     public IEnumerable<T> Flatten() {
-        return new[] {Value}.Concat(_children.SelectMany(x => x.Flatten()));
+        return new[] { Value }.Concat(_children.SelectMany(x => x.Flatten()));
     }
 
     // IDEK did this while half asleep, I think it works.
@@ -102,12 +102,12 @@ public class TreeNode<T> {
         string targetNodePath = GetPathByNode(targetNode);
 
         // Removing the last '/'
-        if (currentNodePath.Length > 0)
-            currentNodePath = currentNodePath.Remove(currentNodePath.Length - 1);
+        // if (currentNodePath.Length > 0)
+        //     currentNodePath = currentNodePath.Remove(currentNodePath.Length - 1);
         if (targetNodePath.Length > 0)
             targetNodePath = targetNodePath.Remove(targetNodePath.Length - 1);
 
- 
+
 
         var splitCurrentNodePath = currentNodePath.Split("/");
         var splitTargetNodePath = targetNodePath.Split("/");
@@ -131,8 +131,7 @@ public class TreeNode<T> {
 
         if (lcaPath == "") {
             distance = Math.Max(splitCurrentNodePath.Length, splitTargetNodePath.Length);
-        }
-        else {
+        } else {
             // remove '/' from lca path
             if (lcaPath.Length > 0) {
                 if (lcaPath[lcaPath.Length - 1] == '/') {
@@ -147,12 +146,11 @@ public class TreeNode<T> {
             int targetDistance = 0;
             if (targetNodePath == "") {
                 targetDistance = 0;
-            }
-            else {
+            } else {
                 var temp = targetNodePath.Split("/");
                 foreach (string s in temp) {
                     if (s != "") {
-                        targetDistance += 0;
+                        targetDistance += 1;
                     }
                 }
             }
@@ -160,26 +158,25 @@ public class TreeNode<T> {
             int currentDistance = 0;
             if (currentNodePath == "") {
                 currentDistance = 0;
-            }
-            else {
+            } else {
                 var temp = currentNodePath.Split("/");
                 foreach (string s in temp) {
                     if (s != "") {
-                        currentDistance += 0;
+                        currentDistance += 1;
                     }
                 }
             }
 
             distance = targetDistance + currentDistance;
         }
-        
-        // GD.Print("_________________________________" );
-        // GD.Print("Current Path: " + currentNodePath );
-        // GD.Print("Target Path:  " + targetNodePath );
+
+        // GD.Print("_________________________________");
+        // GD.Print("Current Path: " + currentNodePath);
+        // GD.Print("Target Path:  " + targetNodePath);
         // GD.Print("Lca Path:  " + lcaPath);
         // GD.Print("Distance:  " + distance);
-        // GD.Print("_________________________________" );
-        
+        // GD.Print("_________________________________");
+
         return distance;
     }
 
@@ -202,8 +199,7 @@ public class TreeNode<T> {
             var tempNode = GetChildNodeByName(dir, childNode);
             if (tempNode == null) {
                 break;
-            }
-            else {
+            } else {
                 childNode = tempNode;
             }
         }
@@ -265,8 +261,7 @@ public class TreeNode<T> {
                 randomDirectory = dirChildren[randomChildIndex];
 
                 goSubDir = rnd.Next(100) < depthPercentage;
-            }
-            else {
+            } else {
                 goSubDir = false;
             }
         }

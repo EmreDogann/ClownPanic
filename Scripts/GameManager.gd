@@ -67,7 +67,7 @@ func _ready():
 	
 	smp.set_param("Health", player_health)
 	smp.set_param("Level1/IdleTimer", 0.0)
-	smp.set_param("isVirusSpawned", false)
+	smp.set_param("isVirusDeleted", false)
 	
 	rng.randomize()
 
@@ -81,7 +81,7 @@ func virus_distance_update(incrementAmount: float):
 
 func virus_deleted():
 	audioManager.virus_deleted()
-	smp.set_trigger("DeleteVirus")
+	smp.set_param("isVirusDeleted", true)
 
 func wrong_file_deleted():
 	player_health -= 1
@@ -110,6 +110,8 @@ func _on_StateMachinePlayer_updated(state, delta) -> void:
 		"Level1/Idle":
 			if (smp.get_param("Level1/IdleTimer", 0.0) < 1.0):
 				smp.set_param("Level1/IdleTimer", smp.get_param("Level1/IdleTimer", 0.0) + delta)
+				if (smp.get_param("Level1/IdleTimer", 0.0) >= 1.0):
+					smp.set_trigger("SpawnVirus")
 		"Level1/Play Wrong Transition":
 			transitionTimer += delta
 			
@@ -171,6 +173,7 @@ func _on_StateMachinePlayer_updated(state, delta) -> void:
 				wrongFileGlitch.material.set('shader_param/amplitude', transitionFadeOutAmplitude)
 				distortion.material.set('shader_param/amplitude', transitionFadeOutAmplitude)
 				
+				distortion.material.set('shader_param/enableColorShifting', false)
 				wrongFileGlitch.get_parent().visible = false
 				distortion.get_parent().visible = false
 		"GameOver":
@@ -212,9 +215,10 @@ func _on_StateMachinePlayer_transited(from, to) -> void:
 		"Level1/Spawn Virus":
 			print("Virus Spawned!")
 			fileSystem.addVirusRandomly("VIRUS.v", false, "", FILE_TYPE.FILE)
+			audioManager.virus_deleted()
 			audioManager.play_static()
 			audioManager.increase_static_volume(fileSystem.getDistanceToVirus())
-			smp.set_param("isVirusSpawned", true)
+			smp.set_trigger("SpawnVirusTransition")
 		"Level1/Play Wrong Transition":
 			transitionFadeOutAmplitude = 1.0 * transitionFadeOutAmplitudeMultipler
 			distortion.material.set('shader_param/enableColorShifting', false)
