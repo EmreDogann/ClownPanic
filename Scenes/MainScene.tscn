@@ -894,7 +894,7 @@ priority = 0
 [sub_resource type="Resource" id=22]
 script = ExtResource( 27 )
 from = "Entry"
-to = "Level2"
+to = "Level1"
 conditions = {
 }
 priority = 0
@@ -915,7 +915,7 @@ states = {
 }
 transitions = {
 "Entry": {
-"Level2": SubResource( 22 )
+"Level1": SubResource( 22 )
 },
 "GameOver": {
 "GameOverTransition": SubResource( 71 )
