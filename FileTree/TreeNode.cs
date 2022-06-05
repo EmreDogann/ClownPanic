@@ -261,7 +261,6 @@ public class TreeNode<T> {
 	public static TreeNode<FileItem> GetRandomDirectory(TreeNode<FileItem> tree, int depthPercentage = 80) {
 		Random rnd = new Random();
 
-
 		TreeNode<FileItem> randomDirectory = tree;
 
 		// keep going if the 
@@ -290,6 +289,9 @@ public class TreeNode<T> {
 		List<TreeNode<FileItem>> fileChildren = GetFileChildren(tree);
 
 		int randomChildIndex = rnd.Next(fileChildren.Count);
+
+		GD.Print(randomChildIndex);
+		GD.Print(fileChildren.Count);
 
 		return fileChildren[randomChildIndex];
 	}

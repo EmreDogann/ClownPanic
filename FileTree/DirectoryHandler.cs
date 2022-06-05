@@ -193,21 +193,66 @@ public class DirectoryHandler : Node {
 			TreeNode<FileItem>.DeleteNode(virusNode);
 		}
 
-		TreeNode<FileItem> dirToAddToo;
+		TreeNode<FileItem> dirToAddToo = null;
 		if (directory == "") {
-			dirToAddToo = TreeNode<FileItem>.GetRandomDirectory(gameFileTree);
+			if (hidden) {
+				bool fileNotFound = true;
+				while (fileNotFound) {
+					dirToAddToo = TreeNode<FileItem>.GetRandomDirectory(gameFileTree);
+
+					if (TreeNode<FileItem>.GetFileChildren(dirToAddToo).Count > 0) {
+						fileNotFound = false;
+					}
+				}
+			} else {
+				dirToAddToo = TreeNode<FileItem>.GetRandomDirectory(gameFileTree);
+			}
 		} else {
 			dirToAddToo = TreeNode<FileItem>.GetChildNodeByPath(directory, gameFileTree);
 		}
 
-		FileItem virusItem;
+		FileItem virusItem = null;
 		if (hidden) {
 			FileItem fileToCopy = TreeNode<FileItem>.GetRandomFile(dirToAddToo).Value;
-			virusItem = new FileItem(TreeNode<FileItem>.GetPathByNode(dirToAddToo) + "/" + fileToCopy.GetFileName(),
-				filename: fileToCopy.GetFileName(), filetype: fileToCopy.GetFileType());
+
+			Random rng = new Random();
+			string newVirusName = fileToCopy.GetFileName();
+
+			switch (rng.Next(5) + 1) {
+				case 1:
+					newVirusName = newVirusName.Replace('i', '1');
+					virusItem = new FileItem(TreeNode<FileItem>.GetPathByNode(dirToAddToo) + "/" + newVirusName, filename: newVirusName, filetype: fileToCopy.GetFileType());
+					break;
+				case 2:
+					char[] characters = newVirusName.ToCharArray();
+					for (int i = 0; i < characters.Length; i += 2) {
+						characters[i] = char.ToUpper(characters[i]);
+					}
+					newVirusName = new string(characters);
+
+					virusItem = new FileItem(TreeNode<FileItem>.GetPathByNode(dirToAddToo) + "/" + newVirusName, filename: newVirusName, filetype: fileToCopy.GetFileType());
+					break;
+				case 3:
+					newVirusName = newVirusName.Replace('e', '3');
+					virusItem = new FileItem(TreeNode<FileItem>.GetPathByNode(dirToAddToo) + "/" + newVirusName, filename: newVirusName, filetype: fileToCopy.GetFileType());
+					break;
+				case 4:
+					int x = rng.Next(newVirusName.Length - 1);
+					newVirusName = newVirusName.Substring(0, x) + newVirusName.Substring(x + 1, newVirusName.Length);
+					virusItem = new FileItem(TreeNode<FileItem>.GetPathByNode(dirToAddToo) + "/" + newVirusName, filename: newVirusName, filetype: fileToCopy.GetFileType());
+					break;
+				case 5:
+					string[] splitName = newVirusName.Split('.');
+					if (splitName.Length > 0) {
+						newVirusName = splitName[0] + "NOTVIRUS" + splitName[1];
+					} else {
+						newVirusName = newVirusName + "NOTVIRUS";
+					}
+					virusItem = new FileItem(TreeNode<FileItem>.GetPathByNode(dirToAddToo) + "/" + newVirusName, filename: newVirusName, filetype: fileToCopy.GetFileType());
+					break;
+			}
 		} else {
-			virusItem = new FileItem(TreeNode<FileItem>.GetPathByNode(dirToAddToo) + "/" + nameOfVirus,
-				filetype: fileType);
+			virusItem = new FileItem(TreeNode<FileItem>.GetPathByNode(dirToAddToo) + "/" + nameOfVirus, filetype: fileType);
 		}
 
 		virusItem.SetIsVirus(true);

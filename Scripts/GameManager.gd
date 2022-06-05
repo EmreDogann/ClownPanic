@@ -114,7 +114,6 @@ func _process(delta):
 			
 			if (hoveredIndex != -1):
 				var distance = fileSystem.getHoveredDistance(itemList.get_item_metadata(hoveredIndex))
-				print(distance)
 				audioManager.increase_static_volume(distance)
 				shouldChangeStaticIntensity = true
 				staticIntensityTargetWeight = 1 - 0.2 * (distance + 1)
@@ -156,6 +155,10 @@ func _on_StateMachinePlayer_transited(from, to) -> void:
 			player.play("CorrectTransition")
 		"Level2/Entry", "Level3/Entry":
 			smp.set_param("isVirusDeleted", false)
+			
+			if (bleedFileTreeAmount == 0.0):
+				bleedFileTreeAmount += 0.35 * currentLevel
+				fileSystem.bleedFileTrees(bleedFileTreeAmount);
 		"Level2/Idle":
 			if (from == "Level2/Entry"):
 				smp.set_trigger("SpawnVirus")
@@ -168,7 +171,8 @@ func _on_StateMachinePlayer_transited(from, to) -> void:
 			smp.set_trigger("VirusSpawned")
 		"Level3/Idle":
 			if (from == "Level3/Entry"):
-				smp.set_trigger("ActivateTerminal")
+#				smp.set_trigger("ActivateTerminal")
+				smp.set_trigger("SpawnVirus")
 			elif (from == "Level3/Activate Terminal"):
 				smp.set_trigger("SpawnVirus")
 		"Level3/Activate Terminal":
@@ -179,9 +183,6 @@ func _on_StateMachinePlayer_transited(from, to) -> void:
 			
 			wallpaperTransitionReady = true
 			totalWallpaperTransition = 0
-			
-			virusGlitch.get_node("Effect").material.set("shader_param/AMT", 0.05)
-			virusGlitch.get_node("Effect").material.set("shader_param/SPEED", 0.2)
 			
 			smp.set_trigger("VirusSpawned")
 		"GameOver":	
@@ -240,4 +241,5 @@ func end_game():
 
 func bleedFiles() -> void:
 	if (currentLevel != 1):
-		fileSystem.bleedFileTrees(0.35);
+		bleedFileTreeAmount += 0.35
+		fileSystem.bleedFileTrees(bleedFileTreeAmount);

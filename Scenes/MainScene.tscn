@@ -1,4 +1,4 @@
-[gd_scene load_steps=154 format=2]
+[gd_scene load_steps=180 format=2]
 
 [ext_resource path="res://Scenes/Desktop.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scripts/Mouse.gd" type="Script" id=2]
@@ -520,13 +520,6 @@ transitions = {
 }
 }
 
-[sub_resource type="Resource" id=85]
-script = ExtResource( 26 )
-__meta__ = {
-"graph_offset": Vector2( 908, 140 )
-}
-name = "Level4"
-
 [sub_resource type="Resource" id=86]
 script = ExtResource( 26 )
 __meta__ = {
@@ -929,6 +922,226 @@ __meta__ = {
 }
 name = "Play Credits"
 
+[sub_resource type="Resource" id=183]
+script = ExtResource( 26 )
+__meta__ = {
+"graph_offset": Vector2( 428, 200 )
+}
+name = "Entry"
+
+[sub_resource type="Resource" id=184]
+script = ExtResource( 26 )
+__meta__ = {
+"graph_offset": Vector2( 647.434, 2.34411 )
+}
+name = "Spawn Virus"
+
+[sub_resource type="Resource" id=185]
+script = ExtResource( 26 )
+__meta__ = {
+"graph_offset": Vector2( 888, 60 )
+}
+name = "Play Correct Transition"
+
+[sub_resource type="Resource" id=186]
+script = ExtResource( 26 )
+__meta__ = {
+"graph_offset": Vector2( 1028, 200 )
+}
+name = "Exit"
+
+[sub_resource type="Resource" id=187]
+script = ExtResource( 26 )
+__meta__ = {
+"graph_offset": Vector2( 948, 380 )
+}
+name = "Play Wrong Transition"
+
+[sub_resource type="Resource" id=188]
+script = ExtResource( 26 )
+__meta__ = {
+"graph_offset": Vector2( 648, 200 )
+}
+name = "Idle"
+
+[sub_resource type="Resource" id=189]
+script = ExtResource( 26 )
+__meta__ = {
+"graph_offset": Vector2( 648, 440 )
+}
+name = "Popup Window"
+
+[sub_resource type="Resource" id=190]
+script = ExtResource( 27 )
+from = "Entry"
+to = "Idle"
+conditions = {
+}
+priority = 0
+
+[sub_resource type="Resource" id=191]
+script = ExtResource( 31 )
+name = "VirusSpawned"
+
+[sub_resource type="Resource" id=192]
+script = ExtResource( 27 )
+from = "Spawn Virus"
+to = "Idle"
+conditions = {
+"VirusSpawned": SubResource( 191 )
+}
+priority = 0
+
+[sub_resource type="Resource" id=193]
+script = ExtResource( 31 )
+name = "TransitionFinished"
+
+[sub_resource type="Resource" id=194]
+script = ExtResource( 27 )
+from = "Play Correct Transition"
+to = "Exit"
+conditions = {
+"TransitionFinished": SubResource( 193 )
+}
+priority = 0
+
+[sub_resource type="Resource" id=195]
+script = ExtResource( 31 )
+name = "TransitionFinished"
+
+[sub_resource type="Resource" id=196]
+script = ExtResource( 27 )
+from = "Play Wrong Transition"
+to = "Idle"
+conditions = {
+"TransitionFinished": SubResource( 195 )
+}
+priority = 0
+
+[sub_resource type="Resource" id=197]
+script = ExtResource( 31 )
+name = "SpawnVirus"
+
+[sub_resource type="Resource" id=198]
+script = ExtResource( 27 )
+from = "Idle"
+to = "Spawn Virus"
+conditions = {
+"SpawnVirus": SubResource( 197 )
+}
+priority = 0
+
+[sub_resource type="Resource" id=199]
+script = ExtResource( 25 )
+name = "isVirusSpawned"
+comparation = 0
+value = true
+
+[sub_resource type="Resource" id=200]
+script = ExtResource( 27 )
+from = "Idle"
+to = "Play Correct Transition"
+conditions = {
+"isVirusSpawned": SubResource( 199 )
+}
+priority = 0
+
+[sub_resource type="Resource" id=201]
+script = ExtResource( 32 )
+name = "Health"
+comparation = 0
+value = 0
+
+[sub_resource type="Resource" id=202]
+script = ExtResource( 27 )
+from = "Idle"
+to = "Exit"
+conditions = {
+"Health": SubResource( 201 )
+}
+priority = 0
+
+[sub_resource type="Resource" id=203]
+script = ExtResource( 31 )
+name = "WrongFileDeleted"
+
+[sub_resource type="Resource" id=204]
+script = ExtResource( 27 )
+from = "Idle"
+to = "Play Wrong Transition"
+conditions = {
+"WrongFileDeleted": SubResource( 203 )
+}
+priority = 0
+
+[sub_resource type="Resource" id=205]
+script = ExtResource( 32 )
+name = "spawnChance"
+comparation = 2
+value = 80
+
+[sub_resource type="Resource" id=206]
+script = ExtResource( 27 )
+from = "Idle"
+to = "Popup Window"
+conditions = {
+"spawnChance": SubResource( 205 )
+}
+priority = 0
+
+[sub_resource type="Resource" id=207]
+script = ExtResource( 31 )
+name = "WindowSpawned"
+
+[sub_resource type="Resource" id=208]
+script = ExtResource( 27 )
+from = "Popup Window"
+to = "Idle"
+conditions = {
+"WindowSpawned": SubResource( 207 )
+}
+priority = 0
+
+[sub_resource type="Resource" id=209]
+script = ExtResource( 29 )
+__meta__ = {
+"graph_offset": Vector2( 908, 140 )
+}
+name = "Level4"
+states = {
+"Entry": SubResource( 183 ),
+"Exit": SubResource( 186 ),
+"Idle": SubResource( 188 ),
+"Play Correct Transition": SubResource( 185 ),
+"Play Wrong Transition": SubResource( 187 ),
+"Popup Window": SubResource( 189 ),
+"Spawn Virus": SubResource( 184 )
+}
+transitions = {
+"Entry": {
+"Idle": SubResource( 190 )
+},
+"Idle": {
+"Exit": SubResource( 202 ),
+"Play Correct Transition": SubResource( 200 ),
+"Play Wrong Transition": SubResource( 204 ),
+"Popup Window": SubResource( 206 ),
+"Spawn Virus": SubResource( 198 )
+},
+"Play Correct Transition": {
+"Exit": SubResource( 194 )
+},
+"Play Wrong Transition": {
+"Idle": SubResource( 196 )
+},
+"Popup Window": {
+"Idle": SubResource( 208 )
+},
+"Spawn Virus": {
+"Idle": SubResource( 192 )
+}
+}
+
 [sub_resource type="Resource" id=70]
 script = ExtResource( 31 )
 name = "PlayCredits"
@@ -1108,7 +1321,7 @@ priority = 0
 [sub_resource type="Resource" id=22]
 script = ExtResource( 27 )
 from = "Entry"
-to = "Level1"
+to = "Level3"
 conditions = {
 }
 priority = 0
@@ -1123,13 +1336,13 @@ states = {
 "Level1": SubResource( 21 ),
 "Level2": SubResource( 146 ),
 "Level3": SubResource( 103 ),
-"Level4": SubResource( 85 ),
+"Level4": SubResource( 209 ),
 "Level5": SubResource( 86 ),
 "Play Credits": SubResource( 72 )
 }
 transitions = {
 "Entry": {
-"Level1": SubResource( 22 )
+"Level3": SubResource( 22 )
 },
 "GameOver": {
 "Play Credits": SubResource( 71 )

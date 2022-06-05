@@ -63,5 +63,5 @@ void fragment() {
 
 [resource]
 shader = SubResource( 1 )
-shader_param/AMT = 0.2
-shader_param/SPEED = 0.6
+shader_param/AMT = 0.05
+shader_param/SPEED = 0.25
