@@ -575,10 +575,19 @@ size_flags_vertical = 0
 custom_constants/separation = 0
 custom_styles/separator = SubResource( 6 )
 
-[node name="CSTree" type="Tree" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer/VBoxContainer"]
+[node name="Control" type="Control" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer/VBoxContainer"]
 margin_top = 21.0
 margin_right = 150.0
 margin_bottom = 276.0
+mouse_filter = 1
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="CSTree" type="Tree" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer/VBoxContainer/Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+focus_neighbour_top = NodePath("../../../VBoxContainer2/Control")
+focus_neighbour_right = NodePath("../../../VBoxContainer2/Control")
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_colors/font_color_selected = Color( 0, 0, 0, 1 )
@@ -633,10 +642,19 @@ size_flags_vertical = 0
 custom_constants/separation = 0
 custom_styles/separator = SubResource( 6 )
 
-[node name="ItemList" type="ItemList" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer/VBoxContainer2"]
+[node name="Control" type="Control" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer/VBoxContainer2"]
 margin_top = 21.0
 margin_right = 391.0
 margin_bottom = 276.0
+mouse_filter = 1
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ItemList" type="ItemList" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer/VBoxContainer2/Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+focus_neighbour_left = NodePath("../../../VBoxContainer/Control")
+focus_neighbour_top = NodePath(".")
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_colors/guide_color = Color( 0, 0, 0, 0 )
@@ -648,22 +666,22 @@ custom_styles/selected_focus = SubResource( 19 )
 custom_styles/selected = SubResource( 19 )
 custom_styles/bg = SubResource( 17 )
 
-[node name="Virus Glitch" type="Control" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer/VBoxContainer2/ItemList"]
+[node name="Virus Glitch" type="Control" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer/VBoxContainer2/Control/ItemList"]
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
-mouse_filter = 2
+mouse_filter = 1
 
-[node name="Effect" type="ColorRect" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer/VBoxContainer2/ItemList/Virus Glitch"]
+[node name="Effect" type="ColorRect" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer/VBoxContainer2/Control/ItemList/Virus Glitch"]
 material = ExtResource( 17 )
 anchor_right = 1.0
 anchor_bottom = 1.0
-mouse_filter = 2
+mouse_filter = 1
 __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="BackBufferCopy" type="BackBufferCopy" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer/VBoxContainer2/ItemList/Virus Glitch"]
+[node name="BackBufferCopy" type="BackBufferCopy" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer/VBoxContainer2/Control/ItemList/Virus Glitch"]
 visible = false
 copy_mode = 2
 __meta__ = {
@@ -683,8 +701,8 @@ shape = SubResource( 15 )
 [connection signal="pressed" from="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer/ControlButtons/MarginContainer2/ForwardButton" to="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files" method="onForwardButtonPressed"]
 [connection signal="pressed" from="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer/ControlButtons/MarginContainer6/DeleteButton" to="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files" method="onDeletePressed"]
 [connection signal="gui_input" from="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer" to="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer" method="_on_HSplitContainer_gui_input"]
-[connection signal="item_collapsed" from="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer/VBoxContainer/CSTree" to="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files" method="onTreeItemCollapsed"]
-[connection signal="item_selected" from="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer/VBoxContainer/CSTree" to="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files" method="onTreeItemSelected"]
-[connection signal="item_activated" from="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer/VBoxContainer2/ItemList" to="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files" method="onItemActivated"]
-[connection signal="item_selected" from="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer/VBoxContainer2/ItemList" to="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files" method="onItemListItemSelected"]
-[connection signal="nothing_selected" from="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer/VBoxContainer2/ItemList" to="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files" method="onItemListNothingSelected"]
+[connection signal="item_collapsed" from="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer/VBoxContainer/Control/CSTree" to="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files" method="onTreeItemCollapsed"]
+[connection signal="item_selected" from="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer/VBoxContainer/Control/CSTree" to="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files" method="onTreeItemSelected"]
+[connection signal="item_activated" from="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer/VBoxContainer2/Control/ItemList" to="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files" method="onItemActivated"]
+[connection signal="item_selected" from="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer/VBoxContainer2/Control/ItemList" to="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files" method="onItemListItemSelected"]
+[connection signal="nothing_selected" from="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer/VBoxContainer2/Control/ItemList" to="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files" method="onItemListNothingSelected"]

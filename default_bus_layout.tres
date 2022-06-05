@@ -2,14 +2,14 @@
 
 [sub_resource type="AudioEffectLowPassFilter" id=1]
 resource_name = "LowPassFilter"
-cutoff_hz = 3000.0
+cutoff_hz = 3500.0
 
 [resource]
 bus/1/name = "Background"
 bus/1/solo = false
 bus/1/mute = false
 bus/1/bypass_fx = false
-bus/1/volume_db = -6.25101
+bus/1/volume_db = 0.0
 bus/1/send = "Master"
 bus/2/name = "Static"
 bus/2/solo = false

@@ -5,13 +5,13 @@ onready var smp = $StateMachinePlayer
 onready var player: AnimationPlayer = get_node("../AnimationPlayer")
 onready var blankWindow = preload("res://Scenes/BlankWindow.tscn")
 onready var fileSystem = get_tree().root.get_node("Node2D/CanvasLayer/FileExplorer/Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files")
-onready var itemList:  = get_tree().root.get_node("Node2D/CanvasLayer/FileExplorer/Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer/VBoxContainer2/ItemList")
+onready var itemList: ItemList = get_tree().root.get_node("Node2D/CanvasLayer/FileExplorer/Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer/VBoxContainer2/Control/ItemList")
 onready var audioManager = get_tree().root.get_node("Node2D/AudioManager")
 onready var wallpaperNode = get_tree().root.get_node("Node2D/CanvasLayer/Desktop/Panel/Wallpaper")
 onready var terminalNode = get_tree().root.get_node("Node2D/CanvasLayer/Terminal")
 onready var mouseNode = get_tree().root.get_node("Node2D/CanvasLayer/Mouse")
 
-onready var virusGlitch = get_node("../CanvasLayer/FileExplorer/Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer/VBoxContainer2/ItemList/Virus Glitch")
+onready var virusGlitch = get_node("../CanvasLayer/FileExplorer/Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer/VBoxContainer2/Control/ItemList/Virus Glitch")
 onready var crtFilter = get_node("../CanvasLayer/Post-Processing Effects/CRT Filter/Effect")
 
 var staticIntensity: float = 0.1
@@ -39,7 +39,8 @@ var virusPosition: int
 
 onready var player_health: int = 4;
 onready var ui_elements_to_turn_off: Dictionary = {
-	3: [get_node("../CanvasLayer/FileExplorer/Window/VBoxContainer/Titlebar/HBoxContainer/HBoxContainer")],
+	3: [get_node("../CanvasLayer/FileExplorer/Window/VBoxContainer/Titlebar/HBoxContainer/HBoxContainer"),
+		get_node("../CanvasLayer/Terminal/Window/VBoxContainer/Titlebar/HBoxContainer/HBoxContainer")],
 	2: get_node("../CanvasLayer/Desktop/Panel/TaskBar"),
 	1: get_node("../CanvasLayer/FileExplorer/Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Controls/HBoxContainer/ControlButtons"),
 }
@@ -70,6 +71,7 @@ func _ready():
 	smp.set_param("Health", player_health)
 	smp.set_param("Level1/IdleTimer", 0.0)
 	smp.set_param("isVirusDeleted", false)
+	smp.set_param("isMouseDisabled", false)
 	
 	player.connect("animation_finished", self, "animFinished")
 	
@@ -96,7 +98,7 @@ func _process(delta):
 			crtFilter.material.set('shader_param/static_noise_intensity', staticIntensity)
 	
 	if (virusGlitch.visible and virusPosition != -1):
-#		print(virusPosition)
+		print(virusPosition)
 		var position: Vector2
 		position.y += (itemList.get_constant("line_separation") + itemList.get_constant("vseparation") + 16) * (virusPosition)
 		position.y -= (itemList.get_v_scroll().value)
@@ -143,7 +145,8 @@ func _on_StateMachinePlayer_updated(state, delta) -> void:
 				
 				smp.set_param("spawnChance", rng.randi_range(0, 100))
 		"Level5/Idle":
-			smp.set_param("disableTimer", smp.get_param("disableTimer", 0.0) + delta)
+			if (!smp.get_param("isMouseDisabled")):
+				smp.set_param("disableTimer", smp.get_param("disableTimer", 0.0) + delta)
 
 func _on_StateMachinePlayer_transited(from, to) -> void:
 	prints("Transition(%s -> %s)" % [from, to])
@@ -169,6 +172,7 @@ func _on_StateMachinePlayer_transited(from, to) -> void:
 				fileSystem.bleedFileTrees(bleedFileTreeAmount);
 		"Level2/Idle":
 			if (from == "Level2/Entry"):
+				currentLevel = 2
 				smp.set_trigger("SpawnVirus")
 		"Level2/Spawn Virus":
 			fileSystem.addVirusRandomly("VIRUS.exe", false, "", FILE_TYPE.EXECUTABLE)
@@ -179,6 +183,7 @@ func _on_StateMachinePlayer_transited(from, to) -> void:
 			smp.set_trigger("VirusSpawned")
 		"Level3/Idle":
 			if (from == "Level3/Entry"):
+				currentLevel = 3
 				smp.set_trigger("ActivateTerminal")
 			elif (from == "Level3/Activate Terminal"):
 				smp.set_trigger("SpawnVirus")
@@ -194,6 +199,7 @@ func _on_StateMachinePlayer_transited(from, to) -> void:
 			smp.set_trigger("VirusSpawned")
 		"Level4/Idle":
 			if (from == "Level4/Entry"):
+				currentLevel = 4
 				smp.set_trigger("SpawnVirus")
 		"Level4/Popup Window":
 			var instance = blankWindow.instance()
@@ -203,10 +209,16 @@ func _on_StateMachinePlayer_transited(from, to) -> void:
 			smp.set_trigger("WindowSpawned")
 		"Level5/Idle":
 			if (from == "Level5/Entry"):
+				currentLevel = 5
 				terminalNode.ambiguous_text()
 				smp.set_trigger("SpawnVirus")
 		"Level5/Disable Mouse":
+			itemList.grab_focus()
+			if (itemList.get_item_count() > 0):
+				itemList.select(0)
+			
 			mouseNode.disable_mouse()
+			smp.set_param("isMouseDisabled", true)
 		"GameOver":	
 			player.play("GameOver")
 		"Play Credits":
@@ -229,7 +241,6 @@ func virus_distance_update(incrementAmount: float):
 		virusGlitch.visible = false
 
 func virus_deleted():
-	currentLevel += 1
 	virusGlitch.visible = false
 	
 	audioManager.virus_deleted()

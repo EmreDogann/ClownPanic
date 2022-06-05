@@ -11,7 +11,7 @@ config_version=4
 [application]
 
 config/name="Go Godot 3 Classic - ClownPanic"
-run/main_scene="res://Scenes/MainScene.tscn"
+run/main_scene="res://Scenes/Disclamer.tscn"
 boot_splash/use_filter=false
 config/icon="res://Images/icon.png"
 
@@ -23,6 +23,7 @@ PixelPerfectScaling="*res://Scripts/PixelPerfectScaling.gd"
 
 window/size/width=960
 window/size/height=540
+window/size/fullscreen=true
 window/size/test_width=1280
 window/size/test_height=720
 window/stretch/mode="viewport"

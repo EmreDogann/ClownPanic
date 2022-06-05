@@ -111,10 +111,10 @@ anchor_bottom = 1.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="DisclamerText/CenterContainer"]
 margin_left = 155.0
-margin_top = 55.0
+margin_top = 50.0
 margin_right = 805.0
-margin_bottom = 485.0
-custom_constants/separation = 10
+margin_bottom = 490.0
+custom_constants/separation = 15
 
 [node name="CenterContainer" type="CenterContainer" parent="DisclamerText/CenterContainer/VBoxContainer"]
 margin_right = 650.0
@@ -129,9 +129,9 @@ custom_fonts/font = SubResource( 1 )
 text = "DISCLAMER"
 
 [node name="CenterContainer2" type="CenterContainer" parent="DisclamerText/CenterContainer/VBoxContainer"]
-margin_top = 66.0
+margin_top = 71.0
 margin_right = 650.0
-margin_bottom = 385.0
+margin_bottom = 390.0
 
 [node name="RichTextLabel" type="RichTextLabel" parent="DisclamerText/CenterContainer/VBoxContainer/CenterContainer2"]
 margin_right = 650.0
@@ -143,21 +143,25 @@ custom_fonts/normal_font = SubResource( 2 )
 bbcode_enabled = true
 bbcode_text = "[center]After clicking '[color=yellow]Continue[/color]', the game will read a restricted number of your files contained inside the '[color=yellow]Users[/color]' directory for the purposes of gameplay.
 
-The game will not modify or create any files or folders once started, even inside its own directories. Along with this, these files are not shared with anyone as the game lacks an internet connection.
+The game will not modify, delete or create any files and folders once started.
+
+These files are not shared with anyone and remain solely within the confines of the game.
 
 [color=#ca1818]If you do not agree to this, please stop here.[/color][/center]"
 text = "After clicking 'Continue', the game will read a restricted number of your files contained inside the 'Users' directory for the purposes of gameplay.
 
-The game will not modify or create any files or folders once started, even inside its own directories. Along with this, these files are not shared with anyone as the game lacks an internet connection.
+The game will not modify, delete or create any files and folders once started.
+
+These files are not shared with anyone and remain solely within the confines of the game.
 
 If you do not agree to this, please stop here."
 fit_content_height = true
 deselect_on_focus_loss_enabled = false
 
 [node name="CenterContainer3" type="CenterContainer" parent="DisclamerText/CenterContainer/VBoxContainer"]
-margin_top = 395.0
+margin_top = 405.0
 margin_right = 650.0
-margin_bottom = 430.0
+margin_bottom = 440.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="DisclamerText/CenterContainer/VBoxContainer/CenterContainer3"]
 margin_left = 210.0

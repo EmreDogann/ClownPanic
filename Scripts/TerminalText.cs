@@ -16,7 +16,7 @@ public class TerminalText : RichTextLabel {
 	private bool is_terminal_active = false;
 
 	private const int MAX_CHARACTER_LIMIT = 5000;
-	private const float gameOverTimeLimit = 120.0f; // Game Over Time Limit in seconds
+	private const float gameOverTimeLimit = 60.0f; // Game Over Time Limit in seconds
 	private float timer;
 	private float timerIncrement;
 
@@ -101,7 +101,7 @@ public class TerminalText : RichTextLabel {
 				textToAdd += rootDirectory + "> [color=yellow](" + numberOfFilesDeleted + "/" + (filesDirectoryReference.GetUserTotalFileCount() - 1) + ")[/color]";
 			}
 			
-			textToAdd += "[color=red]DELETING[/color] [color=green]" + finalFileLocation + "[/color]\n";
+			textToAdd += " [color=red]DELETING[/color] [color=green]" + finalFileLocation + "[/color]\n";
 			
 			BbcodeText += textToAdd;
 			fileDirectoryList.Remove(fileDirectoryList.First.Next);
