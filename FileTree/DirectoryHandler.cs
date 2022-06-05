@@ -82,8 +82,8 @@ public class DirectoryHandler : Node {
 		// TreeNode<FileItem>.PrintTree(userFileTree);
 
 		userTotalFileCount = userFileTree.Size();
-//		GD.Print("User File Tree Size: ", userFileTree.Size());
-//		GD.Print("Game File Tree Size: ", gameFileTree.Size());
+		//		GD.Print("User File Tree Size: ", userFileTree.Size());
+		//		GD.Print("Game File Tree Size: ", gameFileTree.Size());
 
 		// merged File Tree
 		// mergeFileTrees(gameFileTree, userFileTree, 0.002f);
@@ -99,7 +99,7 @@ public class DirectoryHandler : Node {
 
 
 		sceneTree.HideRoot = true;
-//		GD.Print(OS.GetEnvironment("USERNAME"));
+		//		GD.Print(OS.GetEnvironment("USERNAME"));
 
 		// Scene Tree
 		sceneItemList = (ItemList)GetNode("HSplitContainer/VBoxContainer2/ItemList");
@@ -214,6 +214,8 @@ public class DirectoryHandler : Node {
 		virusNode = dirToAddToo.AddChild(virusItem);
 		updateSelectedTreeNode(selectedTreeNode);
 
+		sceneItemList.SortItemsByText();
+
 		// Send a signal to the game manager to update its graphical effects to reflect the new distance of the virus.
 		int distance = TreeNode<FileItem>.DistanceBetweenTwoNodes(TreeNode<FileItem>.GetChildNodeByPath(currentDirectory, gameFileTree), virusNode);
 		EmitSignal(nameof(virus_distance_update), distance);
@@ -222,6 +224,32 @@ public class DirectoryHandler : Node {
 	// Returns the distance to the virus from the current directory.
 	public int getDistanceToVirus() {
 		return TreeNode<FileItem>.DistanceBetweenTwoNodes(TreeNode<FileItem>.GetChildNodeByPath(currentDirectory, gameFileTree), virusNode);
+	}
+
+	// Will find and return the relative position of the virus in the list based off its parent node.
+	public int getVirusPosition() {
+		if (virusNode != null) {
+			int index = 0;
+			foreach (var child in selectedTreeNode.Children) {
+				if (child.Value.IsVirus()) {
+					return index;
+				}
+				index++;
+			}
+		}
+
+		return -1;
+	}
+
+	// Gets the distance from the currently hovered over item to the virus node.
+	public int getHoveredDistance(string path) {
+		var node = TreeNode<FileItem>.GetChildNodeByPath(path, gameFileTree);
+
+		if (virusNode != null) {
+			return TreeNode<FileItem>.DistanceBetweenTwoNodes(node, virusNode);
+		}
+
+		return -1;
 	}
 
 	#endregion
@@ -304,9 +332,16 @@ public class DirectoryHandler : Node {
 	void populateSceneItemList(TreeNode<FileItem> directory) {
 		sceneItemList.Clear();
 
+		// TreeNode<FileItem>[] children = new TreeNode<FileItem>[directory.Children.Count];
+		// directory.Children.CopyTo(children, 0);
+		// Array.Sort(children, delegate (TreeNode<FileItem> node1, TreeNode<FileItem> node2) {
+		// 	return node1.Value.GetFileName().CompareTo(node2.Value.GetFileName());
+		// });
+
 		int i = 0;
 		foreach (TreeNode<FileItem> item in directory.Children) {
 			sceneItemList.AddItem(item.Value.GetFileName(), itemListIcons[(int)item.Value.GetFileType()]);
+			sceneItemList.SetItemMetadata(i, TreeNode<FileItem>.GetPathByNode(item));
 			sceneItemList.SetItemTooltipEnabled(i, false);
 			i++;
 		}
@@ -419,7 +454,7 @@ public class DirectoryHandler : Node {
 		if (sceneTree.GetRoot() != null) {
 			var child = sceneTree.GetRoot().GetChildren();
 			while (child != null) {
-//				GD.Print(child.GetText(0));
+				//				GD.Print(child.GetText(0));
 				child = child.GetNext();
 			}
 		}

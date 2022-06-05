@@ -7,7 +7,7 @@ shader_type canvas_item;
 
 uniform float time = 0.0;
 
-const vec4 FADE_COLOR = vec4(0.0859f, 0.0937f, 0.1328f, 1.0f);
+uniform vec4 FADE_COLOR = vec4(0.0859f, 0.0937f, 0.1328f, 1.0f);
 const float BUFFER = 2.0f;
 const float SCALE_SPEED = 1.5f;
 
@@ -57,4 +57,5 @@ void fragment()
 
 [resource]
 shader = SubResource( 12 )
-shader_param/time = 0.0
+shader_param/time = 1.0
+shader_param/FADE_COLOR = Plane( 0, 0, 0, 1 )

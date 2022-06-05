@@ -1,4 +1,4 @@
-[gd_scene load_steps=146 format=2]
+[gd_scene load_steps=154 format=2]
 
 [ext_resource path="res://Scenes/Desktop.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Scripts/Mouse.gd" type="Script" id=2]
@@ -29,8 +29,12 @@
 [ext_resource path="res://addons/imjp94.yafsm/src/transitions/Transition.gd" type="Script" id=27]
 [ext_resource path="res://addons/imjp94.yafsm/src/StateMachinePlayer.gd" type="Script" id=28]
 [ext_resource path="res://addons/imjp94.yafsm/src/states/StateMachine.gd" type="Script" id=29]
+[ext_resource path="res://Animations/WrongTransition.tres" type="Animation" id=30]
 [ext_resource path="res://addons/imjp94.yafsm/src/conditions/Condition.gd" type="Script" id=31]
 [ext_resource path="res://addons/imjp94.yafsm/src/conditions/IntegerCondition.gd" type="Script" id=32]
+[ext_resource path="res://Animations/CorrectTransition.tres" type="Animation" id=33]
+[ext_resource path="res://Animations/GameOver.tres" type="Animation" id=34]
+[ext_resource path="res://Animations/Credits.tres" type="Animation" id=35]
 
 [sub_resource type="PhysicsMaterial" id=2]
 absorbent = true
@@ -51,11 +55,215 @@ extents = Vector2( 20, 273.75 )
 bounce = 1.0
 absorbent = true
 
+[sub_resource type="DynamicFont" id=149]
+size = 64
+outline_color = Color( 0.952941, 0.952941, 0.952941, 1 )
+font_data = ExtResource( 13 )
+
+[sub_resource type="DynamicFont" id=150]
+size = 32
+font_data = ExtResource( 13 )
+
 [sub_resource type="DynamicFont" id=10]
 size = 32
 outline_size = 1
 outline_color = Color( 0.952941, 0.952941, 0.952941, 1 )
 font_data = ExtResource( 13 )
+
+[sub_resource type="Animation" id=151]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("CanvasLayer/Post-Processing Effects/Wrong File Glitch/Effect:material:shader_param/time")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("CanvasLayer/Post-Processing Effects/Distortion/Effect:material:shader_param/time")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0.0 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("CanvasLayer/Post-Processing Effects/Wrong File Glitch/Effect:material:shader_param/amplitude")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 1.0 ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("CanvasLayer/Post-Processing Effects/Distortion/Effect:material:shader_param/amplitude")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 1.0 ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("CanvasLayer/Post-Processing Effects/CRT Close/Effect:material:shader_param/time")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 1.0 ]
+}
+tracks/5/type = "value"
+tracks/5/path = NodePath("CanvasLayer/Post-Processing Effects/CRT Close:visible")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ false ]
+}
+tracks/6/type = "value"
+tracks/6/path = NodePath("CanvasLayer/Post-Processing Effects/Distortion:visible")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ false ]
+}
+tracks/7/type = "value"
+tracks/7/path = NodePath("CanvasLayer/Post-Processing Effects/Wrong File Glitch:visible")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ false ]
+}
+tracks/8/type = "value"
+tracks/8/path = NodePath("CanvasLayer/Credits:visible")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ false ]
+}
+tracks/9/type = "value"
+tracks/9/path = NodePath("CanvasLayer/Post-Processing Effects/CRT Close:modulate")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+tracks/10/type = "value"
+tracks/10/path = NodePath("CanvasLayer/Credits/CenterContainer/Creators:modulate")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+tracks/11/type = "value"
+tracks/11/path = NodePath("CanvasLayer/Credits/CenterContainer/Thanks!:modulate")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 0 ) ]
+}
+tracks/12/type = "value"
+tracks/12/path = NodePath("CanvasLayer/Credits/CenterContainer/Creators:visible")
+tracks/12/interp = 1
+tracks/12/loop_wrap = true
+tracks/12/imported = false
+tracks/12/enabled = true
+tracks/12/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ false ]
+}
+tracks/13/type = "value"
+tracks/13/path = NodePath("CanvasLayer/Credits/CenterContainer/Thanks!:visible")
+tracks/13/interp = 1
+tracks/13/loop_wrap = true
+tracks/13/imported = false
+tracks/13/enabled = true
+tracks/13/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ false ]
+}
+tracks/14/type = "value"
+tracks/14/path = NodePath("CanvasLayer/Post-Processing Effects/Distortion/Effect:material:shader_param/enableColorShifting")
+tracks/14/interp = 1
+tracks/14/loop_wrap = true
+tracks/14/imported = false
+tracks/14/enabled = true
+tracks/14/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ false ]
+}
+tracks/15/type = "value"
+tracks/15/path = NodePath("CanvasLayer/Post-Processing Effects/Distortion/Effect:material:shader_param/distortionDirection")
+tracks/15/interp = 1
+tracks/15/loop_wrap = true
+tracks/15/imported = false
+tracks/15/enabled = true
+tracks/15/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0 ]
+}
 
 [sub_resource type="Animation" id=7]
 resource_name = "fade_from_black"
@@ -76,7 +284,7 @@ tracks/0/keys = {
 [sub_resource type="Resource" id=12]
 script = ExtResource( 26 )
 __meta__ = {
-"graph_offset": Vector2( 548, -20 )
+"graph_offset": Vector2( 528, -20 )
 }
 name = "Entry"
 
@@ -93,13 +301,6 @@ __meta__ = {
 "graph_offset": Vector2( 714.5, 380 )
 }
 name = "GameOver"
-
-[sub_resource type="Resource" id=72]
-script = ExtResource( 26 )
-__meta__ = {
-"graph_offset": Vector2( 1060.5, 380 )
-}
-name = "GameOverTransition"
 
 [sub_resource type="Resource" id=98]
 script = ExtResource( 26 )
@@ -118,7 +319,7 @@ name = "Entry"
 [sub_resource type="Resource" id=104]
 script = ExtResource( 26 )
 __meta__ = {
-"graph_offset": Vector2( 828, 80 )
+"graph_offset": Vector2( 1088, 80 )
 }
 name = "Exit"
 
@@ -128,6 +329,27 @@ __meta__ = {
 "graph_offset": Vector2( 608, 80 )
 }
 name = "Idle"
+
+[sub_resource type="Resource" id=168]
+script = ExtResource( 26 )
+__meta__ = {
+"graph_offset": Vector2( 588.5, -100 )
+}
+name = "Spawn Virus"
+
+[sub_resource type="Resource" id=169]
+script = ExtResource( 26 )
+__meta__ = {
+"graph_offset": Vector2( 814, -80 )
+}
+name = "Play Correct Transition"
+
+[sub_resource type="Resource" id=170]
+script = ExtResource( 26 )
+__meta__ = {
+"graph_offset": Vector2( 816, 240 )
+}
+name = "Play Wrong Transition"
 
 [sub_resource type="Resource" id=99]
 script = ExtResource( 27 )
@@ -165,6 +387,47 @@ conditions = {
 }
 priority = 0
 
+[sub_resource type="Resource" id=171]
+script = ExtResource( 25 )
+name = "isVirusDeleted"
+comparation = 0
+value = true
+
+[sub_resource type="Resource" id=172]
+script = ExtResource( 27 )
+from = "Idle"
+to = "Play Correct Transition"
+conditions = {
+"isVirusDeleted": SubResource( 171 )
+}
+priority = 0
+
+[sub_resource type="Resource" id=173]
+script = ExtResource( 31 )
+name = "WrongFileDeleted"
+
+[sub_resource type="Resource" id=174]
+script = ExtResource( 27 )
+from = "Idle"
+to = "Play Wrong Transition"
+conditions = {
+"WrongFileDeleted": SubResource( 173 )
+}
+priority = 0
+
+[sub_resource type="Resource" id=175]
+script = ExtResource( 31 )
+name = "SpawnVirus"
+
+[sub_resource type="Resource" id=176]
+script = ExtResource( 27 )
+from = "Idle"
+to = "Spawn Virus"
+conditions = {
+"SpawnVirus": SubResource( 175 )
+}
+priority = 0
+
 [sub_resource type="Resource" id=107]
 script = ExtResource( 31 )
 name = "TerminalActive"
@@ -178,6 +441,45 @@ conditions = {
 }
 priority = 0
 
+[sub_resource type="Resource" id=177]
+script = ExtResource( 31 )
+name = "VirusSpawned"
+
+[sub_resource type="Resource" id=178]
+script = ExtResource( 27 )
+from = "Spawn Virus"
+to = "Idle"
+conditions = {
+"VirusSpawned": SubResource( 177 )
+}
+priority = 0
+
+[sub_resource type="Resource" id=179]
+script = ExtResource( 31 )
+name = "TransitionFinished"
+
+[sub_resource type="Resource" id=180]
+script = ExtResource( 27 )
+from = "Play Correct Transition"
+to = "Exit"
+conditions = {
+"TransitionFinished": SubResource( 179 )
+}
+priority = 0
+
+[sub_resource type="Resource" id=181]
+script = ExtResource( 31 )
+name = "TransitionFinished"
+
+[sub_resource type="Resource" id=182]
+script = ExtResource( 27 )
+from = "Play Wrong Transition"
+to = "Idle"
+conditions = {
+"TransitionFinished": SubResource( 181 )
+}
+priority = 0
+
 [sub_resource type="Resource" id=103]
 script = ExtResource( 29 )
 __meta__ = {
@@ -188,7 +490,10 @@ states = {
 "Activate Terminal": SubResource( 98 ),
 "Entry": SubResource( 96 ),
 "Exit": SubResource( 104 ),
-"Idle": SubResource( 97 )
+"Idle": SubResource( 97 ),
+"Play Correct Transition": SubResource( 169 ),
+"Play Wrong Transition": SubResource( 170 ),
+"Spawn Virus": SubResource( 168 )
 }
 transitions = {
 "Activate Terminal": {
@@ -199,7 +504,19 @@ transitions = {
 },
 "Idle": {
 "Activate Terminal": SubResource( 101 ),
-"Exit": SubResource( 106 )
+"Exit": SubResource( 106 ),
+"Play Correct Transition": SubResource( 172 ),
+"Play Wrong Transition": SubResource( 174 ),
+"Spawn Virus": SubResource( 176 )
+},
+"Play Correct Transition": {
+"Exit": SubResource( 180 )
+},
+"Play Wrong Transition": {
+"Idle": SubResource( 182 )
+},
+"Spawn Virus": {
+"Idle": SubResource( 178 )
 }
 }
 
@@ -231,20 +548,6 @@ __meta__ = {
 }
 name = "Exit"
 
-[sub_resource type="Resource" id=42]
-script = ExtResource( 26 )
-__meta__ = {
-"graph_offset": Vector2( 917, 0 )
-}
-name = "Fade Out Correct Transition"
-
-[sub_resource type="Resource" id=41]
-script = ExtResource( 26 )
-__meta__ = {
-"graph_offset": Vector2( 824.5, 300 )
-}
-name = "Fade Out Error Transition"
-
 [sub_resource type="Resource" id=15]
 script = ExtResource( 26 )
 __meta__ = {
@@ -255,7 +558,7 @@ name = "Idle"
 [sub_resource type="Resource" id=36]
 script = ExtResource( 26 )
 __meta__ = {
-"graph_offset": Vector2( 534, 0 )
+"graph_offset": Vector2( 734, 0 )
 }
 name = "Play Correct Transition"
 
@@ -269,7 +572,7 @@ name = "Play Wrong Transition"
 [sub_resource type="Resource" id=16]
 script = ExtResource( 26 )
 __meta__ = {
-"graph_offset": Vector2( 248.5, 0 )
+"graph_offset": Vector2( 428.5, 0 )
 }
 name = "Spawn Virus"
 
@@ -278,59 +581,6 @@ script = ExtResource( 27 )
 from = "Entry"
 to = "Idle"
 conditions = {
-}
-priority = 0
-
-[sub_resource type="Resource" id=83]
-script = ExtResource( 31 )
-name = "TransitionFinished"
-
-[sub_resource type="Resource" id=80]
-script = ExtResource( 25 )
-name = "isVirusDeleted"
-comparation = 0
-value = true
-
-[sub_resource type="Resource" id=50]
-script = ExtResource( 27 )
-from = "Fade Out Correct Transition"
-to = "Exit"
-conditions = {
-"TransitionFinished": SubResource( 83 ),
-"isVirusDeleted": SubResource( 80 )
-}
-priority = 0
-
-[sub_resource type="Resource" id=84]
-script = ExtResource( 31 )
-name = "TransitionFinished"
-
-[sub_resource type="Resource" id=81]
-script = ExtResource( 25 )
-name = "isVirusDeleted"
-comparation = 0
-value = false
-
-[sub_resource type="Resource" id=56]
-script = ExtResource( 27 )
-from = "Fade Out Correct Transition"
-to = "Idle"
-conditions = {
-"TransitionFinished": SubResource( 84 ),
-"isVirusDeleted": SubResource( 81 )
-}
-priority = 0
-
-[sub_resource type="Resource" id=45]
-script = ExtResource( 31 )
-name = "TransitionFinished"
-
-[sub_resource type="Resource" id=46]
-script = ExtResource( 27 )
-from = "Fade Out Error Transition"
-to = "Idle"
-conditions = {
-"TransitionFinished": SubResource( 45 )
 }
 priority = 0
 
@@ -390,29 +640,56 @@ conditions = {
 }
 priority = 0
 
-[sub_resource type="Resource" id=47]
-script = ExtResource( 31 )
-name = "FadeOutTransition"
+[sub_resource type="Resource" id=160]
+script = ExtResource( 25 )
+name = "isVirusDeleted"
+comparation = 0
+value = false
 
-[sub_resource type="Resource" id=48]
+[sub_resource type="Resource" id=161]
+script = ExtResource( 31 )
+name = "TransitionFinished"
+
+[sub_resource type="Resource" id=162]
 script = ExtResource( 27 )
 from = "Play Correct Transition"
-to = "Fade Out Correct Transition"
+to = "Idle"
 conditions = {
-"FadeOutTransition": SubResource( 47 )
+"TransitionFinished": SubResource( 161 ),
+"isVirusDeleted": SubResource( 160 )
 }
 priority = 0
 
-[sub_resource type="Resource" id=43]
+[sub_resource type="Resource" id=163]
 script = ExtResource( 31 )
-name = "FadeOutTransition"
+name = "TransitionFinished"
 
-[sub_resource type="Resource" id=44]
+[sub_resource type="Resource" id=164]
+script = ExtResource( 25 )
+name = "isVirusDeleted"
+comparation = 0
+value = true
+
+[sub_resource type="Resource" id=165]
+script = ExtResource( 27 )
+from = "Play Correct Transition"
+to = "Exit"
+conditions = {
+"TransitionFinished": SubResource( 163 ),
+"isVirusDeleted": SubResource( 164 )
+}
+priority = 0
+
+[sub_resource type="Resource" id=166]
+script = ExtResource( 31 )
+name = "TransitionFinished"
+
+[sub_resource type="Resource" id=167]
 script = ExtResource( 27 )
 from = "Play Wrong Transition"
-to = "Fade Out Error Transition"
+to = "Idle"
 conditions = {
-"FadeOutTransition": SubResource( 43 )
+"TransitionFinished": SubResource( 166 )
 }
 priority = 0
 
@@ -438,8 +715,6 @@ name = "Level1"
 states = {
 "Entry": SubResource( 14 ),
 "Exit": SubResource( 30 ),
-"Fade Out Correct Transition": SubResource( 42 ),
-"Fade Out Error Transition": SubResource( 41 ),
 "Idle": SubResource( 15 ),
 "Play Correct Transition": SubResource( 36 ),
 "Play Wrong Transition": SubResource( 29 ),
@@ -449,13 +724,6 @@ transitions = {
 "Entry": {
 "Idle": SubResource( 17 )
 },
-"Fade Out Correct Transition": {
-"Exit": SubResource( 50 ),
-"Idle": SubResource( 56 )
-},
-"Fade Out Error Transition": {
-"Idle": SubResource( 46 )
-},
 "Idle": {
 "Exit": SubResource( 75 ),
 "Play Correct Transition": SubResource( 54 ),
@@ -463,10 +731,11 @@ transitions = {
 "Spawn Virus": SubResource( 19 )
 },
 "Play Correct Transition": {
-"Fade Out Correct Transition": SubResource( 48 )
+"Exit": SubResource( 165 ),
+"Idle": SubResource( 162 )
 },
 "Play Wrong Transition": {
-"Fade Out Error Transition": SubResource( 44 )
+"Idle": SubResource( 167 )
 },
 "Spawn Virus": {
 "Play Correct Transition": SubResource( 79 )
@@ -504,16 +773,9 @@ name = "Spawn Virus"
 [sub_resource type="Resource" id=119]
 script = ExtResource( 26 )
 __meta__ = {
-"graph_offset": Vector2( 614, 0 )
+"graph_offset": Vector2( 874, 0 )
 }
 name = "Play Correct Transition"
-
-[sub_resource type="Resource" id=120]
-script = ExtResource( 26 )
-__meta__ = {
-"graph_offset": Vector2( 1077, 0 )
-}
-name = "Fade Out Correct Transition"
 
 [sub_resource type="Resource" id=121]
 script = ExtResource( 26 )
@@ -521,13 +783,6 @@ __meta__ = {
 "graph_offset": Vector2( 616, 380 )
 }
 name = "Play Wrong Transition"
-
-[sub_resource type="Resource" id=122]
-script = ExtResource( 26 )
-__meta__ = {
-"graph_offset": Vector2( 984.5, 300 )
-}
-name = "Fade Out Error Transition"
 
 [sub_resource type="Resource" id=123]
 script = ExtResource( 27 )
@@ -593,68 +848,16 @@ conditions = {
 }
 priority = 0
 
-[sub_resource type="Resource" id=134]
-script = ExtResource( 31 )
-name = "FadeOutTransition"
-
-[sub_resource type="Resource" id=135]
-script = ExtResource( 27 )
-from = "Play Correct Transition"
-to = "Fade Out Correct Transition"
-conditions = {
-"FadeOutTransition": SubResource( 134 )
-}
-priority = 0
-
-[sub_resource type="Resource" id=137]
+[sub_resource type="Resource" id=158]
 script = ExtResource( 31 )
 name = "TransitionFinished"
 
-[sub_resource type="Resource" id=138]
-script = ExtResource( 27 )
-from = "Fade Out Correct Transition"
-to = "Exit"
-conditions = {
-"TransitionFinished": SubResource( 137 )
-}
-priority = 0
-
-[sub_resource type="Resource" id=140]
-script = ExtResource( 31 )
-name = "TransitionFinished"
-
-[sub_resource type="Resource" id=141]
-script = ExtResource( 27 )
-from = "Fade Out Correct Transition"
-to = "Idle"
-conditions = {
-"TransitionFinished": SubResource( 140 )
-}
-priority = 0
-
-[sub_resource type="Resource" id=142]
-script = ExtResource( 31 )
-name = "FadeOutTransition"
-
-[sub_resource type="Resource" id=143]
+[sub_resource type="Resource" id=159]
 script = ExtResource( 27 )
 from = "Play Wrong Transition"
-to = "Fade Out Error Transition"
-conditions = {
-"FadeOutTransition": SubResource( 142 )
-}
-priority = 0
-
-[sub_resource type="Resource" id=144]
-script = ExtResource( 31 )
-name = "TransitionFinished"
-
-[sub_resource type="Resource" id=145]
-script = ExtResource( 27 )
-from = "Fade Out Error Transition"
 to = "Idle"
 conditions = {
-"TransitionFinished": SubResource( 144 )
+"TransitionFinished": SubResource( 158 )
 }
 priority = 0
 
@@ -671,6 +874,19 @@ conditions = {
 }
 priority = 0
 
+[sub_resource type="Resource" id=134]
+script = ExtResource( 31 )
+name = "TransitionFinished"
+
+[sub_resource type="Resource" id=135]
+script = ExtResource( 27 )
+from = "Play Correct Transition"
+to = "Exit"
+conditions = {
+"TransitionFinished": SubResource( 134 )
+}
+priority = 0
+
 [sub_resource type="Resource" id=146]
 script = ExtResource( 29 )
 __meta__ = {
@@ -680,8 +896,6 @@ name = "Level2"
 states = {
 "Entry": SubResource( 115 ),
 "Exit": SubResource( 116 ),
-"Fade Out Correct Transition": SubResource( 120 ),
-"Fade Out Error Transition": SubResource( 122 ),
 "Idle": SubResource( 117 ),
 "Play Correct Transition": SubResource( 119 ),
 "Play Wrong Transition": SubResource( 121 ),
@@ -691,13 +905,6 @@ transitions = {
 "Entry": {
 "Idle": SubResource( 123 )
 },
-"Fade Out Correct Transition": {
-"Exit": SubResource( 138 ),
-"Idle": SubResource( 141 )
-},
-"Fade Out Error Transition": {
-"Idle": SubResource( 145 )
-},
 "Idle": {
 "Exit": SubResource( 129 ),
 "Play Correct Transition": SubResource( 131 ),
@@ -705,39 +912,33 @@ transitions = {
 "Spawn Virus": SubResource( 125 )
 },
 "Play Correct Transition": {
-"Fade Out Correct Transition": SubResource( 135 )
+"Exit": SubResource( 135 )
 },
 "Play Wrong Transition": {
-"Fade Out Error Transition": SubResource( 143 )
+"Idle": SubResource( 159 )
 },
 "Spawn Virus": {
 "Idle": SubResource( 133 )
 }
 }
 
+[sub_resource type="Resource" id=72]
+script = ExtResource( 26 )
+__meta__ = {
+"graph_offset": Vector2( 1060.5, 380 )
+}
+name = "Play Credits"
+
 [sub_resource type="Resource" id=70]
 script = ExtResource( 31 )
-name = "GameOverTransition"
+name = "PlayCredits"
 
 [sub_resource type="Resource" id=71]
 script = ExtResource( 27 )
 from = "GameOver"
-to = "GameOverTransition"
+to = "Play Credits"
 conditions = {
-"GameOverTransition": SubResource( 70 )
-}
-priority = 0
-
-[sub_resource type="Resource" id=73]
-script = ExtResource( 31 )
-name = "TransitionFinished"
-
-[sub_resource type="Resource" id=74]
-script = ExtResource( 27 )
-from = "GameOverTransition"
-to = "Exit"
-conditions = {
-"TransitionFinished": SubResource( 73 )
+"PlayCredits": SubResource( 70 )
 }
 priority = 0
 
@@ -891,6 +1092,19 @@ conditions = {
 }
 priority = 0
 
+[sub_resource type="Resource" id=73]
+script = ExtResource( 31 )
+name = "CreditsFinished"
+
+[sub_resource type="Resource" id=74]
+script = ExtResource( 27 )
+from = "Play Credits"
+to = "Exit"
+conditions = {
+"CreditsFinished": SubResource( 73 )
+}
+priority = 0
+
 [sub_resource type="Resource" id=22]
 script = ExtResource( 27 )
 from = "Entry"
@@ -906,22 +1120,19 @@ states = {
 "Entry": SubResource( 12 ),
 "Exit": SubResource( 13 ),
 "GameOver": SubResource( 58 ),
-"GameOverTransition": SubResource( 72 ),
 "Level1": SubResource( 21 ),
 "Level2": SubResource( 146 ),
 "Level3": SubResource( 103 ),
 "Level4": SubResource( 85 ),
-"Level5": SubResource( 86 )
+"Level5": SubResource( 86 ),
+"Play Credits": SubResource( 72 )
 }
 transitions = {
 "Entry": {
 "Level1": SubResource( 22 )
 },
 "GameOver": {
-"GameOverTransition": SubResource( 71 )
-},
-"GameOverTransition": {
-"Exit": SubResource( 74 )
+"Play Credits": SubResource( 71 )
 },
 "Level1": {
 "GameOver": SubResource( 62 ),
@@ -942,6 +1153,9 @@ transitions = {
 "Level5": {
 "Exit": SubResource( 92 ),
 "GameOver": SubResource( 94 )
+},
+"Play Credits": {
+"Exit": SubResource( 74 )
 }
 }
 
@@ -1034,6 +1248,103 @@ __meta__ = {
 "_edit_lock_": true
 }
 
+[node name="Credits" type="Control" parent="CanvasLayer"]
+pause_mode = 1
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/Credits"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0, 0, 0, 1 )
+
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/Credits"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="Creators" type="Control" parent="CanvasLayer/Credits/CenterContainer"]
+visible = false
+margin_left = 480.0
+margin_top = 270.0
+margin_right = 480.0
+margin_bottom = 270.0
+mouse_filter = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Credits/CenterContainer/Creators"]
+margin_left = -325.0
+margin_top = -66.0
+margin_right = 325.0
+margin_bottom = 66.0
+mouse_filter = 2
+custom_constants/separation = 10
+
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/Credits/CenterContainer/Creators/VBoxContainer"]
+margin_right = 650.0
+margin_bottom = 56.0
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/Credits/CenterContainer/Creators/VBoxContainer/CenterContainer"]
+margin_left = 213.0
+margin_right = 437.0
+margin_bottom = 56.0
+custom_colors/font_color = Color( 0.745098, 0.745098, 0.745098, 1 )
+custom_fonts/font = SubResource( 149 )
+text = "Creators"
+
+[node name="CenterContainer2" type="CenterContainer" parent="CanvasLayer/Credits/CenterContainer/Creators/VBoxContainer"]
+margin_top = 66.0
+margin_right = 650.0
+margin_bottom = 132.0
+mouse_filter = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/Credits/CenterContainer/Creators/VBoxContainer/CenterContainer2"]
+margin_right = 650.0
+margin_bottom = 66.0
+rect_min_size = Vector2( 650, 0 )
+mouse_filter = 2
+size_flags_vertical = 0
+custom_colors/default_color = Color( 0.745098, 0.745098, 0.745098, 1 )
+custom_constants/line_separation = 5
+custom_fonts/normal_font = SubResource( 150 )
+bbcode_enabled = true
+bbcode_text = "[center]Emre Dogan
+Aum Patel[/center]"
+text = "Emre Dogan
+Aum Patel"
+fit_content_height = true
+deselect_on_focus_loss_enabled = false
+
+[node name="Thanks!" type="Control" parent="CanvasLayer/Credits/CenterContainer"]
+visible = false
+modulate = Color( 1, 1, 1, 0 )
+margin_left = 480.0
+margin_top = 270.0
+margin_right = 480.0
+margin_bottom = 270.0
+mouse_filter = 2
+
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/Credits/CenterContainer/Thanks!"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -325.0
+margin_top = -28.0
+margin_right = 325.0
+margin_bottom = 28.0
+mouse_filter = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/Credits/CenterContainer/Thanks!/CenterContainer"]
+margin_left = 53.0
+margin_right = 597.0
+margin_bottom = 56.0
+custom_colors/font_color = Color( 0.745098, 0.745098, 0.745098, 1 )
+custom_fonts/font = SubResource( 149 )
+text = "Thank you for playing!"
+
 [node name="Post-Processing Effects" type="Control" parent="CanvasLayer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -1045,17 +1356,17 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 
+[node name="BackBufferCopy" type="BackBufferCopy" parent="CanvasLayer/Post-Processing Effects/Wrong File Glitch"]
+copy_mode = 2
+__meta__ = {
+"_edit_lock_": true
+}
+
 [node name="Effect" type="ColorRect" parent="CanvasLayer/Post-Processing Effects/Wrong File Glitch"]
 material = ExtResource( 21 )
 margin_right = 960.0
 margin_bottom = 540.0
 mouse_filter = 2
-__meta__ = {
-"_edit_lock_": true
-}
-
-[node name="BackBufferCopy" type="BackBufferCopy" parent="CanvasLayer/Post-Processing Effects/Wrong File Glitch"]
-copy_mode = 2
 __meta__ = {
 "_edit_lock_": true
 }
@@ -1066,17 +1377,17 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 
+[node name="BackBufferCopy" type="BackBufferCopy" parent="CanvasLayer/Post-Processing Effects/Distortion"]
+copy_mode = 2
+__meta__ = {
+"_edit_lock_": true
+}
+
 [node name="Effect" type="ColorRect" parent="CanvasLayer/Post-Processing Effects/Distortion"]
 material = ExtResource( 20 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
-__meta__ = {
-"_edit_lock_": true
-}
-
-[node name="BackBufferCopy" type="BackBufferCopy" parent="CanvasLayer/Post-Processing Effects/Distortion"]
-copy_mode = 2
 __meta__ = {
 "_edit_lock_": true
 }
@@ -1087,6 +1398,12 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 
+[node name="BackBufferCopy" type="BackBufferCopy" parent="CanvasLayer/Post-Processing Effects/Virus Glitch"]
+copy_mode = 2
+__meta__ = {
+"_edit_lock_": true
+}
+
 [node name="Effect" type="ColorRect" parent="CanvasLayer/Post-Processing Effects/Virus Glitch"]
 material = ExtResource( 23 )
 anchor_right = 1.0
@@ -1096,16 +1413,17 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="BackBufferCopy" type="BackBufferCopy" parent="CanvasLayer/Post-Processing Effects/Virus Glitch"]
+[node name="CRT Close" type="Control" parent="CanvasLayer/Post-Processing Effects"]
+visible = false
+margin_right = 960.0
+margin_bottom = 540.0
+mouse_filter = 2
+
+[node name="BackBufferCopy" type="BackBufferCopy" parent="CanvasLayer/Post-Processing Effects/CRT Close"]
 copy_mode = 2
 __meta__ = {
 "_edit_lock_": true
 }
-
-[node name="CRT Close" type="Control" parent="CanvasLayer/Post-Processing Effects"]
-margin_right = 960.0
-margin_bottom = 540.0
-mouse_filter = 2
 
 [node name="Effect" type="ColorRect" parent="CanvasLayer/Post-Processing Effects/CRT Close"]
 material = ExtResource( 22 )
@@ -1116,28 +1434,22 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="BackBufferCopy" type="BackBufferCopy" parent="CanvasLayer/Post-Processing Effects/CRT Close"]
-copy_mode = 2
-__meta__ = {
-"_edit_lock_": true
-}
-
 [node name="CRT Filter" type="Control" parent="CanvasLayer/Post-Processing Effects"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
+
+[node name="BackBufferCopy" type="BackBufferCopy" parent="CanvasLayer/Post-Processing Effects/CRT Filter"]
+copy_mode = 2
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="Effect" type="ColorRect" parent="CanvasLayer/Post-Processing Effects/CRT Filter"]
 material = ExtResource( 4 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
-__meta__ = {
-"_edit_lock_": true
-}
-
-[node name="BackBufferCopy" type="BackBufferCopy" parent="CanvasLayer/Post-Processing Effects/CRT Filter"]
-copy_mode = 2
 __meta__ = {
 "_edit_lock_": true
 }
@@ -1194,14 +1506,18 @@ script = ExtResource( 17 )
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
-mouse_filter = 1
+mouse_filter = 2
 color = Color( 0, 0, 0, 1 )
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer"]
-root_node = NodePath("../..")
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/CorrectTransition = ExtResource( 33 )
+anims/Credits = ExtResource( 35 )
+anims/GameOver = ExtResource( 34 )
+anims/RESET = SubResource( 151 )
+anims/WrongTransition = ExtResource( 30 )
 anims/fade_from_black = SubResource( 7 )
 
-[node name="GameManager" type="Node" parent="."]
+[node name="GameManager" type="Node2D" parent="."]
 script = ExtResource( 11 )
 
 [node name="StateMachinePlayer" type="Node" parent="GameManager"]
@@ -1220,7 +1536,5 @@ script = ExtResource( 19 )
 
 [connection signal="body_entered" from="CanvasLayer/Mouse/PhysicsMouse" to="CanvasLayer/Mouse/PhysicsMouse" method="_on_PhysicsMouse_body_entered"]
 [connection signal="pressed" from="CanvasLayer/PauseScreen/CenterContainer/VBoxContainer/CenterContainer2/TextureButton" to="CanvasLayer/PauseScreen/CenterContainer/VBoxContainer/CenterContainer2/TextureButton" method="_on_TextureButton_pressed"]
-[connection signal="entered" from="GameManager/StateMachinePlayer" to="GameManager" method="_on_StateMachinePlayer_entered"]
-[connection signal="exited" from="GameManager/StateMachinePlayer" to="GameManager" method="_on_StateMachinePlayer_exited"]
 [connection signal="transited" from="GameManager/StateMachinePlayer" to="GameManager" method="_on_StateMachinePlayer_transited"]
 [connection signal="updated" from="GameManager/StateMachinePlayer" to="GameManager" method="_on_StateMachinePlayer_updated"]

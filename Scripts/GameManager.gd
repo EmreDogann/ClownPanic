@@ -1,43 +1,20 @@
-extends Node
+extends Node2D
 
 signal change_wallpaper
 signal activate_terminal
 
-#onready var smp = get_node("../StateMachinePlayer")
 onready var smp = $StateMachinePlayer
-const YAFSM = preload("res://addons/imjp94.yafsm/YAFSM.gd")
-const StackPlayer = YAFSM.StackPlayer
-const StateMachinePlayer = YAFSM.StateMachinePlayer
-const StateMachine = YAFSM.StateMachine
-const State = YAFSM.State
 
+onready var player: AnimationPlayer = get_node("../AnimationPlayer")
 onready var blankWindow = preload("res://Scenes/BlankWindow.tscn")
-
 onready var fileSystem = get_tree().root.get_node("Node2D/CanvasLayer/FileExplorer/Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files")
+onready var itemList:  = get_tree().root.get_node("Node2D/CanvasLayer/FileExplorer/Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer/VBoxContainer2/ItemList")
 onready var audioManager = get_tree().root.get_node("Node2D/AudioManager")
 onready var wallpaperNode = get_tree().root.get_node("Node2D/CanvasLayer/Desktop/Panel/Wallpaper")
 onready var terminalNode = get_tree().root.get_node("Node2D/CanvasLayer/Terminal")
 
-onready var wrongFileGlitch = get_node("../CanvasLayer/Post-Processing Effects/Wrong File Glitch/Effect")
-onready var distortion = get_node("../CanvasLayer/Post-Processing Effects/Distortion/Effect")
-onready var virusGlitch = get_node("../CanvasLayer/Post-Processing Effects/Virus Glitch/Effect")
-onready var crtClose = get_node("../CanvasLayer/Post-Processing Effects/CRT Close/Effect")
+onready var virusGlitch = get_node("../CanvasLayer/FileExplorer/Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer/VBoxContainer2/ItemList/Virus Glitch")
 onready var crtFilter = get_node("../CanvasLayer/Post-Processing Effects/CRT Filter/Effect")
-
-onready var transitionTimer = 0.0
-onready var transitionFadeOutAmplitude = 1.0
-onready var transitionFadeOutAmplitudeMultipler = 1.0
-
-onready var wrongTransitionFadeOutCooldown = 0.2
-onready var wrongTransitionFadeOutTimer = wrongTransitionFadeOutCooldown
-onready var correctTransitionFadeOutCooldown = 1.0
-onready var correctTransitionFadeOutTimer = correctTransitionFadeOutCooldown
-
-onready var gameOverCooldown = 1.0
-onready var gameOverTimer = gameOverCooldown
-
-onready var crtCloseFadeOutCooldown = 1.0
-onready var crtCloseFadeOutTimer = crtCloseFadeOutCooldown
 
 var staticIntensity: float = 0.1
 var staticIntensityTargetWeight: float
@@ -50,9 +27,15 @@ var wallpaperTimerCooldown = 10.0
 var wallpaperTimer = wallpaperTimerCooldown
 var totalWallpaperTransition = 0
 
+var itemListPollCooldown: float = 0.2
+var itemListPollTimer: float = itemListPollCooldown
+
 var bleedFileTreeAmount = 0.0;
 
-# get_node("../CanvasLayer/FileExplorer/Window/VBoxContainer/Titlebar/HBoxContainer/HBoxContainer")
+var currentLevel = 1
+var distanceToVirus: int
+var virusPosition: int
+
 onready var player_health: int = 4;
 onready var ui_elements_to_turn_off: Dictionary = {
 	3: [get_node("../CanvasLayer/FileExplorer/Window/VBoxContainer/Titlebar/HBoxContainer/HBoxContainer")],
@@ -89,6 +72,7 @@ func _ready():
 	
 	connect("change_wallpaper", wallpaperNode, "change_wallpaper")
 	connect("activate_terminal", terminalNode, "activate_terminal")
+	player.connect("animation_finished", self, "animFinished")
 	
 	rng.randomize()
 
@@ -108,10 +92,102 @@ func _process(delta):
 			shouldChangeStaticIntensity = false
 		else:
 			staticIntensityLerpWeight += (delta  / staticIntensityLerpTime) * sign(staticIntensityTargetWeight - staticIntensityLerpWeight)
-			staticIntensity = lerp(0.1, 0.6, clamp(staticIntensityLerpWeight, 0.0, 1.0))
+			staticIntensity = lerp(0.1, 0.4, clamp(staticIntensityLerpWeight, 0.0, 1.0))
 			
 			crtFilter.material.set('shader_param/static_noise_intensity', staticIntensity)
+	
+	if (virusGlitch.visible and virusPosition != -1):
+#		print(virusPosition)
+		var position: Vector2
+		position.y += (itemList.get_constant("line_separation") + itemList.get_constant("vseparation") + 16) * (virusPosition)
+		position.y -= (itemList.get_v_scroll().value)
+		var size: Vector2 = Vector2(itemList.rect_size.x, 17)
+		
+		virusGlitch.rect_position = position
+		virusGlitch.rect_size = size
+	else:
+		itemListPollTimer -= delta
+		
+		if (itemListPollTimer <= 0.0):
+			itemListPollTimer = itemListPollCooldown
+			var hoveredIndex = itemList.get_item_at_position(itemList.get_local_mouse_position(), false)
 			
+			if (hoveredIndex != -1):
+				var distance = fileSystem.getHoveredDistance(itemList.get_item_metadata(hoveredIndex))
+				print(distance)
+				audioManager.increase_static_volume(distance)
+				shouldChangeStaticIntensity = true
+				staticIntensityTargetWeight = 1 - 0.2 * (distance + 1)
+				
+				distanceToVirus = distance
+
+func animFinished(anim_name: String) -> void:
+	match anim_name:
+		"WrongTransition":
+			smp.set_trigger("TransitionFinished")
+		"CorrectTransition":
+			smp.set_trigger("TransitionFinished")
+		"GameOver":
+			smp.set_trigger("PlayCredits")
+
+func _on_StateMachinePlayer_updated(state, delta) -> void:
+	match state:
+		"Level1/Idle":
+			if (smp.get_param("Level1/IdleTimer", 0.0) < 1.0):
+				smp.set_param("Level1/IdleTimer", smp.get_param("Level1/IdleTimer", 0.0) + delta)
+				if (smp.get_param("Level1/IdleTimer", 0.0) >= 1.0):
+					smp.set_trigger("SpawnVirus")
+
+func _on_StateMachinePlayer_transited(from, to) -> void:
+	prints("Transition(%s -> %s)" % [from, to])
+	match to:
+		"Level1/Spawn Virus":
+			fileSystem.addVirusRandomly("VIRUS.v", false, "", FILE_TYPE.FILE)
+			
+			wallpaperTransitionReady = true
+			totalWallpaperTransition = 0
+			
+			audioManager.virus_deleted()
+			audioManager.play_static()
+			smp.set_trigger("SpawnVirusTransition")
+		"Level1/Play Wrong Transition", "Level2/Play Wrong Transition", "Level3/Play Wrong Transition":
+			player.play("WrongTransition")
+		"Level1/Play Correct Transition", "Level2/Play Correct Transition", "Level3/Play Correct Transition":
+			player.play("CorrectTransition")
+		"Level2/Entry", "Level3/Entry":
+			smp.set_param("isVirusDeleted", false)
+		"Level2/Idle":
+			if (from == "Level2/Entry"):
+				smp.set_trigger("SpawnVirus")
+		"Level2/Spawn Virus":
+			fileSystem.addVirusRandomly("VIRUS.v", false, "", FILE_TYPE.FILE)
+			
+			wallpaperTransitionReady = true
+			totalWallpaperTransition = 0
+			
+			smp.set_trigger("VirusSpawned")
+		"Level3/Idle":
+			if (from == "Level3/Entry"):
+				smp.set_trigger("ActivateTerminal")
+			elif (from == "Level3/Activate Terminal"):
+				smp.set_trigger("SpawnVirus")
+		"Level3/Activate Terminal":
+			emit_signal("activate_terminal")
+			smp.set_trigger("TerminalActive")
+		"Level3/Spawn Virus":
+			fileSystem.addVirusRandomly("VIRUS.v", true, "", FILE_TYPE.FILE)
+			
+			wallpaperTransitionReady = true
+			totalWallpaperTransition = 0
+			
+			virusGlitch.get_node("Effect").material.set("shader_param/AMT", 0.05)
+			virusGlitch.get_node("Effect").material.set("shader_param/SPEED", 0.2)
+			
+			smp.set_trigger("VirusSpawned")
+		"GameOver":	
+			player.play("GameOver")
+		"Play Credits":
+			player.play("Credits")
 
 func wallpaper_transition_finished():
 	wallpaperTransitionReady = true
@@ -120,16 +196,25 @@ func virus_distance_update(incrementAmount: float):
 	audioManager.increase_static_volume(incrementAmount)
 	shouldChangeStaticIntensity = true
 	staticIntensityTargetWeight = 1 - 0.2 * (incrementAmount + 1)
+	
+	distanceToVirus = incrementAmount
+	
+	if (distanceToVirus == 0):
+		virusPosition = fileSystem.getVirusPosition()
+		virusGlitch.visible = true
+	else:
+		virusGlitch.visible = false
 
 func virus_deleted():
+	currentLevel += 1
+	virusGlitch.visible = false
+	
 	audioManager.virus_deleted()
 	smp.set_param("isVirusDeleted", true)
 
 func wrong_file_deleted():
 	player_health -= 1
 	smp.set_param("Health", player_health)
-	
-	transitionFadeOutAmplitudeMultipler += 0.35
 	
 	audioManager.wrong_file_deleted()
 	smp.set_trigger("WrongFileDeleted")
@@ -150,183 +235,9 @@ func terminal_game_over() -> void:
 	smp.set_param("Health", 0)
 	audioManager.increase_static_volume(0)
 
-func _on_StateMachinePlayer_updated(state, delta) -> void:
-	match state:
-		"Level1/Idle":
-			if (smp.get_param("Level1/IdleTimer", 0.0) < 5.0):
-				smp.set_param("Level1/IdleTimer", smp.get_param("Level1/IdleTimer", 0.0) + delta)
-				if (smp.get_param("Level1/IdleTimer", 0.0) >= 5.0):
-					smp.set_trigger("SpawnVirus")
-		"Level1/Play Wrong Transition", "Level2/Play Wrong Transition":
-			transitionTimer += delta
-			
-			wrongFileGlitch.material.set('shader_param/time', transitionTimer)
-			distortion.material.set('shader_param/time', transitionTimer)
-			
-			if (transitionTimer >= 0.35): # Audio Length = 0.57s
-				smp.set_trigger("FadeOutTransition")
-		"Level1/Fade Out Error Transition", "Level2/Fade Out Error Transition":
-			wrongTransitionFadeOutTimer -= delta
-			
-			transitionTimer += delta
-			transitionFadeOutAmplitude -= transitionFadeOutAmplitudeMultipler * delta / wrongTransitionFadeOutCooldown
-			
-			wrongFileGlitch.material.set('shader_param/time', transitionTimer)
-			distortion.material.set('shader_param/time', transitionTimer)
-			wrongFileGlitch.material.set('shader_param/amplitude', transitionFadeOutAmplitude)
-			distortion.material.set('shader_param/amplitude', transitionFadeOutAmplitude)
-			
-			if (wrongTransitionFadeOutTimer <= 0.0):
-				smp.set_trigger("TransitionFinished")
-				
-				wrongTransitionFadeOutTimer = wrongTransitionFadeOutCooldown
-				transitionTimer = 0.0
-				
-				transitionFadeOutAmplitude = 1.0 * transitionFadeOutAmplitudeMultipler
-				wrongFileGlitch.material.set('shader_param/amplitude', transitionFadeOutAmplitude)
-				distortion.material.set('shader_param/amplitude', transitionFadeOutAmplitude)
-				
-				wrongFileGlitch.get_parent().visible = false
-				distortion.get_parent().visible = false
-		"Level1/Play Correct Transition", "Level2/Play Correct Transition":
-			delta *= 0.75
-			transitionTimer += delta
-			
-			wrongFileGlitch.material.set('shader_param/time', transitionTimer)
-			distortion.material.set('shader_param/time', transitionTimer)
-			
-			if (transitionTimer >= 0.35): # Audio Length = 0.57s
-				smp.set_trigger("FadeOutTransition")
-		"Level1/Fade Out Correct Transition", "Level2/Fade Out Correct Transition":
-			correctTransitionFadeOutTimer -= delta
-			
-			transitionTimer += delta
-			transitionFadeOutAmplitude -= 1.5 * delta / correctTransitionFadeOutCooldown
-			
-			wrongFileGlitch.material.set('shader_param/time', transitionTimer)
-			distortion.material.set('shader_param/time', transitionTimer)
-			wrongFileGlitch.material.set('shader_param/amplitude', transitionFadeOutAmplitude)
-			distortion.material.set('shader_param/amplitude', transitionFadeOutAmplitude)
-			
-			if (correctTransitionFadeOutTimer <= 0.0):
-				smp.set_trigger("TransitionFinished")
-				
-				correctTransitionFadeOutTimer = correctTransitionFadeOutCooldown
-				transitionTimer = 0.0
-				
-				transitionFadeOutAmplitude = 1.5
-				wrongFileGlitch.material.set('shader_param/amplitude', transitionFadeOutAmplitude)
-				distortion.material.set('shader_param/amplitude', transitionFadeOutAmplitude)
-				
-				distortion.material.set('shader_param/enableColorShifting', false)
-				wrongFileGlitch.get_parent().visible = false
-				distortion.get_parent().visible = false
-		"GameOver":
-			delta *= 0.25
-			gameOverTimer -= delta
-			
-			wrongTransitionFadeOutTimer -= delta
-			
-			transitionTimer += delta
-			transitionFadeOutAmplitude += 7.0 * delta / gameOverCooldown
-			
-			wrongFileGlitch.material.set('shader_param/time', transitionTimer)
-			distortion.material.set('shader_param/time', transitionTimer)
-			wrongFileGlitch.material.set('shader_param/amplitude', transitionFadeOutAmplitude)
-			distortion.material.set('shader_param/amplitude', transitionFadeOutAmplitude)
-			
-			if (gameOverTimer <= 0.0):
-				smp.set_trigger("GameOverTransition")
-		"GameOverTransition":
-			crtCloseFadeOutTimer -= delta
-			
-			delta *= 0.25
-			transitionTimer += delta
-			transitionFadeOutAmplitude += 5.0 * delta / gameOverCooldown
-			
-			crtClose.material.set('shader_param/time', 1.0 - crtCloseFadeOutTimer)
-			
-			wrongFileGlitch.material.set('shader_param/time', transitionTimer)
-			distortion.material.set('shader_param/time', transitionTimer)
-			wrongFileGlitch.material.set('shader_param/amplitude', transitionFadeOutAmplitude)
-			distortion.material.set('shader_param/amplitude', transitionFadeOutAmplitude)
-			
-			if (crtCloseFadeOutTimer <= 0.0):
-				smp.set_trigger("TransitionFinished")
+func end_game():
+	get_tree().quit()
 
-func _on_StateMachinePlayer_transited(from, to) -> void:
-	prints("Transition(%s -> %s)" % [from, to])
-	match to:
-		"Level1/Spawn Virus":
-			fileSystem.addVirusRandomly("VIRUS.v", false, "", FILE_TYPE.FILE)
-			
-			wallpaperTransitionReady = true
-			totalWallpaperTransition = 0
-			
-			audioManager.virus_deleted()
-			audioManager.play_static()
-			smp.set_trigger("SpawnVirusTransition")
-		"Level1/Play Wrong Transition", "Level2/Play Wrong Transition":
-			transitionFadeOutAmplitude = 1.0 * transitionFadeOutAmplitudeMultipler
-			distortion.material.set('shader_param/enableColorShifting', false)
-			distortion.material.set('shader_param/distortionDirection', 1)
-			wrongFileGlitch.get_parent().visible = true;
-			distortion.get_parent().visible = true;
-		"Level1/Play Correct Transition", "Level2/Play Correct Transition":
-			transitionFadeOutAmplitude = 1.5
-			wrongFileGlitch.material.set('shader_param/amplitude', transitionFadeOutAmplitude)
-			distortion.material.set('shader_param/amplitude', transitionFadeOutAmplitude)
-			distortion.material.set('shader_param/enableColorShifting', true)
-			distortion.material.set('shader_param/distortionDirection', 0)
-			
-			wrongFileGlitch.get_parent().visible = true;
-			distortion.get_parent().visible = true;
-		"Level2/Entry":
-			smp.set_param("isVirusDeleted", false)
-		"Level2/Idle":
-			if (from == "Level2/Entry"):
-				smp.set_trigger("SpawnVirus")
-		"Level2/Spawn Virus":
-			fileSystem.addVirusRandomly("VIRUS.v", false, "", FILE_TYPE.FILE)
-			
-			wallpaperTransitionReady = true
-			totalWallpaperTransition = 0
-			
-			smp.set_trigger("VirusSpawned")
-		"Level2/Fade Out Correct Transition":
-			fileSystem.bleedFileTrees(0.35);
-		"Level3/Idle":
-			if (from == "Level3/Entry"):
-				smp.set_trigger("ActivateTerminal")
-			#fileSystem.bleedFileTrees(0.35 * smp.get_param("currentLevel")-1);
-		"Level3/Activate Terminal":
-			emit_signal("activate_terminal")
-			smp.set_trigger("TerminalActive")
-		"GameOver":
-			transitionTimer = -1.5
-			transitionFadeOutAmplitude = 1.0
-			wrongFileGlitch.material.set('shader_param/amplitude', transitionFadeOutAmplitude)
-			distortion.material.set('shader_param/amplitude', transitionFadeOutAmplitude)
-			distortion.material.set('shader_param/distortionDirection', 1)
-			
-			wrongFileGlitch.get_parent().visible = true;
-			distortion.get_parent().visible = true;
-		"GameOverTransition":
-			audioManager.increase_static_volume(10)
-			audioManager.shutdown_pc()
-			
-			yield(get_tree().create_timer(5.0), "timeout")
-			get_tree().quit()
-
-func _on_StateMachinePlayer_entered(to) -> void:
-#	match to:
-#		"Level2/SpawnVirus":
-#			print("Level 2 Virus Spawned!")
-	pass
-
-
-func _on_StateMachinePlayer_exited(from) -> void:
-#	match from:
-#		"Level1/SpawnVirus":
-#			smp.set_param("isVirusSpawned", true)
-	pass
+func bleedFiles() -> void:
+	if (currentLevel != 1):
+		fileSystem.bleedFileTrees(0.35);

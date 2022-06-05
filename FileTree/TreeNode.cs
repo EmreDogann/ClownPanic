@@ -236,6 +236,15 @@ public class TreeNode<T> {
 		return children;
 	}
 
+	public static List<TreeNode<FileItem>> GetAllChildren(TreeNode<FileItem> tree) {
+		List<TreeNode<FileItem>> children = new List<TreeNode<FileItem>>();
+		foreach (var treeChild in tree._children) {
+			children.Add(treeChild);
+		}
+
+		return children;
+	}
+
 	// Gets File (ie. Non-Directory) children
 	public static List<TreeNode<FileItem>> GetFileChildren(TreeNode<FileItem> tree) {
 		List<TreeNode<FileItem>> children = new List<TreeNode<FileItem>>();
@@ -278,7 +287,7 @@ public class TreeNode<T> {
 	public static TreeNode<FileItem> GetRandomFile(TreeNode<FileItem> tree) {
 		Random rnd = new Random();
 
-		List<TreeNode<FileItem>> fileChildren = GetDirectoryChildren(tree);
+		List<TreeNode<FileItem>> fileChildren = GetFileChildren(tree);
 
 		int randomChildIndex = rnd.Next(fileChildren.Count);
 

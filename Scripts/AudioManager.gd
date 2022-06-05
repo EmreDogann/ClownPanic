@@ -153,7 +153,7 @@ func play_static() -> void:
 	players[5].volume_db = staticVolumeInitial
 	play_specific(backgroundNoises[4], 5)
 
-func increase_static_volume(incrementAmount: float) -> void:
+func increase_static_volume(incrementAmount: int) -> void:
 	if (!players[5].playing):
 		play_static()
 	staticVolumeTargetWeight = 1 - 0.1 * (incrementAmount + 1)

@@ -20,8 +20,8 @@ float insideRange(float v, float bottom, float top) {
 }
 
 // Inputs
-const float AMT = 0.2; //0 - 1 glitch amount
-const float SPEED = 0.6; //0 - 1 speed
+uniform float AMT = 0.2; //0 - 1 glitch amount
+uniform float SPEED = 0.6; //0 - 1 speed
    
 void fragment() {
     float time = floor(TIME * SPEED * 60.0);    
@@ -63,3 +63,5 @@ void fragment() {
 
 [resource]
 shader = SubResource( 1 )
+shader_param/AMT = 0.2
+shader_param/SPEED = 0.6

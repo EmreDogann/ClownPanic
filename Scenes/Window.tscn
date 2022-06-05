@@ -1,4 +1,4 @@
-[gd_scene load_steps=41 format=2]
+[gd_scene load_steps=42 format=2]
 
 [ext_resource path="res://Shaders/Pixelate.tres" type="Material" id=1]
 [ext_resource path="res://Images/Icons/My Documents.png" type="Texture" id=2]
@@ -15,7 +15,8 @@
 [ext_resource path="res://Images/Icons/Window Titlebar/Maximize Icon - Disabled.png" type="Texture" id=13]
 [ext_resource path="res://Images/Icons/Window Titlebar/Minimize Icon - Disabled.png" type="Texture" id=14]
 [ext_resource path="res://Images/Icons/Window Titlebar/Close Icon - Disabled.png" type="Texture" id=15]
-[ext_resource path="res://Scenes/FileExplorer-SplitContainer.gd" type="Script" id=16]
+[ext_resource path="res://Scripts/FileExplorer-SplitContainer.gd" type="Script" id=16]
+[ext_resource path="res://Shaders/VirusGlitch.tres" type="Material" id=17]
 [ext_resource path="res://FileTree/DirectoryHandler.cs" type="Script" id=18]
 [ext_resource path="res://Images/Icons/Recycle Bin (Full).png" type="Texture" id=19]
 [ext_resource path="res://Images/Icons/Back Icon - Pressed.png" type="Texture" id=20]
@@ -646,6 +647,28 @@ custom_fonts/font = ExtResource( 5 )
 custom_styles/selected_focus = SubResource( 19 )
 custom_styles/selected = SubResource( 19 )
 custom_styles/bg = SubResource( 17 )
+
+[node name="Virus Glitch" type="Control" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer/VBoxContainer2/ItemList"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="Effect" type="ColorRect" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer/VBoxContainer2/ItemList/Virus Glitch"]
+material = ExtResource( 17 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="BackBufferCopy" type="BackBufferCopy" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer/VBoxContainer2/ItemList/Virus Glitch"]
+visible = false
+copy_mode = 2
+__meta__ = {
+"_edit_lock_": true
+}
 
 [node name="StaticBody2D" type="StaticBody2D" parent="Window"]
 visible = false
