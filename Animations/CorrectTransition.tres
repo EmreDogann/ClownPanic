@@ -59,7 +59,7 @@ tracks/4/loop_wrap = true
 tracks/4/imported = false
 tracks/4/enabled = true
 tracks/4/keys = {
-"times": PoolRealArray( 0.21, 0.29 ),
+"times": PoolRealArray( 0.06, 0.14 ),
 "transitions": PoolRealArray( 1, 1 ),
 "values": [ {
 "args": [  ],

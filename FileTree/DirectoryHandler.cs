@@ -255,7 +255,7 @@ public class DirectoryHandler : Node {
 		virusNode = dirToAddToo.AddChild(virusItem);
 		updateSelectedTreeNode(selectedTreeNode);
 
-		sceneItemList.SortItemsByText();
+		// sceneItemList.SortItemsByText();
 
 		// Send a signal to the game manager to update its graphical effects to reflect the new distance of the virus.
 		int distance = TreeNode<FileItem>.DistanceBetweenTwoNodes(TreeNode<FileItem>.GetChildNodeByPath(currentDirectory, gameFileTree), virusNode);
@@ -267,7 +267,7 @@ public class DirectoryHandler : Node {
 		return TreeNode<FileItem>.DistanceBetweenTwoNodes(TreeNode<FileItem>.GetChildNodeByPath(currentDirectory, gameFileTree), virusNode);
 	}
 
-	// Will find and return the relative position of the virus in the list based off its parent node.
+	// Will find and return the relative position of virus in the list based off its parent node.
 	public int getVirusPosition() {
 		if (virusNode != null) {
 			int index = 0;
@@ -277,6 +277,19 @@ public class DirectoryHandler : Node {
 				}
 				index++;
 			}
+		}
+
+		return -1;
+	}
+
+	// Will find and return the relative position of a node in the list based off its parent node.
+	public int getNodePosition(int exclude) {
+		int index = 0;
+		foreach (var child in selectedTreeNode.Children) {
+			if (!child.Value.IsDirectory() && index != exclude) {
+				return index;
+			}
+			index++;
 		}
 
 		return -1;
@@ -373,11 +386,11 @@ public class DirectoryHandler : Node {
 	void populateSceneItemList(TreeNode<FileItem> directory) {
 		sceneItemList.Clear();
 
-		// TreeNode<FileItem>[] children = new TreeNode<FileItem>[directory.Children.Count];
-		// directory.Children.CopyTo(children, 0);
-		// Array.Sort(children, delegate (TreeNode<FileItem> node1, TreeNode<FileItem> node2) {
-		// 	return node1.Value.GetFileName().CompareTo(node2.Value.GetFileName());
-		// });
+		TreeNode<FileItem>[] children = new TreeNode<FileItem>[directory.Children.Count];
+		directory.Children.CopyTo(children, 0);
+		Array.Sort(children, delegate (TreeNode<FileItem> node1, TreeNode<FileItem> node2) {
+			return node1.Value.GetFileName().CompareTo(node2.Value.GetFileName());
+		});
 
 		int i = 0;
 		foreach (TreeNode<FileItem> item in directory.Children) {
@@ -387,7 +400,7 @@ public class DirectoryHandler : Node {
 			i++;
 		}
 
-		sceneItemList.SortItemsByText();
+		// sceneItemList.SortItemsByText();
 	}
 
 	void createSceneTree(TreeNode<FileItem> tree, TreeItem sceneTreeParent, bool retainCollapsed = true) {

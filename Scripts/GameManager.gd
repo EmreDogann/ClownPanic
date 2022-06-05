@@ -11,7 +11,6 @@ onready var wallpaperNode = get_tree().root.get_node("Node2D/CanvasLayer/Desktop
 onready var terminalNode = get_tree().root.get_node("Node2D/CanvasLayer/Terminal")
 onready var mouseNode = get_tree().root.get_node("Node2D/CanvasLayer/Mouse")
 
-onready var virusGlitch = get_node("../CanvasLayer/FileExplorer/Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer/VBoxContainer2/Control/ItemList/Virus Glitch")
 onready var crtFilter = get_node("../CanvasLayer/Post-Processing Effects/CRT Filter/Effect")
 
 var staticIntensity: float = 0.1
@@ -21,7 +20,7 @@ var staticIntensityLerpTime: float = 2.0
 var shouldChangeStaticIntensity = false
 
 var wallpaperTransitionReady: bool = false
-var wallpaperTimerCooldown = 10.0
+var wallpaperTimerCooldown = 5.0
 var wallpaperTimer = wallpaperTimerCooldown
 var totalWallpaperTransition = 0
 
@@ -36,6 +35,7 @@ var bleedFileTreeAmount = 0.0;
 var currentLevel = 1
 var distanceToVirus: int
 var virusPosition: int
+var filePosition: int;
 
 onready var player_health: int = 4;
 onready var ui_elements_to_turn_off: Dictionary = {
@@ -97,15 +97,48 @@ func _process(delta):
 			
 			crtFilter.material.set('shader_param/static_noise_intensity', staticIntensity)
 	
-	if (virusGlitch.visible and virusPosition != -1):
-		print(virusPosition)
+	if (itemList.get_node("Virus Glitch").visible and virusPosition != -1):
+#		print(virusPosition)
 		var position: Vector2
 		position.y += (itemList.get_constant("line_separation") + itemList.get_constant("vseparation") + 16) * (virusPosition)
 		position.y -= (itemList.get_v_scroll().value)
 		var size: Vector2 = Vector2(itemList.rect_size.x, 17)
 		
+		var virusGlitch = itemList.get_node("Virus Glitch")
 		virusGlitch.rect_position = position
 		virusGlitch.rect_size = size
+		
+		match currentLevel:
+			4:
+				filePosition = fileSystem.getNodePosition(virusPosition)
+				position.y = 0.0
+				position.y += (itemList.get_constant("line_separation") + itemList.get_constant("vseparation") + 16) * (filePosition)
+				position.y -= (itemList.get_v_scroll().value)
+				
+				virusGlitch = itemList.get_node("Virus Glitch2")
+				virusGlitch.visible = true
+				virusGlitch.rect_position = position
+				virusGlitch.rect_size = size
+			5:
+				filePosition = fileSystem.getNodePosition(virusPosition)
+				position.y = 0.0
+				position.y += (itemList.get_constant("line_separation") + itemList.get_constant("vseparation") + 16) * (filePosition)
+				position.y -= (itemList.get_v_scroll().value)
+				
+				virusGlitch = itemList.get_node("Virus Glitch2")
+				virusGlitch.visible = true
+				virusGlitch.rect_position = position
+				virusGlitch.rect_size = size
+				
+				filePosition = fileSystem.getNodePosition(filePosition)
+				position.y = 0.0
+				position.y += (itemList.get_constant("line_separation") + itemList.get_constant("vseparation") + 16) * (filePosition)
+				position.y -= (itemList.get_v_scroll().value)
+				
+				virusGlitch = itemList.get_node("Virus Glitch3")
+				virusGlitch.visible = true
+				virusGlitch.rect_position = position
+				virusGlitch.rect_size = size
 	else:
 		itemListPollTimer -= delta
 		
@@ -236,12 +269,12 @@ func virus_distance_update(incrementAmount: float):
 	
 	if (distanceToVirus == 0):
 		virusPosition = fileSystem.getVirusPosition()
-		virusGlitch.visible = true
-	else:
-		virusGlitch.visible = false
+		itemList.get_node("Virus Glitch").visible = true
 
 func virus_deleted():
-	virusGlitch.visible = false
+	itemList.get_node("Virus Glitch").visible = false
+	itemList.get_node("Virus Glitch2").visible = false
+	itemList.get_node("Virus Glitch3").visible = false
 	
 	audioManager.virus_deleted()
 	smp.set_param("isVirusDeleted", true)

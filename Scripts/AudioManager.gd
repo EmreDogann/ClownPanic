@@ -16,7 +16,7 @@ var time_delay: float
 
 var rng = RandomNumberGenerator.new()
 
-var staticVolumeInitial: float = -30.0
+var staticVolumeInitial: float = -20.0
 var staticVolume: float = staticVolumeInitial
 var staticVolumeTargetWeight: float
 var staticVolumeLerpWeight: float
@@ -156,7 +156,7 @@ func play_static() -> void:
 func increase_static_volume(incrementAmount: int) -> void:
 	if (!players[5].playing):
 		play_static()
-	staticVolumeTargetWeight = 1 - 0.1 * (incrementAmount + 1)
+	staticVolumeTargetWeight = 1 - 0.15 * (incrementAmount + 1)
 	shouldIncreaseStaticVolume = true
 
 func terminal_beep() -> void:

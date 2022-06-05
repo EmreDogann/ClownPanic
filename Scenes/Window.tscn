@@ -688,6 +688,50 @@ __meta__ = {
 "_edit_lock_": true
 }
 
+[node name="Virus Glitch2" type="Control" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer/VBoxContainer2/Control/ItemList"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 1
+
+[node name="Effect" type="ColorRect" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer/VBoxContainer2/Control/ItemList/Virus Glitch2"]
+material = ExtResource( 17 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 1
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="BackBufferCopy" type="BackBufferCopy" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer/VBoxContainer2/Control/ItemList/Virus Glitch2"]
+visible = false
+copy_mode = 2
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Virus Glitch3" type="Control" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer/VBoxContainer2/Control/ItemList"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 1
+
+[node name="Effect" type="ColorRect" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer/VBoxContainer2/Control/ItemList/Virus Glitch3"]
+material = ExtResource( 17 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 1
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="BackBufferCopy" type="BackBufferCopy" parent="Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer/VBoxContainer2/Control/ItemList/Virus Glitch3"]
+visible = false
+copy_mode = 2
+__meta__ = {
+"_edit_lock_": true
+}
+
 [node name="StaticBody2D" type="StaticBody2D" parent="Window"]
 visible = false
 

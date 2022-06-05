@@ -16,7 +16,7 @@ public class TerminalText : RichTextLabel {
 	private bool is_terminal_active = false;
 
 	private const int MAX_CHARACTER_LIMIT = 5000;
-	private const float gameOverTimeLimit = 60.0f; // Game Over Time Limit in seconds
+	private const float gameOverTimeLimit = 180.0f; // Game Over Time Limit in seconds (3 minutes)
 	private float timer;
 	private float timerIncrement;
 

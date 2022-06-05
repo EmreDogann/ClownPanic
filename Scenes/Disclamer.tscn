@@ -143,7 +143,7 @@ custom_fonts/normal_font = SubResource( 2 )
 bbcode_enabled = true
 bbcode_text = "[center]After clicking '[color=yellow]Continue[/color]', the game will read a restricted number of your files contained inside the '[color=yellow]Users[/color]' directory for the purposes of gameplay.
 
-The game will not modify, delete or create any files and folders once started.
+The game will [color=#ca1818]not modify, delete or create[/color] any files and folders once started.
 
 These files are not shared with anyone and remain solely within the confines of the game.
 

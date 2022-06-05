@@ -285,7 +285,7 @@ tracks/0/keys = {
 [sub_resource type="Resource" id=12]
 script = ExtResource( 26 )
 __meta__ = {
-"graph_offset": Vector2( 208, 140 )
+"graph_offset": Vector2( 188, 140 )
 }
 name = "Entry"
 
@@ -1365,14 +1365,6 @@ __meta__ = {
 }
 name = "Play Credits"
 
-[sub_resource type="Resource" id=237]
-script = ExtResource( 27 )
-from = "Entry"
-to = "Level1"
-conditions = {
-}
-priority = 0
-
 [sub_resource type="Resource" id=70]
 script = ExtResource( 31 )
 name = "PlayCredits"
@@ -1524,6 +1516,14 @@ from = "Play Credits"
 to = "Exit"
 conditions = {
 "CreditsFinished": SubResource( 73 )
+}
+priority = 0
+
+[sub_resource type="Resource" id=237]
+script = ExtResource( 27 )
+from = "Entry"
+to = "Level1"
+conditions = {
 }
 priority = 0
 
