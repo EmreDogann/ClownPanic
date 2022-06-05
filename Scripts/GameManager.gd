@@ -133,9 +133,9 @@ func animFinished(anim_name: String) -> void:
 func _on_StateMachinePlayer_updated(state, delta) -> void:
 	match state:
 		"Level1/Idle":
-			if (smp.get_param("Level1/IdleTimer", 0.0) < 1.0):
+			if (smp.get_param("Level1/IdleTimer", 0.0) < 15.0):
 				smp.set_param("Level1/IdleTimer", smp.get_param("Level1/IdleTimer", 0.0) + delta)
-				if (smp.get_param("Level1/IdleTimer", 0.0) >= 1.0):
+				if (smp.get_param("Level1/IdleTimer", 0.0) >= 15.0):
 					smp.set_trigger("SpawnVirus")
 		"Level4/Idle":
 			windowPopupTimer -= delta
