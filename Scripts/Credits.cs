@@ -16,7 +16,7 @@ public class Credits : RichTextLabel {
 	private bool is_terminal_active = false;
 
 	private const int MAX_CHARACTER_LIMIT = 5000;
-	private const float gameOverTimeLimit = 10.0f; // Game Over Time Limit in seconds
+	private const float gameOverTimeLimit = 120.0f; // Game Over Time Limit in seconds
 	private float timer;
 	private float timerIncrement;
 

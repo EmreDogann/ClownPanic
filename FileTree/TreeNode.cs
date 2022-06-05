@@ -290,9 +290,6 @@ public class TreeNode<T> {
 
 		int randomChildIndex = rnd.Next(fileChildren.Count);
 
-		GD.Print(randomChildIndex);
-		GD.Print(fileChildren.Count);
-
 		return fileChildren[randomChildIndex];
 	}
 

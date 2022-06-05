@@ -57,5 +57,5 @@ void fragment()
 
 [resource]
 shader = SubResource( 12 )
-shader_param/time = 1.0
+shader_param/time = 0.0
 shader_param/FADE_COLOR = Plane( 0, 0, 0, 1 )

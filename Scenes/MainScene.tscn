@@ -932,7 +932,7 @@ name = "Entry"
 [sub_resource type="Resource" id=184]
 script = ExtResource( 26 )
 __meta__ = {
-"graph_offset": Vector2( 647.434, 2.34411 )
+"graph_offset": Vector2( 628.5, 0 )
 }
 name = "Spawn Virus"
 
@@ -967,7 +967,7 @@ name = "Idle"
 [sub_resource type="Resource" id=189]
 script = ExtResource( 26 )
 __meta__ = {
-"graph_offset": Vector2( 648, 440 )
+"graph_offset": Vector2( 619.5, 480 )
 }
 name = "Popup Window"
 
@@ -1078,7 +1078,7 @@ priority = 0
 script = ExtResource( 32 )
 name = "spawnChance"
 comparation = 2
-value = 80
+value = 95
 
 [sub_resource type="Resource" id=206]
 script = ExtResource( 27 )
@@ -1412,6 +1412,11 @@ margin_left = 137.0
 margin_top = 92.0
 margin_right = 777.0
 margin_bottom = 452.0
+
+[node name="PopupWindows" type="Control" parent="CanvasLayer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
 
 [node name="Terminal" parent="CanvasLayer" instance=ExtResource( 24 )]
 visible = false

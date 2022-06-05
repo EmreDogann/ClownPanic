@@ -2,7 +2,7 @@
 
 [ext_resource path="res://WindowsXPTheme.theme" type="Theme" id=1]
 [ext_resource path="res://Images/Icons/My Documents.png" type="Texture" id=2]
-[ext_resource path="res://Scripts/Window-Resizing.gd" type="Script" id=3]
+[ext_resource path="res://Scripts/BlankWindow.gd" type="Script" id=3]
 [ext_resource path="res://Scripts/WindowXP-Titlebar.gd" type="Script" id=4]
 [ext_resource path="res://Shaders/Pixelate.tres" type="Material" id=5]
 [ext_resource path="res://Gradients/Window-TitleBar.tres" type="Texture" id=6]
@@ -29,6 +29,7 @@ bg_color = Color( 0, 0, 0, 1 )
 [node name="Control" type="Control"]
 margin_right = 200.0
 margin_bottom = 200.0
+mouse_filter = 2
 
 [node name="Window" type="Panel" parent="."]
 material = ExtResource( 5 )
@@ -39,7 +40,6 @@ mouse_filter = 1
 theme = ExtResource( 1 )
 custom_styles/panel = SubResource( 11 )
 script = ExtResource( 3 )
-enable_resizing = false
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Window"]
 use_parent_material = true
@@ -87,23 +87,24 @@ stretch_mode = 5
 
 [node name="MarginContainer2" type="MarginContainer" parent="Window/VBoxContainer/Titlebar/HBoxContainer"]
 margin_left = 20.0
-margin_right = 98.0
+margin_right = 120.0
 margin_bottom = 22.0
 mouse_filter = 1
 custom_constants/margin_top = 2
 
 [node name="Window Name" type="Label" parent="Window/VBoxContainer/Titlebar/HBoxContainer/MarginContainer2"]
 margin_top = 2.0
-margin_right = 78.0
+margin_right = 100.0
 margin_bottom = 22.0
+rect_min_size = Vector2( 100, 0 )
 size_flags_vertical = 1
 custom_fonts/font = ExtResource( 12 )
 text = "File Explorer"
-align = 1
 valign = 1
+clip_text = true
 
 [node name="MarginContainer3" type="MarginContainer" parent="Window/VBoxContainer/Titlebar/HBoxContainer"]
-margin_left = 98.0
+margin_left = 120.0
 margin_right = 130.0
 margin_bottom = 22.0
 mouse_filter = 1
@@ -203,4 +204,4 @@ margin_bottom = 174.0
 custom_styles/panel = SubResource( 14 )
 
 [connection signal="gui_input" from="Window/VBoxContainer/Titlebar" to="Window/VBoxContainer/Titlebar" method="_on_Titlebar_gui_input"]
-[connection signal="window_moved" from="Window/VBoxContainer/Titlebar" to="Window" method="_on_Titlebar_window_moved"]
+[connection signal="pressed" from="Window/VBoxContainer/Titlebar/HBoxContainer/HBoxContainer/MarginContainer3/Close" to="Window" method="_on_Close_pressed"]

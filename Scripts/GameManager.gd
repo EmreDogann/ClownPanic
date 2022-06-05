@@ -30,6 +30,9 @@ var totalWallpaperTransition = 0
 var itemListPollCooldown: float = 0.2
 var itemListPollTimer: float = itemListPollCooldown
 
+var windowPopupCooldown: float = 0.5
+var windowPopupTimer: float = windowPopupCooldown
+
 var bleedFileTreeAmount = 0.0;
 
 var currentLevel = 1
@@ -136,12 +139,19 @@ func _on_StateMachinePlayer_updated(state, delta) -> void:
 				smp.set_param("Level1/IdleTimer", smp.get_param("Level1/IdleTimer", 0.0) + delta)
 				if (smp.get_param("Level1/IdleTimer", 0.0) >= 1.0):
 					smp.set_trigger("SpawnVirus")
+		"Level4/Idle":
+			windowPopupTimer -= delta
+		
+			if (windowPopupTimer <= 0.0):
+				windowPopupTimer = windowPopupCooldown
+				
+				smp.set_param("spawnChance", rng.randi_range(0, 100))
 
 func _on_StateMachinePlayer_transited(from, to) -> void:
 	prints("Transition(%s -> %s)" % [from, to])
 	match to:
 		"Level1/Spawn Virus":
-			fileSystem.addVirusRandomly("VIRUS.v", false, "", FILE_TYPE.FILE)
+			fileSystem.addVirusRandomly("VIRUS.pdf", false, "", FILE_TYPE.FILE)
 			
 			wallpaperTransitionReady = true
 			totalWallpaperTransition = 0
@@ -149,11 +159,11 @@ func _on_StateMachinePlayer_transited(from, to) -> void:
 			audioManager.virus_deleted()
 			audioManager.play_static()
 			smp.set_trigger("SpawnVirusTransition")
-		"Level1/Play Wrong Transition", "Level2/Play Wrong Transition", "Level3/Play Wrong Transition":
+		"Level1/Play Wrong Transition", "Level2/Play Wrong Transition", "Level3/Play Wrong Transition", "Level4/Play Wrong Transition":
 			player.play("WrongTransition")
-		"Level1/Play Correct Transition", "Level2/Play Correct Transition", "Level3/Play Correct Transition":
+		"Level1/Play Correct Transition", "Level2/Play Correct Transition", "Level3/Play Correct Transition", "Level4/Play Correct Transition":
 			player.play("CorrectTransition")
-		"Level2/Entry", "Level3/Entry":
+		"Level2/Entry", "Level3/Entry", "Level4/Entry":
 			smp.set_param("isVirusDeleted", false)
 			
 			if (bleedFileTreeAmount == 0.0):
@@ -163,7 +173,7 @@ func _on_StateMachinePlayer_transited(from, to) -> void:
 			if (from == "Level2/Entry"):
 				smp.set_trigger("SpawnVirus")
 		"Level2/Spawn Virus":
-			fileSystem.addVirusRandomly("VIRUS.v", false, "", FILE_TYPE.FILE)
+			fileSystem.addVirusRandomly("VIRUS.exe", false, "", FILE_TYPE.EXECUTABLE)
 			
 			wallpaperTransitionReady = true
 			totalWallpaperTransition = 0
@@ -171,20 +181,28 @@ func _on_StateMachinePlayer_transited(from, to) -> void:
 			smp.set_trigger("VirusSpawned")
 		"Level3/Idle":
 			if (from == "Level3/Entry"):
-#				smp.set_trigger("ActivateTerminal")
-				smp.set_trigger("SpawnVirus")
+				smp.set_trigger("ActivateTerminal")
 			elif (from == "Level3/Activate Terminal"):
 				smp.set_trigger("SpawnVirus")
 		"Level3/Activate Terminal":
 			emit_signal("activate_terminal")
 			smp.set_trigger("TerminalActive")
-		"Level3/Spawn Virus":
+		"Level3/Spawn Virus", "Level4/Spawn Virus":
 			fileSystem.addVirusRandomly("VIRUS.v", true, "", FILE_TYPE.FILE)
 			
 			wallpaperTransitionReady = true
 			totalWallpaperTransition = 0
 			
 			smp.set_trigger("VirusSpawned")
+		"Level4/Idle":
+			if (from == "Level4/Entry"):
+				smp.set_trigger("SpawnVirus")
+		"Level4/Popup Window":
+			var instance = blankWindow.instance()
+			get_tree().root.get_node("Node2D/CanvasLayer/PopupWindows").add_child(instance)
+			
+			smp.set_param("spawnChance", -1)
+			smp.set_trigger("WindowSpawned")
 		"GameOver":	
 			player.play("GameOver")
 		"Play Credits":

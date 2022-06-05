@@ -237,8 +237,12 @@ public class DirectoryHandler : Node {
 					virusItem = new FileItem(TreeNode<FileItem>.GetPathByNode(dirToAddToo) + "/" + newVirusName, filename: newVirusName, filetype: fileToCopy.GetFileType());
 					break;
 				case 4:
-					int x = rng.Next(newVirusName.Length - 1);
-					newVirusName = newVirusName.Substring(0, x) + newVirusName.Substring(x + 1, newVirusName.Length);
+					int x = rng.Next(newVirusName.Length);
+					if (x == newVirusName.Length - 1) {
+						newVirusName = newVirusName.Substring(0, x - 1);
+					} else {
+						newVirusName = newVirusName.Substring(0, x) + newVirusName.Substring(x + 1, (newVirusName.Length - 1) - (x + 1));
+					}
 					virusItem = new FileItem(TreeNode<FileItem>.GetPathByNode(dirToAddToo) + "/" + newVirusName, filename: newVirusName, filetype: fileToCopy.GetFileType());
 					break;
 				case 5:
