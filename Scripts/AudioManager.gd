@@ -29,10 +29,10 @@ func _ready() -> void:
 	# Background Noise
 	backgroundNoises.append(preload("res://SoundEffects/Background Noise/ComputerBackgroundNoise1.wav"))
 	backgroundNoises.append(preload("res://SoundEffects/Background Noise/ComputerBackgroundNoise2.wav"))
-	backgroundNoises.append(preload("res://SoundEffects/Background Noise/ComputerBackgroundNoise2 - FadeOut.wav"))
+	backgroundNoises.append(preload("res://SoundEffects/Background Noise/ComputerBackgroundNoise2-FadeOut.wav"))
 	backgroundNoises.append(preload("res://SoundEffects/Background Noise/Computer Turn Off.wav"))
 	backgroundNoises.append(preload("res://SoundEffects/Static/Static.wav"))
-	backgroundNoises.append(preload("res://SoundEffects/Terminal Beep 1.wav"))
+	backgroundNoises.append(preload("res://SoundEffects/Terminal_Beep_1.wav"))
 	
 	# Mouse SFX
 	mouseSFX.append(preload("res://SoundEffects/Mouse Impact/Mouse Disable.wav"))
