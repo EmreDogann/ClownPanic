@@ -13,7 +13,7 @@
 [ext_resource path="res://Images/Icons/Window Titlebar/Minimize Icon - Disabled.png" type="Texture" id=11]
 [ext_resource path="res://Fonts/DefaultDynamicFont_Bold.tres" type="DynamicFont" id=12]
 [ext_resource path="res://Fonts/DefaultDynamicFont.tres" type="DynamicFont" id=13]
-[ext_resource path="res://Scripts/Credits.cs" type="Script" id=14]
+[ext_resource path="res://Scripts/TerminalText.cs" type="Script" id=14]
 [ext_resource path="res://Scripts/Terminal.gd" type="Script" id=15]
 
 [sub_resource type="StyleBoxFlat" id=11]

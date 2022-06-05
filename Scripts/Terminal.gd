@@ -1,16 +1,10 @@
 extends Control
 
-signal begin_credits
-
-onready var creditsNode = get_node("Window/VBoxContainer/Body/MarginContainer/ColorRect/RichTextLabel")
+onready var terminalTextNode = get_node("Window/VBoxContainer/Body/MarginContainer/ColorRect/RichTextLabel")
 
 var closeWaitCooldown = 4.0
 var closeWaitTimer = closeWaitCooldown
 var closeTriggered = false
-
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	connect("begin_credits", creditsNode, "begin_credits")
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -23,8 +17,11 @@ func _process(delta: float) -> void:
 			closeTriggered = false
 
 func activate_terminal() -> void:
-	emit_signal("begin_credits")
+	terminalTextNode.begin_countdown()
 	visible = true
+
+func ambiguous_text() -> void:
+	terminalTextNode.ambiguous_text()
 
 func _on_Close_pressed() -> void:
 	closeTriggered = true

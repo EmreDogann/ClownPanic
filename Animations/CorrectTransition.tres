@@ -59,11 +59,14 @@ tracks/4/loop_wrap = true
 tracks/4/imported = false
 tracks/4/enabled = true
 tracks/4/keys = {
-"times": PoolRealArray( 0.21 ),
-"transitions": PoolRealArray( 1 ),
+"times": PoolRealArray( 0.21, 0.29 ),
+"transitions": PoolRealArray( 1, 1 ),
 "values": [ {
 "args": [  ],
 "method": "bleedFiles"
+}, {
+"args": [  ],
+"method": "clear_terminals"
 } ]
 }
 tracks/5/type = "value"

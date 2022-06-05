@@ -18,7 +18,6 @@ enum MouseMode {
 }
 
 var mode = MouseMode.FREE
-var prev_mouse_pos: Vector2
 
 var original_tree_position: int
 
@@ -36,46 +35,57 @@ func _process(delta: float) -> void:
 	if (mode == MouseMode.PHYSICS):
 		$MouseSprite.position = $PhysicsMouse.position
 		$MouseSprite.rotation = $PhysicsMouse.rotation
-	
+		
 #	get_viewport().warp_mouse(Vector2(600, 300))
 	
 func _input(event: InputEvent) -> void:
-	if (Input.is_action_just_pressed("disable_mouse") == true):
-		emit_signal("on_mouse_disable")
-		$PhysicsMouse/CollisionPolygon2D.disabled = false
-		
-		$PhysicsMouse.set_reset_physics(true)
-		yield(get_tree(), "physics_frame")
-		yield(get_tree(), "physics_frame")
-		mode = MouseMode.PHYSICS
-		
-		$MouseSprite/Sprite.position = -$PhysicsMouse.rigidbody_origin
-	elif (Input.is_action_just_pressed("enable_mouse") == true):
-		mode = MouseMode.FREE
-		$MouseSprite/Sprite.position = Vector2(0, 0)
-		$MouseSprite.rotation = 0
-		
-		$PhysicsMouse/CollisionPolygon2D.disabled = true
-	elif (Input.is_action_just_pressed("mouse_left") == true):
-		emit_signal("on_mouse_pressed")
-	elif (Input.is_action_just_released("mouse_left") == true):
-		emit_signal("on_mouse_released")
-	elif (Input.is_action_just_pressed("mouse_right") == true):
-		emit_signal("on_mouse_pressed")
-	elif (Input.is_action_just_released("mouse_right") == true):
-		emit_signal("on_mouse_released")
-	elif (event is InputEventMouseButton and Input.is_action_just_pressed("ui_back") == true):
-		emit_signal("on_mouse_pressed")
-	elif (event is InputEventMouseButton and Input.is_action_just_released("ui_back") == true):
-		emit_signal("on_mouse_released")
-	elif (Input.is_action_just_pressed("ui_forward") == true):
-		emit_signal("on_mouse_pressed")
-	elif (Input.is_action_just_released("ui_forward") == true):
-		emit_signal("on_mouse_released")
-		
-	if (event is InputEventMouseMotion):
-		if (mode == MouseMode.FREE):
+#	if (Input.is_action_just_pressed("disable_mouse") == true):
+#		emit_signal("on_mouse_disable")
+#		$PhysicsMouse/CollisionPolygon2D.disabled = false
+#
+#		$PhysicsMouse.set_reset_physics(true)
+#		yield(get_tree(), "physics_frame")
+#		yield(get_tree(), "physics_frame")
+#		mode = MouseMode.PHYSICS
+#
+#		$MouseSprite/Sprite.position = -$PhysicsMouse.rigidbody_origin
+#	elif (Input.is_action_just_pressed("enable_mouse") == true):
+#		mode = MouseMode.FREE
+#		$MouseSprite/Sprite.position = Vector2(0, 0)
+#		$MouseSprite.rotation = 0
+#
+#		$PhysicsMouse/CollisionPolygon2D.disabled = true
+	if (mode == MouseMode.FREE):
+		if (Input.is_action_just_pressed("mouse_left") == true):
+			emit_signal("on_mouse_pressed")
+		elif (Input.is_action_just_released("mouse_left") == true):
+			emit_signal("on_mouse_released")
+		elif (Input.is_action_just_pressed("mouse_right") == true):
+			emit_signal("on_mouse_pressed")
+		elif (Input.is_action_just_released("mouse_right") == true):
+			emit_signal("on_mouse_released")
+		elif (event is InputEventMouseButton and Input.is_action_just_pressed("ui_back") == true):
+			emit_signal("on_mouse_pressed")
+		elif (event is InputEventMouseButton and Input.is_action_just_released("ui_back") == true):
+			emit_signal("on_mouse_released")
+		elif (Input.is_action_just_pressed("ui_forward") == true):
+			emit_signal("on_mouse_pressed")
+		elif (Input.is_action_just_released("ui_forward") == true):
+			emit_signal("on_mouse_released")
+			
+		if (event is InputEventMouseMotion):
 			$MouseSprite.position = self.get_global_mouse_position()
+
+func disable_mouse() -> void:
+	emit_signal("on_mouse_disable")
+	$PhysicsMouse/CollisionPolygon2D.disabled = false
+	
+	$PhysicsMouse.set_reset_physics(true)
+	yield(get_tree(), "physics_frame")
+	yield(get_tree(), "physics_frame")
+	mode = MouseMode.PHYSICS
+	
+	$MouseSprite/Sprite.position = -$PhysicsMouse.rigidbody_origin
 
 func _on_window_mouse_entered(isEdge: bool, type: int):
 #	if (mode == MouseMode.FREE):

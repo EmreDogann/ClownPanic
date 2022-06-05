@@ -3,16 +3,20 @@ extends RigidBody2D
 signal on_mouse_collide()
 
 var direction = Vector2(0.0, 0.0)
+var speedAccumulation: float = 0.0
 var speed: float = 0.0
-var speedAccumulation = 0.0
-var directionAccumulation: Vector2 = Vector2(0,0)
-var previous_mouse_position = Vector2(0.0, 0.0)
+var directionAccumulation: Vector2 = Vector2(0.0, 0.0)
+var previous_mouse_pos: Vector2 = Vector2(0.0, 0.0)
+
 var frame = 0
 var maxFrameBuffer = 5
 
 var rigidbody_origin = Vector2(0.0, 0.0)
 var reset_physics = false
-var show_mouse = false;
+#var push_mouse = false;
+#
+#var timerCooldown = 0.05
+#var timer = timerCooldown
 
 var rng = RandomNumberGenerator.new()
 var mouseSpriteNode: Node2D
@@ -25,22 +29,30 @@ func _ready():
 	
 	connect("on_mouse_collide", get_tree().root.get_node("Node2D/AudioManager"), "mouse_collided")
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	var current_mouse_position = mouseSpriteNode.position
-	
-	if (frame % maxFrameBuffer != 0):
-		directionAccumulation += current_mouse_position - previous_mouse_position
-		speedAccumulation += current_mouse_position.distance_to(previous_mouse_position)
-	else:
-		direction = (directionAccumulation / maxFrameBuffer).normalized()
-		speed = (speedAccumulation / maxFrameBuffer) * 1000
-		
-		directionAccumulation = Vector2(0,0)
-		speedAccumulation = 0
+#func _process(delta: float) -> void:
+#	timer -= delta
+#
+#	if (timer <= 0.0):
+#		timer = timerCooldown
+#		push_mouse = true
 
-	frame += 1
-	previous_mouse_position = current_mouse_position
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _input(event: InputEvent) -> void:
+	if (event is InputEventMouseMotion):
+		var current_mouse_pos = self.get_global_mouse_position()
+		
+		if (frame % maxFrameBuffer != 0):
+			directionAccumulation += current_mouse_pos - previous_mouse_pos
+			speedAccumulation += current_mouse_pos.distance_to(previous_mouse_pos)
+		else:
+			direction = (directionAccumulation / maxFrameBuffer).normalized()
+			speed = (speedAccumulation / maxFrameBuffer) * 1000
+			
+			directionAccumulation = Vector2(0,0)
+			speedAccumulation = 0.0
+
+		frame += 1
+		previous_mouse_pos = current_mouse_pos
 
 func set_reset_physics(reset):
 	reset_physics = reset
@@ -60,6 +72,9 @@ func _integrate_forces(state: Physics2DDirectBodyState):
 		state.apply_impulse(random_offset, direction * speed)
 		
 		reset_physics = false
+#	if (push_mouse):
+#		state.apply_impulse(Vector2(0,0), direction * speed/ 10)
+#		push_mouse = false
 
 
 func _on_PhysicsMouse_body_entered(body: Node) -> void:

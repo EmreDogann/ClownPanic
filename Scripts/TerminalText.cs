@@ -3,7 +3,7 @@ using Godot;
 using System.Collections.Generic;
 using System.Linq;
 
-public class Credits : RichTextLabel {
+public class TerminalText : RichTextLabel {
 	[Signal]
 	delegate void terminal_game_over();
 	
@@ -27,6 +27,7 @@ public class Credits : RichTextLabel {
 	private float gameOverTimer;
 
 	private bool is_game_over = false;
+	private bool ambiguous_text_active = false;
 
 	private int numberOfFilesDeleted = 1;
 
@@ -81,16 +82,27 @@ public class Credits : RichTextLabel {
 		return numberOfFilesDeleted >= filesDirectoryReference.GetUserTotalFileCount();
 	}
 
-	public void begin_credits() {
+	public void begin_countdown() {
 		is_terminal_active = true;
+	}
+	
+	public void ambiguous_text() {
+		ambiguous_text_active = true;
 	}
 
 	public void addDebugStatementToTerminal() {
 		if (fileDirectoryList.Count > 1) {
 			var finalFileLocation = fileDirectoryList.First.Next.Value.Replace(rootDirectory, "");
-
-			String textToAdd = rootDirectory + "> [color=yellow](" + numberOfFilesDeleted + "/" + (filesDirectoryReference.GetUserTotalFileCount() - 1) + ")[/color] [color=red]DELETING[/color] [color=green]" + finalFileLocation + "[/color]\n";
-
+			
+			String textToAdd = "";
+			if (ambiguous_text_active) {
+				textToAdd += rootDirectory + "> [color=yellow](???/???)[/color]";
+			} else {
+				textToAdd += rootDirectory + "> [color=yellow](" + numberOfFilesDeleted + "/" + (filesDirectoryReference.GetUserTotalFileCount() - 1) + ")[/color]";
+			}
+			
+			textToAdd += "[color=red]DELETING[/color] [color=green]" + finalFileLocation + "[/color]\n";
+			
 			BbcodeText += textToAdd;
 			fileDirectoryList.Remove(fileDirectoryList.First.Next);
 

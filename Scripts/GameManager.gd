@@ -1,8 +1,5 @@
 extends Node2D
 
-signal change_wallpaper
-signal activate_terminal
-
 onready var smp = $StateMachinePlayer
 
 onready var player: AnimationPlayer = get_node("../AnimationPlayer")
@@ -12,6 +9,7 @@ onready var itemList:  = get_tree().root.get_node("Node2D/CanvasLayer/FileExplor
 onready var audioManager = get_tree().root.get_node("Node2D/AudioManager")
 onready var wallpaperNode = get_tree().root.get_node("Node2D/CanvasLayer/Desktop/Panel/Wallpaper")
 onready var terminalNode = get_tree().root.get_node("Node2D/CanvasLayer/Terminal")
+onready var mouseNode = get_tree().root.get_node("Node2D/CanvasLayer/Mouse")
 
 onready var virusGlitch = get_node("../CanvasLayer/FileExplorer/Window/VBoxContainer/Body/MarginContainer/VBoxContainer/Files/HSplitContainer/VBoxContainer2/ItemList/Virus Glitch")
 onready var crtFilter = get_node("../CanvasLayer/Post-Processing Effects/CRT Filter/Effect")
@@ -73,8 +71,6 @@ func _ready():
 	smp.set_param("Level1/IdleTimer", 0.0)
 	smp.set_param("isVirusDeleted", false)
 	
-	connect("change_wallpaper", wallpaperNode, "change_wallpaper")
-	connect("activate_terminal", terminalNode, "activate_terminal")
 	player.connect("animation_finished", self, "animFinished")
 	
 	rng.randomize()
@@ -85,7 +81,7 @@ func _process(delta):
 		wallpaperTimer -= delta
 	
 	if (wallpaperTimer <= 0.0):
-		emit_signal("change_wallpaper")
+		wallpaperNode.change_wallpaper()
 		wallpaperTimer = wallpaperTimerCooldown
 		wallpaperTransitionReady = false
 		totalWallpaperTransition += 1
@@ -146,6 +142,8 @@ func _on_StateMachinePlayer_updated(state, delta) -> void:
 				windowPopupTimer = windowPopupCooldown
 				
 				smp.set_param("spawnChance", rng.randi_range(0, 100))
+		"Level5/Idle":
+			smp.set_param("disableTimer", smp.get_param("disableTimer", 0.0) + delta)
 
 func _on_StateMachinePlayer_transited(from, to) -> void:
 	prints("Transition(%s -> %s)" % [from, to])
@@ -159,11 +157,11 @@ func _on_StateMachinePlayer_transited(from, to) -> void:
 			audioManager.virus_deleted()
 			audioManager.play_static()
 			smp.set_trigger("SpawnVirusTransition")
-		"Level1/Play Wrong Transition", "Level2/Play Wrong Transition", "Level3/Play Wrong Transition", "Level4/Play Wrong Transition":
+		"Level1/Play Wrong Transition", "Level2/Play Wrong Transition", "Level3/Play Wrong Transition", "Level4/Play Wrong Transition", "Level5/Play Wrong Transition":
 			player.play("WrongTransition")
-		"Level1/Play Correct Transition", "Level2/Play Correct Transition", "Level3/Play Correct Transition", "Level4/Play Correct Transition":
+		"Level1/Play Correct Transition", "Level2/Play Correct Transition", "Level3/Play Correct Transition", "Level4/Play Correct Transition", "Level5/Play Correct Transition":
 			player.play("CorrectTransition")
-		"Level2/Entry", "Level3/Entry", "Level4/Entry":
+		"Level2/Entry", "Level3/Entry", "Level4/Entry", "Level5/Entry":
 			smp.set_param("isVirusDeleted", false)
 			
 			if (bleedFileTreeAmount == 0.0):
@@ -185,9 +183,9 @@ func _on_StateMachinePlayer_transited(from, to) -> void:
 			elif (from == "Level3/Activate Terminal"):
 				smp.set_trigger("SpawnVirus")
 		"Level3/Activate Terminal":
-			emit_signal("activate_terminal")
+			terminalNode.activate_terminal();
 			smp.set_trigger("TerminalActive")
-		"Level3/Spawn Virus", "Level4/Spawn Virus":
+		"Level3/Spawn Virus", "Level4/Spawn Virus", "Level5/Spawn Virus":
 			fileSystem.addVirusRandomly("VIRUS.v", true, "", FILE_TYPE.FILE)
 			
 			wallpaperTransitionReady = true
@@ -203,6 +201,12 @@ func _on_StateMachinePlayer_transited(from, to) -> void:
 			
 			smp.set_param("spawnChance", -1)
 			smp.set_trigger("WindowSpawned")
+		"Level5/Idle":
+			if (from == "Level5/Entry"):
+				terminalNode.ambiguous_text()
+				smp.set_trigger("SpawnVirus")
+		"Level5/Disable Mouse":
+			mouseNode.disable_mouse()
 		"GameOver":	
 			player.play("GameOver")
 		"Play Credits":
@@ -261,3 +265,7 @@ func bleedFiles() -> void:
 	if (currentLevel != 1):
 		bleedFileTreeAmount += 0.35
 		fileSystem.bleedFileTrees(bleedFileTreeAmount);
+
+func clear_terminals():
+	if (currentLevel == 4):
+		get_node("../CanvasLayer/PopupWindows").queue_free()
