@@ -285,7 +285,7 @@ tracks/0/keys = {
 [sub_resource type="Resource" id=12]
 script = ExtResource( 26 )
 __meta__ = {
-"graph_offset": Vector2( 188, 140 )
+"graph_offset": Vector2( 208, 140 )
 }
 name = "Entry"
 
@@ -1761,6 +1761,98 @@ custom_colors/font_color = Color( 0.745098, 0.745098, 0.745098, 1 )
 custom_fonts/font = SubResource( 149 )
 text = "Thank you for playing!"
 
+[node name="PauseScreen" type="Control" parent="CanvasLayer"]
+pause_mode = 1
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 16 )
+
+[node name="Background" type="ColorRect" parent="CanvasLayer/PauseScreen"]
+material = ExtResource( 18 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0, 0, 0, 0.501961 )
+
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/PauseScreen"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/PauseScreen/CenterContainer"]
+margin_left = 353.0
+margin_top = 238.0
+margin_right = 607.0
+margin_bottom = 302.0
+
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/PauseScreen/CenterContainer/VBoxContainer"]
+margin_right = 254.0
+margin_bottom = 28.0
+
+[node name="Label" type="Label" parent="CanvasLayer/PauseScreen/CenterContainer/VBoxContainer/CenterContainer"]
+margin_right = 254.0
+margin_bottom = 28.0
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 10 )
+text = "Do you wish to Quit?"
+
+[node name="CenterContainer2" type="CenterContainer" parent="CanvasLayer/PauseScreen/CenterContainer/VBoxContainer"]
+margin_top = 32.0
+margin_right = 254.0
+margin_bottom = 64.0
+
+[node name="TextureButton" type="TextureButton" parent="CanvasLayer/PauseScreen/CenterContainer/VBoxContainer/CenterContainer2"]
+margin_left = 111.0
+margin_right = 143.0
+margin_bottom = 32.0
+texture_normal = ExtResource( 12 )
+texture_pressed = ExtResource( 14 )
+texture_hover = ExtResource( 15 )
+script = ExtResource( 17 )
+
+[node name="Mouse" type="Node2D" parent="CanvasLayer/PauseScreen" groups=["Mouse"]]
+pause_mode = 2
+script = ExtResource( 2 )
+
+[node name="MouseSprite" type="Position2D" parent="CanvasLayer/PauseScreen/Mouse"]
+
+[node name="Sprite" type="Sprite" parent="CanvasLayer/PauseScreen/Mouse/MouseSprite"]
+scale = Vector2( 0.8, 0.8 )
+texture = ExtResource( 3 )
+centered = false
+
+[node name="KinematicBody" type="KinematicBody2D" parent="CanvasLayer/PauseScreen/Mouse"]
+use_parent_material = true
+position = Vector2( 2, 4 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="CanvasLayer/PauseScreen/Mouse/KinematicBody"]
+position = Vector2( -2, -4 )
+scale = Vector2( 0.8, 0.8 )
+polygon = PoolVector2Array( 12.5, 11.25, 10, 21.25, 0, 17.5, 0, 0 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="PhysicsMouse" type="RigidBody2D" parent="CanvasLayer/PauseScreen/Mouse"]
+use_parent_material = true
+position = Vector2( 2, 4 )
+mass = 10.0
+physics_material_override = SubResource( 11 )
+gravity_scale = 10.0
+continuous_cd = 1
+contacts_reported = 1
+contact_monitor = true
+linear_velocity = Vector2( 1000, 0 )
+script = ExtResource( 6 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="CanvasLayer/PauseScreen/Mouse/PhysicsMouse"]
+position = Vector2( -2, -4 )
+scale = Vector2( 0.8, 0.8 )
+polygon = PoolVector2Array( 12.5, 11.25, 10, 21.25, 0, 17.5, 0, 0 )
+disabled = true
+__meta__ = {
+"_edit_lock_": true
+}
+
 [node name="Post-Processing Effects" type="Control" parent="CanvasLayer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -1870,54 +1962,6 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="PauseScreen" type="Control" parent="CanvasLayer"]
-pause_mode = 1
-visible = false
-anchor_right = 1.0
-anchor_bottom = 1.0
-script = ExtResource( 16 )
-
-[node name="Background" type="ColorRect" parent="CanvasLayer/PauseScreen"]
-material = ExtResource( 18 )
-anchor_right = 1.0
-anchor_bottom = 1.0
-color = Color( 0, 0, 0, 0.501961 )
-
-[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/PauseScreen"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/PauseScreen/CenterContainer"]
-margin_left = 353.0
-margin_top = 238.0
-margin_right = 607.0
-margin_bottom = 302.0
-
-[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/PauseScreen/CenterContainer/VBoxContainer"]
-margin_right = 254.0
-margin_bottom = 28.0
-
-[node name="Label" type="Label" parent="CanvasLayer/PauseScreen/CenterContainer/VBoxContainer/CenterContainer"]
-margin_right = 254.0
-margin_bottom = 28.0
-custom_colors/font_color = Color( 0, 0, 0, 1 )
-custom_fonts/font = SubResource( 10 )
-text = "Do you wish to Quit?"
-
-[node name="CenterContainer2" type="CenterContainer" parent="CanvasLayer/PauseScreen/CenterContainer/VBoxContainer"]
-margin_top = 32.0
-margin_right = 254.0
-margin_bottom = 64.0
-
-[node name="TextureButton" type="TextureButton" parent="CanvasLayer/PauseScreen/CenterContainer/VBoxContainer/CenterContainer2"]
-margin_left = 111.0
-margin_right = 143.0
-margin_bottom = 32.0
-texture_normal = ExtResource( 12 )
-texture_pressed = ExtResource( 14 )
-texture_hover = ExtResource( 15 )
-script = ExtResource( 17 )
-
 [node name="FadeInTransition" type="ColorRect" parent="CanvasLayer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -1951,5 +1995,6 @@ script = ExtResource( 19 )
 
 [connection signal="body_entered" from="CanvasLayer/Mouse/PhysicsMouse" to="CanvasLayer/Mouse/PhysicsMouse" method="_on_PhysicsMouse_body_entered"]
 [connection signal="pressed" from="CanvasLayer/PauseScreen/CenterContainer/VBoxContainer/CenterContainer2/TextureButton" to="CanvasLayer/PauseScreen/CenterContainer/VBoxContainer/CenterContainer2/TextureButton" method="_on_TextureButton_pressed"]
+[connection signal="body_entered" from="CanvasLayer/PauseScreen/Mouse/PhysicsMouse" to="CanvasLayer/PauseScreen/Mouse/PhysicsMouse" method="_on_PhysicsMouse_body_entered"]
 [connection signal="transited" from="GameManager/StateMachinePlayer" to="GameManager" method="_on_StateMachinePlayer_transited"]
 [connection signal="updated" from="GameManager/StateMachinePlayer" to="GameManager" method="_on_StateMachinePlayer_updated"]
